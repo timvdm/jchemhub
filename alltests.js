@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var _allTests = [ "jchemhub/smiles/smiles_parser_test.html",
-		"jchemhub/math/line_test.html", 
-		"/jchemhub/io/json_test.html",
-		"jchemhub/io/mdl_test.html", 
-		"jchemhub/model/model_test.html", 
-		"jchemhub/ring/ring_finder_test.html",
-		"jchemhub/view/plugin_test.html",  
-		"jchemhub/view/reaction_editor_test.html"];
+var _allTests = [ "jchemhub/algorithm/symmetry/symmetry_test.html",
+                  "jchemhub/algorithm/query/query_test.html",
+                  "jchemhub/smiles/smiles_parser_test.html",
+		  "jchemhub/math/line_test.html", 
+		  "jchemhub/io/json_test.html",
+		  "jchemhub/io/mdl_test.html", 
+		  "jchemhub/model/model_test.html", 
+		  "jchemhub/ring/ring_finder_test.html",
+		  "jchemhub/ring/sssr_test.html",
+		  "jchemhub/controller/plugin_test.html",  
+		  "jchemhub/controller/reaction_editor_test.html"];
