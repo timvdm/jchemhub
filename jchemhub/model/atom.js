@@ -36,23 +36,23 @@ jchemhub.model.Atom=function(symbol, x, y, opt_charge, opt_aromatic, opt_isotope
      * Bonds belonging to this atom
      * @type{goog.structs.Set}
      */
-	this.bonds=new goog.structs.Set();
-	/**
-	 * charge
-	 * @type{number} 
-	 */
+    this.bonds=new goog.structs.Set();
+    /**
+     * charge
+     * @type{number} 
+     */
     this.charge = goog.isDef(opt_charge) ? opt_charge : 0;
     
     /**
-	 * isotope
-	 * @type{number} 
-	 */
+     * isotope
+     * @type{number} 
+     */
     this.isotope = goog.isDef(opt_isotope) ? opt_isotope : 0;
     
     /**
-	 * aromatic
-	 * @type{bool} 
-	 */
+     * aromatic
+     * @type{bool} 
+     */
     this.aromatic = goog.isDef(opt_aromatic) ? opt_aromatic : false;
 
     this.hybridization=null;
@@ -76,6 +76,21 @@ jchemhub.model.Atom.prototype.hydrogenCount = function() {
 	}
 	return hydrogenCount;
 };
+
+/**
+ * Get an array with the neighbor atoms.
+ * @return {Array.<jchemhub.model.Atom>}
+ */
+jchemhub.model.Atom.prototype.getNeighbors = function() {
+    var bonds = this.bonds.getValues();
+    var nbrs = [];
+    for (var i = 0, li = bonds.length; i < li; i++) {
+        nbrs.push(bonds[i].otherAtom(this));
+    }
+    return nbrs;
+};
+
+	
 
 /**
  * Hybridization states

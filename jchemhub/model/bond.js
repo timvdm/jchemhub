@@ -29,3 +29,18 @@ jchemhub.model.Bond = function(source, target, opt_molecule) {
 	}
 };
 
+/**
+ * Get the other bond atom
+ * @return {jchemhub.model.Atom} The other bond atom or null if the specified atom is not part of the bond.
+ */
+jchemhub.model.Bond.prototype.otherAtom = function(atom) {
+    if (atom === this.source) {
+        return this.target;
+    }
+    if (atom === this.target) {
+        return this.source
+    }
+    return null;
+};
+
+
