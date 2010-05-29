@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<!--
+TODO: License
+Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
+-->
+<html>
+<head>
+<title>jchemhub unit ring_finder.js</title>
+<script src="../../../third-party/closure/closure/goog/base.js"></script>
+<script src="../../deps.js"></script>
+<script>
+            goog.require('goog.testing.jsunit');
+            goog.require('goog.array');
+            goog.require('jchemhub.io.mdl');
+            goog.require('jchemhub.model.Atom');
+            goog.require('jchemhub.query.Query');
+            goog.require('jchemhub.query.DFSMapper');
+            goog.require('jchemhub.query.SmilesCompiler');
+            goog.require('jchemhub.query.MoleculeCompiler');
+        </script>
+<script>
+           
+function debug(text, noNewLine) {
+    var logDiv = document.getElementById("logDiv");
+    if (!logDiv) {
+        var body = document.getElementsByTagName("body")[0];
+        logDiv = document.createElement("div");
+        logDiv.id = "logDiv";
+        body.appendChild(logDiv);
+    }
+    if (noNewLine) {
+        logDiv.innerHTML += text;
+    } else {
+        logDiv.innerHTML += text + "<br>";
+    }
+}
+
+            function createMolecule() {
+                var molfile = '\n OpenBabel05291001332D\n\n  9  9  0  0  0  0  0  0  0  0999 V2000\n   -6.3750   -0.6250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -6.3750    0.3750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.5092    0.8755    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.6427    0.3764    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.6411   -0.6236    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.5061   -1.1255    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -5.5092    1.8755    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -6.3766    2.3732    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -4.6435    2.3759    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n  1  2  1  0  0  0  0\n  2  3  1  0  0  0  0\n  3  4  1  0  0  0  0\n  3  7  1  0  0  0  0\n  4  5  2  0  0  0  0\n  5  6  1  0  0  0  0\n  6  1  1  0  0  0  0\n  7  8  1  0  0  0  0\n  7  9  2  0  0  0  0\nM  END\n';
+                return jchemhub.io.mdl.readMolfile(molfile);
+            }
+ 
+            function createBenzene(){
+                var benzene = "\n  xxx     10310613082D          \n\n  6  6  0  0  0  0            999 V2000\n    0.7145   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.0000   -0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.7145    0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n    0.0000    0.8250    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.7145   -0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n   -0.7145    0.4125    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n  2  1  2  0  0  0  0\n  3  1  1  0  0  0  0\n  4  3  2  0  0  0  0\n  5  2  1  0  0  0  0\n  6  4  1  0  0  0  0\n  5  6  2  0  0  0  0\nM  END\n";
+                return jchemhub.io.mdl.readMolfile(benzene);
+            }
+         
+
+            function printMaps(maps) {
+                for (var i = 0; i < maps.length; i++) {
+                    var keys = maps[i].getKeys();
+                    var vals = maps[i].getValues();
+                    debug("map: query index -> queried index");
+                    for (var j = 0; j < keys.length; j++) {
+                        debug(keys[j] + " -> " + vals[j]);
+                    }
+                }
+            }
+
+
+            function testSmilesCompiler1() {
+                var queried = createMolecule();
+                var query = jchemhub.query.SmilesCompiler.compile('CCC');
+                var mapper = new jchemhub.query.DFSMapper(query);
+                var maps = mapper.mapUnique(queried);
+                assertEquals(6, maps.length);
+            }
+            
+            function testSmilesCompiler2() {
+                var queried = createMolecule();
+                var query = jchemhub.query.SmilesCompiler.compile('CCCN');
+                var mapper = new jchemhub.query.DFSMapper(query);
+                var maps = mapper.mapUnique(queried);
+                printMaps(maps);
+                assertEquals(1, maps.length);
+            }
+ 
+            function testSmilesCompiler3() {
+                var queried = createMolecule();
+                var query = jchemhub.query.SmilesCompiler.compile('CCC=N');
+                var mapper = new jchemhub.query.DFSMapper(query);
+                var maps = mapper.mapUnique(queried);
+                printMaps(maps);
+                assertEquals(2, maps.length);
+            }
+ 
+            function testDFSMapper() {
+                var queried = createBenzene();
+                var query = jchemhub.query.MoleculeCompiler.compile(queried);
+
+                var mapper = new jchemhub.query.DFSMapper(query);
+                var all = mapper.mapAll(queried);
+                assertEquals(12, all.length);
+                assertEquals(6, all[0].getCount());
+                /*
+                debug("MAP ALL");
+                printMaps(all);
+                */
+
+                var unique = mapper.mapUnique(queried);
+                assertEquals(1, unique.length);
+                assertEquals(6, unique[0].getCount());
+                /*
+                debug("MAP UNIQUE");
+                printMaps(unique);
+                */
+ 
+                var first = mapper.mapFirst(queried);
+                assertEquals(6, first.getCount());
+                /*
+                debug("MAP FIRST");
+                printMaps([first]);
+                */
+
+            }
+            
+        </script>
+</head>
+<body>
+</body>
+</html>
