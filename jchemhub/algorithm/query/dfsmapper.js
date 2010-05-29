@@ -12,11 +12,15 @@
  * limitations under the License.
  */
 
-goog.provide('jchemhub.query.DFSMapper')
+goog.provide('jchemhub.query.DFSMapper');
 
 goog.require('goog.structs.Map');
 
 (function() {
+
+    function simpleSort(a, b) {
+        return a - b;
+    }
 
     jchemhub.query.DFSMapper = function(query) {
 
@@ -24,6 +28,60 @@ goog.require('goog.structs.Map');
 
         this.query = query;
 
+        /**
+         * Since mapping a query can be time slow, it is important to start
+         * with the most unique atom. This avoids checking many paths which
+         * will lead to no full match.
+         */
+        function getAtomScore(qatom) {
+            if (qatom.symbols.length !== 1) {
+                return 0;
+            }
+            switch (qatom.symbols[0]) {
+                case 'H':
+                case 'C':
+                    return 0;
+                case 'N':
+                case 'O':
+                    return 1;
+                case 'P':
+                case 'S':
+                    return 3;
+                case 'F':
+                case 'Cl':
+                case 'Br':
+                case 'I':
+                    return 4;
+                default:
+                    return 5;
+            }
+        }
+        function getAtomUniqueScore(qatom) {
+            var score = 3 * getAtomScore(qatom);
+            var neighbors = qatom.getNeighbors();
+            for (var i = 0, li = neighbors.length; i < li; i++) {
+                score += getAtomScore(neighbors[i]);
+            }
+            return score;
+        }
+        function getUniqueStartAtom(query) {
+            var bestScore = 0;
+            var startAtom = query.getAtom(0);
+            for (var i = 0, li = query.countAtoms(); i < li; i++) {
+                var qatom = query.getAtom(i);
+                var score = getAtomUniqueScore(qatom);
+                if (score > bestScore) {
+                    bestScore = score;
+                    startAtom = qatom;
+                }
+            }
+            return startAtom;        
+        }
+
+
+        /**
+         * State to represent the current mapped state
+         */
         function State(type, query, queried) {
             this.type = type;
             this.query = query;
@@ -31,7 +89,10 @@ goog.require('goog.structs.Map');
             this.queryPath = [];
             this.queriedPath = [];
         }
-    
+   
+        /**
+         * The depth-first isomorphism algorithm.
+         */
         function DFS(state, queryAtom, queriedAtom, maps) {
             var queryNbrs = queryAtom.getNeighbors();
             var queriedNbrs = queriedAtom.getNeighbors();
@@ -42,10 +103,10 @@ goog.require('goog.structs.Map');
                     var queriedNbr = queriedNbrs[j];
 
                     // make sure the neighbor atom isn't in the paths already
-                    if (goog.array.indexOf(state.queryPath, queryNbr) != -1) {
+                    if (goog.array.indexOf(state.queryPath, queryNbr) !== -1) {
                         continue;
                     }
-                    if (goog.array.indexOf(state.queriedPath, queriedNbr) != -1) {
+                    if (goog.array.indexOf(state.queriedPath, queriedNbr) !== -1) {
                         continue;
                     }
 
@@ -69,20 +130,20 @@ goog.require('goog.structs.Map');
                     //debug(state.query.indexOfAtom(queryNbr) + " -> " + state.queried.indexOfAtom(queriedNbr));
 
                     // store the mapping if all atoms are mapped
-                    if (state.queryPath.length == state.query.countAtoms()) {
+                    if (state.queryPath.length === state.query.countAtoms()) {
                         //debug("map:");
                         var map = new goog.structs.Map();
                         for (var k = 0, kl = state.queryPath.length; k < kl; k++) {
                             //debug(state.query.indexOfAtom(state.queryPath[k]) + " -> " + state.queried.indexOfAtom(state.queriedPath[k]));
                             map.set(state.query.indexOfAtom(state.queryPath[k]), state.queried.indexOfAtom(state.queriedPath[k]));
                         }
-                        if (state.type == Type.MapUnique) {
+                        if (state.type === Type.MapUnique) {
                             var values = map.getValues();
-                            values.sort(function(a,b){return a-b;});
+                            values.sort(simpleSort);
                             var isUnique = true;
-                            for (var k = 0, kl = maps.length; k < kl; k++) {
+                            for (k = 0, kl = maps.length; k < kl; k++) {
                                 var kValues = maps[k].getValues();
-                                kValues.sort(function(a,b){return a-b;});
+                                kValues.sort(simpleSort);
                                 if (goog.array.equals(values, kValues)) {
                                     isUnique = false;                                
                                 }
@@ -94,7 +155,7 @@ goog.require('goog.structs.Map');
                             maps.push(map);
                         }
 
-                        if (state.type == Type.MapFirst) {
+                        if (state.type === Type.MapFirst) {
                             return;
                         }
                     }
@@ -108,9 +169,14 @@ goog.require('goog.structs.Map');
         }
 
 
+        /**
+         * Get all mappings of the query on the queried molecule.
+         * @param {jchemhub.model.Molecule} queried The queried molecule.
+         * @return {Array.<goog.structs.Set>} The mappings
+         */
         this.mapAll = function(queried) {
             var maps = [];
-            var queryAtom = this.query.getAtom(0);
+            var queryAtom = getUniqueStartAtom(this.query);
             for (var i = 0, li = queried.countAtoms(); i < li; i++) {
                 var state = new State(Type.MapAll, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
@@ -125,9 +191,14 @@ goog.require('goog.structs.Map');
             return maps;
         }; 
 
+        /**
+         * Get all unique mappings of the query on the queried molecule.
+         * @param {jchemhub.model.Molecule} queried The queried molecule.
+         * @return {Array.<goog.structs.Set>} The unique mappings
+         */ 
         this.mapUnique = function(queried) {
             var maps = [];
-            var queryAtom = this.query.getAtom(0);
+            var queryAtom = getUniqueStartAtom(this.query);
             for (var i = 0, li = queried.countAtoms(); i < li; i++) {
                 var state = new State(Type.MapUnique, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
@@ -143,9 +214,14 @@ goog.require('goog.structs.Map');
         }; 
 
 
+        /**
+         * Get the first mappings of the query on the queried molecule.
+         * @param {jchemhub.model.Molecule} queried The queried molecule.
+         * @return {goog.structs.Set} The mapping
+         */ 
         this.mapFirst = function(queried) {
             var maps = [];
-            var queryAtom = this.query.getAtom(0);
+            var queryAtom = getUniqueStartAtom(this.query);
             for (var i = 0, li = queried.countAtoms(); i < li; i++) {
                 var state = new State(Type.MapFirst, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
@@ -168,4 +244,4 @@ goog.require('goog.structs.Map');
     };
 
 
-})();
+}());

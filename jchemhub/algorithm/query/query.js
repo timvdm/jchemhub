@@ -30,7 +30,7 @@ goog.provide('jchemhub.query.Query');
     jchemhub.query.QueryAtom.prototype.matches = function(atom) {
         var symbolMatches = true;
         if (this.symbols.length) {
-            if (goog.array.indexOf(this.symbols, atom.symbol) == -1) {
+            if (goog.array.indexOf(this.symbols, atom.symbol) === -1) {
                 symbolMatches = false;                
             }
         }
@@ -59,7 +59,7 @@ goog.provide('jchemhub.query.Query');
         if (!this.orders.length) {
             return true; // match any bond order
         }
-        if (goog.array.indexOf(this.orders, bond.constructor.ORDER) != -1) {
+        if (goog.array.indexOf(this.orders, bond.constructor.ORDER) !== -1) {
             return true;
         }
         return false;
@@ -102,7 +102,7 @@ goog.provide('jchemhub.query.Query');
     jchemhub.query.Query.prototype.findBond = function(atom1, atom2) {
         for ( var i = 0, il = this.bonds.length; i < il; i++) {
             var bond = this.bonds[i];
-            if ((atom1 == bond.source && atom2 == bond.target) || (atom2 == bond.source && atom1 == bond.target)) {
+            if ((atom1 === bond.source && atom2 === bond.target) || (atom2 === bond.source && atom1 === bond.target)) {
                 return bond;
             }
         }
@@ -110,4 +110,4 @@ goog.provide('jchemhub.query.Query');
     };
 
  
-})();
+}());

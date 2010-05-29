@@ -32,4 +32,4 @@ goog.require('jchemhub.query.MoleculeCompiler');
         return query;
     };
  
-})();
+}());

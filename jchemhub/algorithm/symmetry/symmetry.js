@@ -26,7 +26,7 @@ goog.require('goog.array');
         for (var i = 0; i < n; i++) {
             var row = [];
             for (var j = 0; j < n; j++) {
-                if (i == j) {
+                if (i === j) {
                     row.push(0);
                 } else if (molecule.findBond(molecule.getAtom(i), molecule.getAtom(j))) {
                     row.push(1);
@@ -87,7 +87,7 @@ goog.require('goog.array');
 
     function extendSymmetryClasses(molecule, symmetry_classes) {
         var n = molecule.countAtoms();
-        var newClasses = []
+        var newClasses = [];
         for (var i = 0; i < n; i++) {
             var nbrs = molecule.getAtom(i).getNeighbors();
             var sum = 0;
@@ -104,24 +104,24 @@ goog.require('goog.array');
         var n = symmetry_classes.length;
         var unique = [];
         for (var i = 0; i < n; i++) {
-            if (goog.array.indexOf(unique, symmetry_classes[i]) == -1) {
+            if (goog.array.indexOf(unique, symmetry_classes[i]) === -1) {
                 unique.push(symmetry_classes[i]);
             } 
         }
         return unique.length;
-    }
+    };
 
     function renumberSymmetryClasses(symmetry_classes) {
         var n = symmetry_classes.length;
         var unique = [];
         for (var i = 0; i < n; i++) {
-            if (goog.array.indexOf(unique, symmetry_classes[i]) == -1) {
+            if (goog.array.indexOf(unique, symmetry_classes[i]) === -1) {
                 unique.push(symmetry_classes[i]);
             } 
         }
         unique.sort(function(a,b){return a-b;});
         var newClasses = [];
-        for (var i = 0; i < n; i++) {
+        for (i = 0; i < n; i++) {
             newClasses.push(goog.array.indexOf(unique, symmetry_classes[i])+1);
         }
         return newClasses;    
@@ -136,7 +136,7 @@ goog.require('goog.array');
             extendSymmetryClasses(molecule, symmetry_classes);
             
             var newCount = jchemhub.symmetry.countSymmetryClasses(symmetry_classes);
-            if (newCount == lastCount) {
+            if (newCount === lastCount) {
                 break;
             }
         }
@@ -144,7 +144,7 @@ goog.require('goog.array');
         symmetry_classes = renumberSymmetryClasses(symmetry_classes);
 
         return symmetry_classes;    
-    }
+    };
 
  
-})();
+}());

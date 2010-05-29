@@ -33,7 +33,7 @@ goog.require('jchemhub.query.Query');
             qatom.symbols.push(molecule.getAtom(i).symbol);
         }
 
-        for (var i = 0, li = molecule.countBonds(); i < li; i++) {
+        for (i = 0, li = molecule.countBonds(); i < li; i++) {
             var bond = molecule.bonds[i];
             var source = query.getAtom(molecule.indexOfAtom(bond.source));
             var target = query.getAtom(molecule.indexOfAtom(bond.target));
@@ -42,7 +42,7 @@ goog.require('jchemhub.query.Query');
         }
 
         return query;
-    } 
+    }; 
 
 
-})();
+}());
