@@ -9,7 +9,7 @@
  * See the License for the specific language governing permissions and limitations under the License.
  */
 
-goog.provide('jchemhub.smiles.SmilesParser');
+goog.provide('jchemhub.io.smiles.SmilesParser');
 goog.require('goog.array');
 goog.require('jchemhub.model.Atom');
 goog.require('jchemhub.model.Atom.Hybridizations');
@@ -36,14 +36,14 @@ goog.require('jchemhub.util.BondUtil.Orders');
 
 //TODO - why is stereo information ignored in the parser??
 
-jchemhub.smiles.SmilesParser = function(){
+jchemhub.io.smiles.SmilesParser = function(){
 	alert("jchemhub.smiles.SmilesParser = function()")
 }
 
 /**
  * Parse a SMILES String into a jchemhub.model.Molecule.
  */
-jchemhub.smiles.SmilesParser.parse = function(smiles){
+jchemhub.io.smiles.SmilesParser.parse = function(smiles){
 
     //Initialization before parse 
     var bond = new jchemhub.model.Bond;
@@ -277,7 +277,7 @@ jchemhub.smiles.SmilesParser.parse = function(smiles){
  *  brackets may be omitted.
  *
  */
-jchemhub.smiles.SmilesParser.getSymbolForOrganicSubsetElement = function(s, pos){
+jchemhub.io.smiles.SmilesParser.getSymbolForOrganicSubsetElement = function(s, pos){
     var possibleSymbol="";
 	if (pos < s.length - 1){
         possibleSymbol = s.substring(pos, pos + 2);
@@ -296,7 +296,7 @@ jchemhub.smiles.SmilesParser.getSymbolForOrganicSubsetElement = function(s, pos)
 }
 
 
-jchemhub.smiles.SmilesParser.getAtomString = function(smiles, pos) {
+jchemhub.io.smiles.SmilesParser.getAtomString = function(smiles, pos) {
     atomString = "";
     for (f=pos+1; f<smiles.length; f++) {
         character = smiles.charAt(f);
@@ -309,7 +309,7 @@ jchemhub.smiles.SmilesParser.getAtomString = function(smiles, pos) {
 }
 
 
-jchemhub.smiles.SmilesParser.getElementSymbol = function(s,pos) {
+jchemhub.io.smiles.SmilesParser.getElementSymbol = function(s,pos) {
     // Try to match elements not in the organic subset.
     // first, the two char elements
     if (pos < s.length - 1)
@@ -332,7 +332,7 @@ jchemhub.smiles.SmilesParser.getElementSymbol = function(s,pos) {
 
 
 
-jchemhub.smiles.SmilesParser.getImplicitHydrogenCount = function(s,position) {
+jchemhub.io.smiles.SmilesParser.getImplicitHydrogenCount = function(s,position) {
     count = 0;  
     if (s.charAt(position) == 'H') {
         multiplier = "";
@@ -349,7 +349,7 @@ jchemhub.smiles.SmilesParser.getImplicitHydrogenCount = function(s,position) {
 }
 
 
-jchemhub.smiles.SmilesParser.assembleAtom = function(s) {
+jchemhub.io.smiles.SmilesParser.assembleAtom = function(s) {
     atom = null;
     position = 0;
     currentSymbol = null;

@@ -14,7 +14,8 @@
 
 var _allTests = [ "jchemhub/algorithm/symmetry/symmetry_test.html",
                   "jchemhub/algorithm/query/query_test.html",
-                  "jchemhub/smiles/smiles_parser_test.html",
+                  "jchemhub/io/smiles/smiles_parser_test.html",
+                  "jchemhub/io/qsmiles/smiles_test.html",
 		  "jchemhub/math/line_test.html", 
 		  "jchemhub/io/json_test.html",
 		  "jchemhub/io/mdl_test.html", 
