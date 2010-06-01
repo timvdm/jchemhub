@@ -50,6 +50,7 @@
 	goog.require('jchemhub.controller.plugins.Zoom');
 	goog.require('jchemhub.controller.plugins.UndoRedo');
 	goog.require('jchemhub.controller.plugins.Highlight');
+	goog.require('jchemhub.controller.plugins.AtomSelect');
 	goog.require('goog.debug.Console');
 
 </script>
@@ -59,8 +60,8 @@
 	
 function initPage(){
 	// uncomment next two lines to debug to console
-	//var c = new goog.debug.Console(); 
-	//c.setCapturing(true); 
+	var c = new goog.debug.Console(); 
+	c.setCapturing(true); 
 
 	var buttons = []; 
 	buttons.push(jchemhub.controller.ToolbarFactory.makeButton( 
@@ -69,6 +70,14 @@ function initPage(){
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT, 'zoom out', '-'));
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO, 'undo', 'undo'));
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.REDO, 'redo', 'redo'));
+    var atom_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.AtomSelect.COMMAND.INSERT, 'insert selected Atom', 'Atom');
+    var atom_menu = new goog.ui.Menu();
+    atom_menu.addItem(m1 = new goog.ui.Option('C'));
+    atom_menu.addItem(m1 = new goog.ui.Option('N'));
+    atom_menu.addItem(m1 = new goog.ui.Option('S'));
+    atom_menu.addItem(m1 = new goog.ui.Option('...'));
+    atom_select.setMenu(atom_menu);
+    buttons.push(atom_select);
 
 	var toolbar = jchemhub.controller.DefaultToolbar.makeToolbar(buttons, goog.dom.getElement('reactionEditorToolbar')); 
 	var model = jchemhub.io.json.readReaction(reactionDrawing); 
@@ -77,6 +86,7 @@ function initPage(){
 	editor.registerPlugin(new jchemhub.controller.plugins.Zoom());
 	editor.registerPlugin(new jchemhub.controller.plugins.UndoRedo());
 	editor.registerPlugin(new jchemhub.controller.plugins.Highlight());
+	editor.registerPlugin(new jchemhub.controller.plugins.AtomSelect());
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
 	editor.setModel(model);
@@ -89,14 +99,14 @@ goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 
 <body>
 <table style="width: 100%">
-	<tr >
+	<tr>
 		<td>
 		<div id="reactionEditorToolbar"></div>
 		</td>
 	</tr>
-	<tr >
+	<tr>
 		<td>
-		<div id="reactionEditorContainer" style="height:400px"></div>
+		<div id="reactionEditorContainer" style="height: 400px"></div>
 		</td>
 	</tr>
 </table>

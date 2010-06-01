@@ -88,6 +88,9 @@ jchemhub.controller.ReactionEditor = function(element, opt_config) {
 
 	this.isModified_ = false;
 	this.isEverModified_ = false;
+	
+	// currently selected model objects
+	this.selected = [];
 
 };
 goog.inherits(jchemhub.controller.ReactionEditor, goog.events.EventTarget);
@@ -368,7 +371,6 @@ jchemhub.controller.ReactionEditor.prototype.handleBondMouseOut_ = function(e){
 }
 
 jchemhub.controller.ReactionEditor.prototype.handleBondMouseDown_ = function(e){
-
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEDOWN, e);
 }
 

@@ -1,6 +1,7 @@
 goog.provide('jchemhub.controller.BondController');
 goog.provide('jchemhub.controller.BondController.BondEvent');
 goog.require('goog.events.EventTarget');
+goog.require('goog.debug.Logger');
 
 /**
  * @constructor
@@ -12,6 +13,16 @@ jchemhub.controller.BondController = function(parentController) {
 };
 goog.inherits(jchemhub.controller.BondController, goog.events.EventTarget);
 
+/**
+ * Logging object.
+ * 
+ * @type {goog.debug.Logger}
+ * @protected
+ */
+jchemhub.controller.BondController.prototype.logger = goog.debug.Logger
+		.getLogger('jchemhub.controller.BondController');
+
+
 jchemhub.controller.BondController.prototype.handleMouseOver = function(bond, e) {
 
 	this.dispatchEvent(new jchemhub.controller.BondController.BondEvent(this,
@@ -19,7 +30,8 @@ jchemhub.controller.BondController.prototype.handleMouseOver = function(bond, e)
 };
 
 jchemhub.controller.BondController.prototype.handleMouseOut = function(bond, e) {
-	this.dispatchEvent(jchemhub.controller.BondController.EventType.MOUSEOUT);
+	this.dispatchEvent(new jchemhub.controller.BondController.BondEvent(this,
+			bond, jchemhub.controller.BondController.EventType.MOUSEOUT));
 };
 
 jchemhub.controller.BondController.prototype.handleMouseDown = function(bond, e) {
