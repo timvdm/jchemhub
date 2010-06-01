@@ -3,25 +3,82 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Jchemhub Demo</title>
-<script src="jchemhub_compiled.js"></script>
-<script src="json_test_rxn.js"></script>
+<!-- 
+<script src="build/jchemhub-advanced.js"></script>
+<script src="build/jchemhub-simple.js"></script>
+ -->
+<script src="build/jchemhub-whitespace-only.js"></script>
+<script src="jchemhub/io/json_test_rxn.js"></script>
+
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/demos/css/demo.css">
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/button.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/dialog.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/linkbutton.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/menus.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/tab.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/tabbar.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/toolbar.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/colormenubutton.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/palette.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/colorpalette.css" />
+<link rel="stylesheet"
+	href="third-party/closure/closure/goog/css/editortoolbar.css" />
+
+
 
 <script>
     
 function initPage(){
-	var model = jchemhub.io.json.readReaction(reactionDrawing);
 
-	var controller = new jchemhub.controller.Controller(goog.dom.getElement('reactionEditorContainer'));
+	var buttons = []; 
+	buttons.push(jchemhub.controller.ToolbarFactory.makeButton( 
+    	jchemhub.controller.plugins.ClearEditor.COMMAND, 'Clear Editor', 'Clear')); 
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_IN, 'zoom in', '+'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT, 'zoom out', '-'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO, 'undo', 'undo'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.REDO, 'redo', 'redo'));
 
-	controller.setModel(model);
+	var toolbar = jchemhub.controller.DefaultToolbar.makeToolbar(buttons, goog.dom.getElement('reactionEditorToolbar')); 
+	var model = jchemhub.io.json.readReaction(reactionDrawing); 
+	var editor = new jchemhub.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'));
+	editor.registerPlugin(new jchemhub.controller.plugins.ClearEditor());
+	editor.registerPlugin(new jchemhub.controller.plugins.Zoom());
+	editor.registerPlugin(new jchemhub.controller.plugins.UndoRedo());
+	editor.registerPlugin(new jchemhub.controller.plugins.Highlight());
+	
+    var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
+	editor.setModel(model);
 };
 
-goog.events.listen(window, goog.events.EventType.LOAD, initPage);
---></script>
+
+</script>
 </head>
 
-<body>
-<div id="reactionEditorContainer" style="width: 1200px; height: 400px"></div>
+<body onload="initPage();">
+
+<table style="width: 100%">
+	<tr>
+		<td>
+		<div id="reactionEditorToolbar"></div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<div id="reactionEditorContainer" style="height: 400px"></div>
+		</td>
+	</tr>
+</table>
 
 </body>
 </html>
