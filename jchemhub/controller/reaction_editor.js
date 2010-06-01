@@ -1,5 +1,5 @@
-goog.provide("jchemhub.view.ReactionEditor");
-goog.provide("jchemhub.view.ReactionEditor.EventType");
+goog.provide("jchemhub.controller.ReactionEditor");
+goog.provide("jchemhub.controller.ReactionEditor.EventType");
 goog.require("jchemhub.controller.ReactionController");
 goog.require("jchemhub.view.ReactionRenderer");
 goog.require("jchemhub.view.MoleculeRenderer");
@@ -9,7 +9,10 @@ goog.require('goog.fx.Dragger');
 goog.require('goog.fx.Dragger.EventType');
 goog.require('goog.editor.BrowserFeature');
 goog.require('goog.async.Delay');
-goog.require('jchemhub.view.Plugin');
+goog.require('jchemhub.controller.Plugin');
+
+
+
 
 /**
  * A graphical editor for reactions
@@ -18,7 +21,7 @@ goog.require('jchemhub.view.Plugin');
  * @constructor
  * @extends {goog.events.EventTarget}
  */
-jchemhub.view.ReactionEditor = function(element, opt_config) {
+jchemhub.controller.ReactionEditor = function(element, opt_config) {
 	goog.events.EventTarget.call(this);
 	this.originalElement = element;
 	this.id = element.id;
@@ -32,7 +35,7 @@ jchemhub.view.ReactionEditor = function(element, opt_config) {
 	this.plugins_ = {};
 
 	/**
-	 * Plugins registered on this field, indexed by the jchemhub.view.Plugin.Op
+	 * Plugins registered on this field, indexed by the jchemhub.controller.Plugin.Op
 	 * that they support.
 	 * 
 	 * @type {Object.<Array>}
@@ -40,11 +43,11 @@ jchemhub.view.ReactionEditor = function(element, opt_config) {
 	 */
 	this.indexedPlugins_ = {};
 
-	for ( var op in jchemhub.view.Plugin.OPCODE) {
+	for ( var op in jchemhub.controller.Plugin.OPCODE) {
 		this.indexedPlugins_[op] = [];
 	}
 	this.config = new goog.structs.Map(
-			jchemhub.view.ReactionEditor.defaultConfig);
+			jchemhub.controller.ReactionEditor.defaultConfig);
 	if (opt_config) {
 		this.config.addAll(opt_config); // merge optional config into
 		// defaults
@@ -61,14 +64,14 @@ jchemhub.view.ReactionEditor = function(element, opt_config) {
 
 	// The editor will not listen to change events until it has finished loading
 	// this.stoppedEvents_ = {};
-	// this.stopEvent(jchemhub.view.ReactionEditor.EventType.CHANGE);
-	// this.stopEvent(jchemhub.view.ReactionEditor.EventType.DELAYEDCHANGE);
+	// this.stopEvent(jchemhub.controller.ReactionEditor.EventType.CHANGE);
+	// this.stopEvent(jchemhub.controller.ReactionEditor.EventType.DELAYEDCHANGE);
 	this.isModified_ = false;
 	this.isEverModified_ = false;
 	//
 	// this.delayedChangeTimer_ = new goog.async.Delay(
 	// this.dispatchDelayedChange_,
-	// jchemhub.view.ReactionEditor.DELAYED_CHANGE_FREQUENCY, this);
+	// jchemhub.controller.ReactionEditor.DELAYED_CHANGE_FREQUENCY, this);
 
 	/**
 	 * @type {goog.events.EventHandler}
@@ -81,13 +84,13 @@ jchemhub.view.ReactionEditor = function(element, opt_config) {
 
 	this.handleEditorLoad();
 
-	this.loadState_ = jchemhub.view.ReactionEditor.LoadState_.EDITABLE;
+	this.loadState_ = jchemhub.controller.ReactionEditor.LoadState_.EDITABLE;
 
 	this.isModified_ = false;
 	this.isEverModified_ = false;
 
 };
-goog.inherits(jchemhub.view.ReactionEditor, goog.events.EventTarget);
+goog.inherits(jchemhub.controller.ReactionEditor, goog.events.EventTarget);
 
 /**
  * List of mutation events in Gecko browsers.
@@ -95,7 +98,7 @@ goog.inherits(jchemhub.view.ReactionEditor, goog.events.EventTarget);
  * @type {Array.<string>}
  * @protected
  */
-jchemhub.view.ReactionEditor.MUTATION_EVENTS_GECKO = [ 'DOMNodeInserted',
+jchemhub.controller.ReactionEditor.MUTATION_EVENTS_GECKO = [ 'DOMNodeInserted',
 		'DOMNodeRemoved', 'DOMNodeRemovedFromDocument',
 		'DOMNodeInsertedIntoDocument', 'DOMCharacterDataModified' ];
 
@@ -105,25 +108,25 @@ jchemhub.view.ReactionEditor.MUTATION_EVENTS_GECKO = [ 'DOMNodeInserted',
  * @param {?string}
  *            editorId The active editor id.
  */
-jchemhub.view.ReactionEditor.setActiveEditorId = function(editorId) {
-	jchemhub.view.ReactionEditor.activeEditorId_ = editorId;
+jchemhub.controller.ReactionEditor.setActiveEditorId = function(editorId) {
+	jchemhub.controller.ReactionEditor.activeEditorId_ = editorId;
 };
 
 /**
  * @return {goog.dom.DomHelper?} The dom helper for the editable node.
  */
-jchemhub.view.ReactionEditor.prototype.getEditableDomHelper = function() {
+jchemhub.controller.ReactionEditor.prototype.getEditableDomHelper = function() {
 	return this.editableDomHelper;
 };
 
 /**
  * @return {?string} The id of the active editor.
  */
-jchemhub.view.ReactionEditor.getActiveEditorId = function() {
-	return jchemhub.view.ReactionEditor.activeEditorId_;
+jchemhub.controller.ReactionEditor.getActiveEditorId = function() {
+	return jchemhub.controller.ReactionEditor.activeEditorId_;
 };
 
-jchemhub.view.ReactionEditor.prototype.clear = function() {
+jchemhub.controller.ReactionEditor.prototype.clear = function() {
 	this.graphics.clear();
 	this.model = null;
 	var fill = new goog.graphics.SolidFill(this.config.get("background").color);
@@ -132,21 +135,21 @@ jchemhub.view.ReactionEditor.prototype.clear = function() {
 			.getSize().height, null, fill);
 }
 
-jchemhub.view.ReactionEditor.prototype.getScaleFactor = function(){
+jchemhub.controller.ReactionEditor.prototype.getScaleFactor = function(){
 	return this.reactionRenderer.scale_factor;
 }
 
-jchemhub.view.ReactionEditor.prototype.setScaleFactor = function(scale){
+jchemhub.controller.ReactionEditor.prototype.setScaleFactor = function(scale){
 	this.reactionRenderer.scale_factor = scale;
 }
 
-jchemhub.view.ReactionEditor.prototype.setModel = function(model) {
+jchemhub.controller.ReactionEditor.prototype.setModel = function(model) {
 	this.clear();
 	this.model = model;
 	this.render();
 }
 
-jchemhub.view.ReactionEditor.prototype.render = function() {
+jchemhub.controller.ReactionEditor.prototype.render = function() {
 	if (this.model instanceof jchemhub.model.Reaction) {
 		this.reactionRenderer.render(this.model);
 	}
@@ -160,21 +163,21 @@ jchemhub.view.ReactionEditor.prototype.render = function() {
  * 
  * @return{jchemhub.model.Reaction | jchemhub.model.Molecule}
  */
-jchemhub.view.ReactionEditor.prototype.getModel = function() {
+jchemhub.controller.ReactionEditor.prototype.getModel = function() {
 	return this.model;
 };
 
 /**
  * This dispatches the beforechange event on the editable reaction editor
  */
-jchemhub.view.ReactionEditor.prototype.dispatchBeforeChange = function() {
+jchemhub.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
 	this.logger.info('dispatchBeforeChange');
 	// if (this
-	// .isEventStopped(jchemhub.view.ReactionEditor.EventType.BEFORECHANGE)) {
+	// .isEventStopped(jchemhub.controller.ReactionEditor.EventType.BEFORECHANGE)) {
 	// return;
 	// }
 
-	this.dispatchEvent(jchemhub.view.ReactionEditor.EventType.BEFORECHANGE);
+	this.dispatchEvent(jchemhub.controller.ReactionEditor.EventType.BEFORECHANGE);
 };
 //
 // /**
@@ -185,7 +188,7 @@ jchemhub.view.ReactionEditor.prototype.dispatchBeforeChange = function() {
 // * @return {boolean} true if the event has been stopped with stopEvent().
 // * @protected
 // */
-// jchemhub.view.ReactionEditor.prototype.isEventStopped = function(eventType) {
+// jchemhub.controller.ReactionEditor.prototype.isEventStopped = function(eventType) {
 // return !!this.stoppedEvents_[eventType];
 // };
 
@@ -194,7 +197,7 @@ jchemhub.view.ReactionEditor.prototype.dispatchBeforeChange = function() {
  * arguments. This is short-circuiting: once one plugin cancels the event, no
  * more plugins will be invoked.
  * 
- * @param {jchemhub.view.Plugin.Op}
+ * @param {jchemhub.controller.Plugin.Op}
  *            op A plugin op.
  * @param {...*}
  *            var_args The arguments to the plugin.
@@ -202,7 +205,7 @@ jchemhub.view.ReactionEditor.prototype.dispatchBeforeChange = function() {
  *         otherwise.
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.invokeShortCircuitingOp_ = function(op,
+jchemhub.controller.ReactionEditor.prototype.invokeShortCircuitingOp_ = function(op,
 		var_args) {
 	var plugins = this.indexedPlugins_[op];
 	var argList = goog.array.slice(arguments, 1);
@@ -210,8 +213,8 @@ jchemhub.view.ReactionEditor.prototype.invokeShortCircuitingOp_ = function(op,
 		// If the plugin returns true, that means it handled the event and
 		// we shouldn't propagate to the other plugins.
 		var plugin = plugins[i];
-		if ((plugin.isEnabled(this) || jchemhub.view.Plugin.IRREPRESSIBLE_OPS[op])
-				&& plugin[jchemhub.view.Plugin.OPCODE[op]].apply(plugin,
+		if ((plugin.isEnabled(this) || jchemhub.controller.Plugin.IRREPRESSIBLE_OPS[op])
+				&& plugin[jchemhub.controller.Plugin.OPCODE[op]].apply(plugin,
 						argList)) {
 			// Only one plugin is allowed to handle the event. If for some
 			// reason
@@ -236,7 +239,7 @@ jchemhub.view.ReactionEditor.prototype.invokeShortCircuitingOp_ = function(op,
  *            e The browser event.
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.handleKeyboardShortcut_ = function(e) {
+jchemhub.controller.ReactionEditor.prototype.handleKeyboardShortcut_ = function(e) {
 	// Alt key is used for i18n languages to enter certain characters. like
 	// control + alt + z (used for IMEs) and control + alt + s for Polish.
 	// So we don't invoke handleKeyboardShortcut at all for alt keys.
@@ -246,7 +249,7 @@ jchemhub.view.ReactionEditor.prototype.handleKeyboardShortcut_ = function(e) {
 
 	var isModifierPressed = goog.userAgent.MAC ? e.metaKey : e.ctrlKey;
 	if (isModifierPressed
-			|| jchemhub.view.ReactionEditor.POTENTIAL_SHORTCUT_KEYCODES_[e.keyCode]) {
+			|| jchemhub.controller.ReactionEditor.POTENTIAL_SHORTCUT_KEYCODES_[e.keyCode]) {
 		// TODO: goog.events.KeyHandler uses much more complicated logic
 		// to determine key. Consider changing to what they do.
 		var key = e.charCode || e.keyCode;
@@ -257,7 +260,7 @@ jchemhub.view.ReactionEditor.prototype.handleKeyboardShortcut_ = function(e) {
 		}
 
 		var stringKey = String.fromCharCode(key).toLowerCase();
-		if (this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.SHORTCUT, e,
+		if (this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.SHORTCUT, e,
 				stringKey, isModifierPressed)) {
 			e.preventDefault();
 			// We don't call stopPropagation as some other handler outside of
@@ -272,8 +275,8 @@ jchemhub.view.ReactionEditor.prototype.handleKeyboardShortcut_ = function(e) {
  * delayed change event. Note that these actions only occur if the proper events
  * are not stopped.
  */
-jchemhub.view.ReactionEditor.prototype.handleChange = function() {
-	// if (this.isEventStopped(jchemhub.view.ReactionEditor.EventType.CHANGE)) {
+jchemhub.controller.ReactionEditor.prototype.handleChange = function() {
+	// if (this.isEventStopped(jchemhub.controller.ReactionEditor.EventType.CHANGE)) {
 	// return;
 	// }
 
@@ -287,7 +290,7 @@ jchemhub.view.ReactionEditor.prototype.handleChange = function() {
 	this.isEverModified_ = true;
 
 	// if (this
-	// .isEventStopped(jchemhub.view.ReactionEditor.EventType.DELAYEDCHANGE)) {
+	// .isEventStopped(jchemhub.controller.ReactionEditor.EventType.DELAYEDCHANGE)) {
 	// return;
 	// }
 
@@ -301,7 +304,7 @@ jchemhub.view.ReactionEditor.prototype.handleChange = function() {
  *            e The browser event.
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.handleKeyDown_ = function(e) {
+jchemhub.controller.ReactionEditor.prototype.handleKeyDown_ = function(e) {
 
 	this.handleKeyboardShortcut_(e);
 };
@@ -313,7 +316,7 @@ jchemhub.view.ReactionEditor.prototype.handleKeyDown_ = function(e) {
  *            e The browser event.
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.handleKeyPress_ = function(e) {
+jchemhub.controller.ReactionEditor.prototype.handleKeyPress_ = function(e) {
 	this.gotGeneratingKey_ = true;
 	this.dispatchBeforeChange();
 	this.handleKeyboardShortcut_(e);
@@ -326,12 +329,12 @@ jchemhub.view.ReactionEditor.prototype.handleKeyPress_ = function(e) {
  *            e The browser event.
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.handleKeyUp_ = function(e) {
+jchemhub.controller.ReactionEditor.prototype.handleKeyUp_ = function(e) {
 
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.KEYUP, e);
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.KEYUP, e);
 
 	if (this
-			.isEventStopped(jchemhub.view.ReactionEditor.EventType.SELECTIONCHANGE)) {
+			.isEventStopped(jchemhub.controller.ReactionEditor.EventType.SELECTIONCHANGE)) {
 		return;
 	}
 
@@ -339,34 +342,34 @@ jchemhub.view.ReactionEditor.prototype.handleKeyUp_ = function(e) {
 
 };
 
-jchemhub.view.ReactionEditor.prototype.handleMouseDown_ = function(e) {
+jchemhub.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
 
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.MOUSEDOWN, e);
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEDOWN, e);
 
 }
 
-jchemhub.view.ReactionEditor.prototype.handleMouseUp_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.MOUSEUP, e);
+jchemhub.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEUP, e);
 }
 
-jchemhub.view.ReactionEditor.prototype.handleAtomMouseOver_ = function(e){
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.ATOM_MOUSEOVER, e);
+jchemhub.controller.ReactionEditor.prototype.handleAtomMouseOver_ = function(e){
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEOVER, e);
 }
 
-jchemhub.view.ReactionEditor.prototype.handleAtomMouseOut_ = function(e){
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.ATOM_MOUSEOUT, e);
+jchemhub.controller.ReactionEditor.prototype.handleAtomMouseOut_ = function(e){
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEOUT, e);
 }
-jchemhub.view.ReactionEditor.prototype.handleBondMouseOver_ = function(e){
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.BOND_MOUSEOVER, e);
-}
-
-jchemhub.view.ReactionEditor.prototype.handleBondMouseOut_ = function(e){
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.BOND_MOUSEOUT, e);
+jchemhub.controller.ReactionEditor.prototype.handleBondMouseOver_ = function(e){
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEOVER, e);
 }
 
-jchemhub.view.ReactionEditor.prototype.handleBondMouseDown_ = function(e){
+jchemhub.controller.ReactionEditor.prototype.handleBondMouseOut_ = function(e){
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEOUT, e);
+}
 
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.BOND_MOUSEDOWN, e);
+jchemhub.controller.ReactionEditor.prototype.handleBondMouseDown_ = function(e){
+
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEDOWN, e);
 }
 
 /**
@@ -381,9 +384,9 @@ jchemhub.view.ReactionEditor.prototype.handleBondMouseDown_ = function(e){
  *         uneditable commands.
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.queryCommandValueInternal_ = function(
+jchemhub.controller.ReactionEditor.prototype.queryCommandValueInternal_ = function(
 		command, isEditable) {
-	var plugins = this.indexedPlugins_[jchemhub.view.Plugin.Op.QUERY_COMMAND];
+	var plugins = this.indexedPlugins_[jchemhub.controller.Plugin.Op.QUERY_COMMAND];
 	for ( var i = 0; i < plugins.length; ++i) {
 		var plugin = plugins[i];
 		if (plugin.isEnabled(this) && plugin.isSupportedCommand(command)
@@ -397,13 +400,12 @@ jchemhub.view.ReactionEditor.prototype.queryCommandValueInternal_ = function(
 /**
  * Gets the value of command(s).
  * 
- * @param {string|Array.
- *            <string>} commands String name(s) of the command.
+ * @param {string|Array.<string>} commands String name(s) of the command.
  * @return {*} Value of each command. Returns false (or array of falses) if
  *         designMode is off or the editor is otherwise uneditable, and there
  *         are no activeOnUneditable plugins for the command.
  */
-jchemhub.view.ReactionEditor.prototype.queryCommandValue = function(commands) {
+jchemhub.controller.ReactionEditor.prototype.queryCommandValue = function(commands) {
 	var isEditable = this.isLoaded();
 	if (goog.isString(commands)) {
 		return this.queryCommandValueInternal_(commands, isEditable);
@@ -422,29 +424,29 @@ jchemhub.view.ReactionEditor.prototype.queryCommandValue = function(commands) {
 // *
 // * @private
 // */
-// jchemhub.view.ReactionEditor.prototype.dispatchDelayedChange_ = function() {
+// jchemhub.controller.ReactionEditor.prototype.dispatchDelayedChange_ = function() {
 // if (this
-// .isEventStopped(jchemhub.view.ReactionEditor.EventType.DELAYEDCHANGE)) {
+// .isEventStopped(jchemhub.controller.ReactionEditor.EventType.DELAYEDCHANGE)) {
 // return;
 // }
 // // Clear the delayedChangeTimer_ if it's active, since any manual call to
 // // dispatchDelayedChange_ is equivalent to delayedChangeTimer_.fire().
 // this.delayedChangeTimer_.stop();
 // this.isModified_ = false;
-// this.dispatchEvent(jchemhub.view.ReactionEditor.EventType.DELAYEDCHANGE);
+// this.dispatchEvent(jchemhub.controller.ReactionEditor.EventType.DELAYEDCHANGE);
 // };
 
 /**
  * Dispatches the appropriate set of change events. This only fires synchronous
  * change events in blended-mode, iframe-using mozilla. It just starts the
- * appropriate timer for jchemhub.view.ReactionEditor.DELAYEDCHANGE. This also
+ * appropriate timer for jchemhub.controller.ReactionEditor.DELAYEDCHANGE. This also
  * starts up change events again if they were stopped.
  * 
  * @param {boolean=}
- *            opt_noDelay True if jchemhub.view.ReactionEditor.DELAYEDCHANGE
+ *            opt_noDelay True if jchemhub.controller.ReactionEditor.DELAYEDCHANGE
  *            should be fired syncronously.
  */
-jchemhub.view.ReactionEditor.prototype.dispatchChange = function(opt_noDelay) {
+jchemhub.controller.ReactionEditor.prototype.dispatchChange = function(opt_noDelay) {
 	this.handleChange();
 	// this.startChangeEvents(true, opt_noDelay)
 };
@@ -456,39 +458,38 @@ jchemhub.view.ReactionEditor.prototype.dispatchChange = function(opt_noDelay) {
  * @param {goog.events.BrowserEvent=}
  *            opt_e Optional browser event causing this event.
  */
-jchemhub.view.ReactionEditor.prototype.dispatchSelectionChangeEvent = function(
+jchemhub.controller.ReactionEditor.prototype.dispatchSelectionChangeEvent = function(
 		opt_e) {
 	// if (this
-	// .isEventStopped(jchemhub.view.ReactionEditor.EventType.SELECTIONCHANGE))
+	// .isEventStopped(jchemhub.controller.ReactionEditor.EventType.SELECTIONCHANGE))
 	// {
 	// return;
 	// }
 
 	this.dispatchCommandValueChange();
 	this.dispatchEvent( {
-		type : jchemhub.view.ReactionEditor.EventType.SELECTIONCHANGE,
+		type : jchemhub.controller.ReactionEditor.EventType.SELECTIONCHANGE,
 		originalType : opt_e && opt_e.type
 	});
 
-	this.invokeShortCircuitingOp_(jchemhub.view.Plugin.Op.SELECTION, opt_e);
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.SELECTION, opt_e);
 };
 
 /**
  * Dispatches a command value change event.
  * 
- * @param {Array.
- *            <string>=} opt_commands Commands whose state has changed.
+ * @param {Array.<string>=} opt_commands Commands whose state has changed.
  */
-jchemhub.view.ReactionEditor.prototype.dispatchCommandValueChange = function(
+jchemhub.controller.ReactionEditor.prototype.dispatchCommandValueChange = function(
 		opt_commands) {
 	if (opt_commands) {
 		this.dispatchEvent( {
-			type : jchemhub.view.ReactionEditor.EventType.COMMAND_VALUE_CHANGE,
+			type : jchemhub.controller.ReactionEditor.EventType.COMMAND_VALUE_CHANGE,
 			commands : opt_commands
 		});
 	} else {
 		this
-				.dispatchEvent(jchemhub.view.ReactionEditor.EventType.COMMAND_VALUE_CHANGE);
+				.dispatchEvent(jchemhub.controller.ReactionEditor.EventType.COMMAND_VALUE_CHANGE);
 	}
 };
 
@@ -502,11 +503,11 @@ jchemhub.view.ReactionEditor.prototype.dispatchCommandValueChange = function(
  * @return {Object|boolean} False if the command wasn't handled, otherwise, the
  *         result of the command.
  */
-jchemhub.view.ReactionEditor.prototype.execCommand = function(command, var_args) {
+jchemhub.controller.ReactionEditor.prototype.execCommand = function(command, var_args) {
 	var args = arguments;
 	var result;
 
-	var plugins = this.indexedPlugins_[jchemhub.view.Plugin.Op.EXEC_COMMAND];
+	var plugins = this.indexedPlugins_[jchemhub.controller.Plugin.Op.EXEC_COMMAND];
 	for ( var i = 0; i < plugins.length; ++i) {
 		// If the plugin supports the command, that means it handled the
 		// event and we shouldn't propagate to the other plugins.
@@ -523,10 +524,10 @@ jchemhub.view.ReactionEditor.prototype.execCommand = function(command, var_args)
 /**
  * Registers the plugin with the editor.
  * 
- * @param {jchemhub.view.Plugin}
+ * @param {jchemhub.controller.Plugin}
  *            plugin The plugin to register.
  */
-jchemhub.view.ReactionEditor.prototype.registerPlugin = function(plugin) {
+jchemhub.controller.ReactionEditor.prototype.registerPlugin = function(plugin) {
 	var classId = plugin.getTrogClassId();
 
 	if (this.plugins_[classId]) {
@@ -539,8 +540,8 @@ jchemhub.view.ReactionEditor.prototype.registerPlugin = function(plugin) {
 	// custom
 	// handler array since they need to be very careful about performance.
 	// The rest of the plugin hooks should be event-based.
-	for ( var op in jchemhub.view.Plugin.OPCODE) {
-		var opcode = jchemhub.view.Plugin.OPCODE[op];
+	for ( var op in jchemhub.controller.Plugin.OPCODE) {
+		var opcode = jchemhub.controller.Plugin.OPCODE[op];
 		if (plugin[opcode]) {
 			this.indexedPlugins_[op].push(plugin);
 		}
@@ -556,10 +557,10 @@ jchemhub.view.ReactionEditor.prototype.registerPlugin = function(plugin) {
 /**
  * Unregisters the plugin with this editor.
  * 
- * @param {jchemhub.view.Plugin}
+ * @param {jchemhub.controller.Plugin}
  *            plugin The plugin to unregister.
  */
-jchemhub.view.ReactionEditor.prototype.unregisterPlugin = function(plugin) {
+jchemhub.controller.ReactionEditor.prototype.unregisterPlugin = function(plugin) {
 	var classId = plugin.getTrogClassId();
 	if (!this.plugins_[classId]) {
 		this.logger
@@ -567,8 +568,8 @@ jchemhub.view.ReactionEditor.prototype.unregisterPlugin = function(plugin) {
 	}
 	delete this.plugins_[classId];
 
-	for ( var op in jchemhub.view.Plugin.OPCODE) {
-		var opcode = jchemhub.view.Plugin.OPCODE[op];
+	for ( var op in jchemhub.controller.Plugin.OPCODE) {
+		var opcode = jchemhub.controller.Plugin.OPCODE[op];
 		if (plugin[opcode]) {
 			goog.array.remove(this.indexedPlugins_[op], plugin);
 		}
@@ -580,8 +581,8 @@ jchemhub.view.ReactionEditor.prototype.unregisterPlugin = function(plugin) {
 /**
  * @return {boolean} Whether the editor has finished loading.
  */
-jchemhub.view.ReactionEditor.prototype.isLoaded = function() {
-	return this.loadState_ == jchemhub.view.ReactionEditor.LoadState_.EDITABLE;
+jchemhub.controller.ReactionEditor.prototype.isLoaded = function() {
+	return this.loadState_ == jchemhub.controller.ReactionEditor.LoadState_.EDITABLE;
 };
 
 /**
@@ -590,7 +591,7 @@ jchemhub.view.ReactionEditor.prototype.isLoaded = function() {
  * @enum {number}
  * @private
  */
-jchemhub.view.ReactionEditor.LoadState_ = {
+jchemhub.controller.ReactionEditor.LoadState_ = {
 	UNEDITABLE : 0,
 	LOADING : 1,
 	EDITABLE : 2
@@ -602,15 +603,15 @@ jchemhub.view.ReactionEditor.LoadState_ = {
  * @type {goog.debug.Logger}
  * @protected
  */
-jchemhub.view.ReactionEditor.prototype.logger = goog.debug.Logger
-		.getLogger('jchemhub.view.ReactionEditor');
+jchemhub.controller.ReactionEditor.prototype.logger = goog.debug.Logger
+		.getLogger('jchemhub.controller.ReactionEditor');
 
 /**
  * Event types that can be stopped/started.
  * 
  * @enum {string}
  */
-jchemhub.view.ReactionEditor.EventType = {
+jchemhub.controller.ReactionEditor.EventType = {
 	/**
 	 * Dispatched when the command state of the selection may have changed. This
 	 * event should be listened to for updating toolbar state.
@@ -667,13 +668,13 @@ jchemhub.view.ReactionEditor.EventType = {
  * 
  * @override
  */
-jchemhub.view.ReactionEditor.prototype.disposeInternal = function() {
+jchemhub.controller.ReactionEditor.prototype.disposeInternal = function() {
 	if (this.isLoading() || this.isLoaded()) {
 		this.logger.warning('Disposing an editor that is in use.');
 	}
 
 	if (this.getOriginalElement()) {
-		this.execCommand(jchemhub.view.Command.CLEAR);
+		this.execCommand(jchemhub.controller.Command.CLEAR);
 	}
 
 	this.tearDownEditorObject_();
@@ -687,8 +688,8 @@ jchemhub.view.ReactionEditor.prototype.disposeInternal = function() {
 
 	this.removeAllWrappers();
 
-	if (jchemhub.view.ReactionEditor.getActiveEditorId() == this.id) {
-		jchemhub.view.ReactionEditor.setActiveEditorId(null);
+	if (jchemhub.controller.ReactionEditor.getActiveEditorId() == this.id) {
+		jchemhub.controller.ReactionEditor.setActiveEditorId(null);
 	}
 
 	for ( var classId in this.plugins_) {
@@ -699,7 +700,7 @@ jchemhub.view.ReactionEditor.prototype.disposeInternal = function() {
 	}
 	delete (this.plugins_);
 
-	jchemhub.view.ReactionEditor.superClass_.disposeInternal.call(this);
+	jchemhub.controller.ReactionEditor.superClass_.disposeInternal.call(this);
 };
 
 /**
@@ -707,9 +708,9 @@ jchemhub.view.ReactionEditor.prototype.disposeInternal = function() {
  * 
  * @param {string}
  *            classId classId of the plugin.
- * @return {jchemhub.view.Plugin} Registered plugin with the given classId.
+ * @return {jchemhub.controller.Plugin} Registered plugin with the given classId.
  */
-jchemhub.view.ReactionEditor.prototype.getPluginByClassId = function(classId) {
+jchemhub.controller.ReactionEditor.prototype.getPluginByClassId = function(classId) {
 	return this.plugins_[classId];
 };
 
@@ -719,7 +720,7 @@ jchemhub.view.ReactionEditor.prototype.getPluginByClassId = function(classId) {
  * 
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.tearDownEditorObject_ = function() {
+jchemhub.controller.ReactionEditor.prototype.tearDownEditorObject_ = function() {
 	for ( var classId in this.plugins_) {
 		var plugin = this.plugins_[classId];
 		if (!plugin.activeOnUneditableEditors()) {
@@ -727,22 +728,22 @@ jchemhub.view.ReactionEditor.prototype.tearDownEditorObject_ = function() {
 		}
 	}
 
-	this.loadState_ = jchemhub.view.ReactionEditor.LoadState_.UNEDITABLE;
+	this.loadState_ = jchemhub.controller.ReactionEditor.LoadState_.UNEDITABLE;
 
 };
 
 /**
  * @return {boolean} Whether the editor has finished loading.
  */
-jchemhub.view.ReactionEditor.prototype.isLoaded = function() {
-	return this.loadState_ == jchemhub.view.ReactionEditor.LoadState_.EDITABLE;
+jchemhub.controller.ReactionEditor.prototype.isLoaded = function() {
+	return this.loadState_ == jchemhub.controller.ReactionEditor.LoadState_.EDITABLE;
 };
 
 /**
  * @return {boolean} Whether the editor is in the process of loading.
  */
-jchemhub.view.ReactionEditor.prototype.isLoading = function() {
-	return this.loadState_ == jchemhub.view.ReactionEditor.LoadState_.LOADING;
+jchemhub.controller.ReactionEditor.prototype.isLoading = function() {
+	return this.loadState_ == jchemhub.controller.ReactionEditor.LoadState_.LOADING;
 };
 
 /**
@@ -751,17 +752,17 @@ jchemhub.view.ReactionEditor.prototype.isLoading = function() {
  * 
  * @return {Element} The original element.
  */
-jchemhub.view.ReactionEditor.prototype.getOriginalElement = function() {
+jchemhub.controller.ReactionEditor.prototype.getOriginalElement = function() {
 	return this.originalElement;
 };
 
 // /**
 // * Stops the event of the given type from being dispatched.
 // *
-// * @param {jchemhub.view.ReactionEditor.EventType}
+// * @param {jchemhub.controller.ReactionEditor.EventType}
 // * eventType type of event to stop.
 // */
-// jchemhub.view.ReactionEditor.prototype.stopEvent = function(eventType) {
+// jchemhub.controller.ReactionEditor.prototype.stopEvent = function(eventType) {
 // this.stoppedEvents_[eventType] = 1;
 // };
 
@@ -770,10 +771,10 @@ jchemhub.view.ReactionEditor.prototype.getOriginalElement = function() {
 // previously
 // * been stopped with stopEvent().
 // *
-// * @param {jchemhub.view.ReactionEditor.EventType}
+// * @param {jchemhub.controller.ReactionEditor.EventType}
 // * eventType type of event to start.
 // */
-// jchemhub.view.ReactionEditor.prototype.startEvent = function(eventType) {
+// jchemhub.controller.ReactionEditor.prototype.startEvent = function(eventType) {
 // // Toggling this bit on/off instead of deleting it/re-adding it
 // // saves array allocations.
 // this.stoppedEvents_[eventType] = 0;
@@ -784,7 +785,7 @@ jchemhub.view.ReactionEditor.prototype.getOriginalElement = function() {
  * 
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.clearListeners_ = function() {
+jchemhub.controller.ReactionEditor.prototype.clearListeners_ = function() {
 	if (this.eventRegister) {
 		this.eventRegister.removeAll();
 	}
@@ -798,7 +799,7 @@ jchemhub.view.ReactionEditor.prototype.clearListeners_ = function() {
 /**
  * Removes all wrappers and destroys them.
  */
-jchemhub.view.ReactionEditor.prototype.removeAllWrappers = function() {
+jchemhub.controller.ReactionEditor.prototype.removeAllWrappers = function() {
 	var wrapper;
 	while (wrapper = this.wrappers_.pop()) {
 		wrapper.dispose();
@@ -810,10 +811,10 @@ jchemhub.view.ReactionEditor.prototype.removeAllWrappers = function() {
  * 
  * @protected
  */
-jchemhub.view.ReactionEditor.prototype.handleEditorLoad = function() {
+jchemhub.controller.ReactionEditor.prototype.handleEditorLoad = function() {
 
-	if (jchemhub.view.ReactionEditor.getActiveEditorId() != this.id) {
-		// this.execCommand(jchemhub.view.Command.CLEAR_EDITOR);
+	if (jchemhub.controller.ReactionEditor.getActiveEditorId() != this.id) {
+		// this.execCommand(jchemhub.controller.Command.CLEAR_EDITOR);
 	}
 
 	this.setupChangeListeners_();
@@ -831,7 +832,7 @@ jchemhub.view.ReactionEditor.prototype.handleEditorLoad = function() {
 // * Don't wait for the timer and just fire the delayed change event if it's
 // * pending.
 // */
-// jchemhub.view.ReactionEditor.prototype.clearDelayedChange = function() {
+// jchemhub.controller.ReactionEditor.prototype.clearDelayedChange = function() {
 // // The changeTimerGecko_ will queue up a delayed change so to fully clear
 // // delayed change we must also clear this timer.
 // if (this.changeTimerGecko_) {
@@ -846,11 +847,11 @@ jchemhub.view.ReactionEditor.prototype.handleEditorLoad = function() {
  * 
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
+jchemhub.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
 	this.installStyles();
 	// this.startChangeEvents();
 	this.logger.info('Dispatching load ' + this.id);
-	this.dispatchEvent(jchemhub.view.ReactionEditor.EventType.LOAD);
+	this.dispatchEvent(jchemhub.controller.ReactionEditor.EventType.LOAD);
 };
 
 /**
@@ -858,8 +859,7 @@ jchemhub.view.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
  * Gecko since the fields are contained in an iFrame and there is no way to
  * auto-propagate key events up to the main window.
  * 
- * @param {string|Array.
- *            <string>} type Event type to listen for or array of event types,
+ * @param {string|Array.<string>} type Event type to listen for or array of event types,
  *            for example goog.events.EventType.KEYDOWN.
  * @param {Function}
  *            listener Function to be used as the listener.
@@ -869,7 +869,7 @@ jchemhub.view.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
  * @param {Object=}
  *            opt_handler Object in whose scope to call the listener.
  */
-jchemhub.view.ReactionEditor.prototype.addListener = function(type, listener,
+jchemhub.controller.ReactionEditor.prototype.addListener = function(type, listener,
 		opt_capture, opt_handler) {
 	var elem = this.getOriginalElement();
 
@@ -885,7 +885,7 @@ jchemhub.view.ReactionEditor.prototype.addListener = function(type, listener,
  * 
  * @private
  */
-jchemhub.view.ReactionEditor.prototype.setupChangeListeners_ = function() {
+jchemhub.controller.ReactionEditor.prototype.setupChangeListeners_ = function() {
 
 	this.addListener(goog.events.EventType.BLUR, this.dispatchBlur,
 			goog.editor.BrowserFeature.USE_MUTATION_EVENTS);
@@ -946,7 +946,7 @@ jchemhub.view.ReactionEditor.prototype.setupChangeListeners_ = function() {
 
 	var selectionChange = goog.bind(this.dispatchSelectionChangeEvent, this);
 	this.selectionChangeTimer_ = new goog.async.Delay(selectionChange,
-			jchemhub.view.ReactionEditor.SELECTION_CHANGE_FREQUENCY_);
+			jchemhub.controller.ReactionEditor.SELECTION_CHANGE_FREQUENCY_);
 
 	this.addListener(goog.events.EventType.MOUSEDOWN, this.handleMouseDown_);
 	this.addListener(goog.events.EventType.MOUSEUP, this.handleMouseUp_);
@@ -964,14 +964,14 @@ jchemhub.view.ReactionEditor.prototype.setupChangeListeners_ = function() {
  * 
  * @protected
  */
-jchemhub.view.ReactionEditor.prototype.setupMutationEventHandlersGecko = function() {
+jchemhub.controller.ReactionEditor.prototype.setupMutationEventHandlersGecko = function() {
 	if (goog.editor.BrowserFeature.HAS_DOM_SUBTREE_MODIFIED_EVENT) {
 		this.eventRegister.listen(this.getElement(), 'DOMSubtreeModified',
 				this.handleMutationEventGecko_);
 	} else {
 		var doc = this.getEditableDomHelper().getDocument();
 		this.eventRegister.listen(doc,
-				jchemhub.view.ReactionEditor.MUTATION_EVENTS_GECKO,
+				jchemhub.controller.ReactionEditor.MUTATION_EVENTS_GECKO,
 				this.handleMutationEventGecko_, true);
 
 		// DOMAttrModified fires for a lot of events we want to ignore. This
@@ -989,7 +989,7 @@ jchemhub.view.ReactionEditor.prototype.setupMutationEventHandlersGecko = functio
  * 
  * @protected
  */
-jchemhub.view.ReactionEditor.prototype.installStyles = function() {
+jchemhub.controller.ReactionEditor.prototype.installStyles = function() {
 	if (this.cssStyles && this.shouldLoadAsynchronously()) {
 		goog.style.installStyles(this.cssStyles, this.getElement());
 	}
@@ -1004,7 +1004,7 @@ jchemhub.view.ReactionEditor.prototype.installStyles = function() {
 // * opt_fireDelayedChange Whether to fire the delayed change event
 // * immediately.
 // */
-// jchemhub.view.ReactionEditor.prototype.startChangeEvents = function(
+// jchemhub.controller.ReactionEditor.prototype.startChangeEvents = function(
 // opt_fireChange, opt_fireDelayedChange) {
 //
 // if (!opt_fireChange && this.changeTimerGecko_) {
@@ -1016,8 +1016,8 @@ jchemhub.view.ReactionEditor.prototype.installStyles = function() {
 // this.changeTimerGecko_.fireIfActive();
 // }
 //
-// this.startEvent(jchemhub.view.ReactionEditor.EventType.CHANGE);
-// this.startEvent(jchemhub.view.ReactionEditor.EventType.DELAYEDCHANGE);
+// this.startEvent(jchemhub.controller.ReactionEditor.EventType.CHANGE);
+// this.startEvent(jchemhub.controller.ReactionEditor.EventType.DELAYEDCHANGE);
 // if (opt_fireChange) {
 // this.handleChange();
 // }
@@ -1033,12 +1033,12 @@ jchemhub.view.ReactionEditor.prototype.installStyles = function() {
  * @type {number}
  * @private
  */
-jchemhub.view.ReactionEditor.SELECTION_CHANGE_FREQUENCY_ = 250;
+jchemhub.controller.ReactionEditor.SELECTION_CHANGE_FREQUENCY_ = 250;
 
 /**
  * A default configuration for the reaction editor.
  */
-jchemhub.view.ReactionEditor.defaultConfig = {
+jchemhub.controller.ReactionEditor.defaultConfig = {
 	background : {
 		color : '#F0FFF0'
 	},

@@ -5,7 +5,6 @@
  */
 goog.provide('jchemhub.io.json');
 
-
 goog.require('jchemhub.model.Reaction');
 goog.require('jchemhub.model.Molecule');
 goog.require('jchemhub.model.SingleBond');
@@ -19,11 +18,10 @@ goog.require('jchemhub.model.QuadrupleBond');
 goog.require('jchemhub.model.Bond');
 goog.require('jchemhub.model.Atom');
 goog.require('jchemhub.model.DoubleBond');
-
 goog.require('goog.json');
 goog.require('goog.array');
 
-
+goog.exportSymbol('jchemhub.io.json.readReaction', jchemhub.io.json.readReaction);
 
 
 /**
@@ -88,7 +86,7 @@ jchemhub.io.json.getTypeCode = function(bond){
 /**
  * maps bond class to stereo type code
  * 
- * @param{jchemhub.model.Bond}
+ * @param{jchemhub.model.Bond} bond
  * @return{jchemhub.io.json.StereoType}
  */
 jchemhub.io.json.getStereoCode = function(bond){
