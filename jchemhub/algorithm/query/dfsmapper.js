@@ -1,14 +1,14 @@
 /*
  * Copyright 2010 Tim Vandermeersch
  *
- * Licensed under the Apache License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
- * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  */
 
@@ -75,7 +75,7 @@ goog.require('goog.structs.Map');
                     startAtom = qatom;
                 }
             }
-            return startAtom;        
+            return startAtom;
         }
 
 
@@ -89,7 +89,7 @@ goog.require('goog.structs.Map');
             this.queryPath = [];
             this.queriedPath = [];
         }
-   
+
         /**
          * The depth-first isomorphism algorithm.
          */
@@ -111,7 +111,7 @@ goog.require('goog.structs.Map');
                     }
 
                     // check if the atoms match
-                    if (!queryNbr.matches(queriedNbr)) { 
+                    if (!queryNbr.matches(queriedNbr)) {
                         continue;
                     }
 
@@ -145,7 +145,7 @@ goog.require('goog.structs.Map');
                                 var kValues = maps[k].getValues();
                                 kValues.sort(simpleSort);
                                 if (goog.array.equals(values, kValues)) {
-                                    isUnique = false;                                
+                                    isUnique = false;
                                 }
                             }
                             if (isUnique) {
@@ -168,6 +168,27 @@ goog.require('goog.structs.Map');
             state.queriedPath.pop();
         }
 
+        /**
+         * Helper function for mapAllCallback, mapUniqueCallback and MapFirstCallback
+         */
+        function mapNext(i, type, query, queryAtom, queried, maps, callback) {
+            var state = new State(type, query, queried);
+            var queriedAtom = queried.getAtom(i);
+
+            if (queryAtom.matches(queriedAtom)) {
+                state.queryPath.push(queryAtom);
+                state.queriedPath.push(queriedAtom);
+                DFS(state, queryAtom, queriedAtom, maps);
+            }
+
+            i++;
+            if (i < queried.countAtoms()) {
+                var nextBitOfWork = function() { mapNext(i, type, query, queryAtom, queried, maps, callback); };
+                setTimeout(nextBitOfWork, 0);
+            } else {
+                callback(maps);
+            }
+        }
 
         /**
          * Get all mappings of the query on the queried molecule.
@@ -181,7 +202,7 @@ goog.require('goog.structs.Map');
                 var state = new State(Type.MapAll, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
 
-                if (queryAtom.matches(queriedAtom)) { 
+                if (queryAtom.matches(queriedAtom)) {
                     state.queryPath.push(queryAtom);
                     state.queriedPath.push(queriedAtom);
                     DFS(state, queryAtom, queriedAtom, maps);
@@ -189,13 +210,28 @@ goog.require('goog.structs.Map');
             }
 
             return maps;
-        }; 
+        };
+
+        /**
+         * Get all mappings of the query on the queried molecule. The specified
+         * callback function will be called with the found maps as argument.
+         * Unlike mapAll, this function regulary gives control back to the
+         * browser, preventing the GUI to lock up.
+         * @param {jchemhub.model.Molecule} queried The queried molecule.
+         * @param {Function} callback The callback function to report results.
+         */
+        this.mapAllCallback = function(queried, callback) {
+            var maps = [];
+            var queryAtom = getUniqueStartAtom(this.query);
+            var i = 0;
+            mapNext(i, Type.MapAll, this.query, queryAtom, queried, maps, callback);
+        };
 
         /**
          * Get all unique mappings of the query on the queried molecule.
          * @param {jchemhub.model.Molecule} queried The queried molecule.
          * @return {Array.<goog.structs.Set>} The unique mappings
-         */ 
+         */
         this.mapUnique = function(queried) {
             var maps = [];
             var queryAtom = getUniqueStartAtom(this.query);
@@ -203,7 +239,7 @@ goog.require('goog.structs.Map');
                 var state = new State(Type.MapUnique, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
 
-                if (queryAtom.matches(queriedAtom)) { 
+                if (queryAtom.matches(queriedAtom)) {
                     state.queryPath.push(queryAtom);
                     state.queriedPath.push(queriedAtom);
                     DFS(state, queryAtom, queriedAtom, maps);
@@ -211,14 +247,29 @@ goog.require('goog.structs.Map');
             }
 
             return maps;
-        }; 
+        };
+
+        /**
+         * Get all unique mappings of the query on the queried molecule. The
+         * specified callback function will be called with the found maps as
+         * argument. Unlike mapUnique, this function regulary gives control
+         * back to the browser preventing the GUI to lock up.
+         * @param {jchemhub.model.Molecule} queried The queried molecule.
+         * @param {Function} callback The callback function to report results.
+         */
+        this.mapUniqueCallback = function(queried, callback) {
+            var maps = [];
+            var queryAtom = getUniqueStartAtom(this.query);
+            var i = 0;
+            mapNext(i, Type.MapUnique, this.query, queryAtom, queried, maps, callback);
+        };
 
 
         /**
          * Get the first mappings of the query on the queried molecule.
          * @param {jchemhub.model.Molecule} queried The queried molecule.
          * @return {goog.structs.Set} The mapping
-         */ 
+         */
         this.mapFirst = function(queried) {
             var maps = [];
             var queryAtom = getUniqueStartAtom(this.query);
@@ -226,7 +277,7 @@ goog.require('goog.structs.Map');
                 var state = new State(Type.MapFirst, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
 
-                if (queryAtom.matches(queriedAtom)) { 
+                if (queryAtom.matches(queriedAtom)) {
                     state.queryPath.push(queryAtom);
                     state.queriedPath.push(queriedAtom);
                     DFS(state, queryAtom, queriedAtom, maps);
@@ -239,7 +290,6 @@ goog.require('goog.structs.Map');
 
             return new goog.structs.Map();
         };
-
 
     };
 
