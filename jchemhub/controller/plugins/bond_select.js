@@ -1,6 +1,13 @@
 goog.provide('jchemhub.controller.plugins.BondSelect');
 goog.require('jchemhub.controller.Plugin');
 goog.require('goog.debug.Logger');
+goog.require('jchemhub.model.SingleBond');
+goog.require('jchemhub.model.DoubleBond');
+goog.require('jchemhub.model.TripleBond');
+goog.require('jchemhub.model.QuadrupleBond');
+goog.require('jchemhub.model.SingleBondUp');
+goog.require('jchemhub.model.SingleBondDown');
+goog.require('jchemhub.model.SingleBondUpOrDown');
 
 /**
  * @constructor
