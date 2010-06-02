@@ -48,6 +48,15 @@ function initPage(){
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT, 'zoom out', '-'));
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO, 'undo', 'undo'));
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.REDO, 'redo', 'redo'));
+    var atom_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.SymbolSelect.COMMAND, 'select Symbol', 'Symbol');
+    var atom_menu = new goog.ui.Menu();
+    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:black"},'C')));
+    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:blue"},'N')));
+    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:red"},'O')));
+    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:yellow"},'S')));
+    atom_menu.addItem(m1 = new goog.ui.Option('...'));
+    atom_select.setMenu(atom_menu);
+    buttons.push(atom_select);
 
 	var toolbar = jchemhub.controller.DefaultToolbar.makeToolbar(buttons, goog.dom.getElement('reactionEditorToolbar')); 
 	var model = jchemhub.io.json.readReaction(reactionDrawing); 
@@ -56,6 +65,7 @@ function initPage(){
 	editor.registerPlugin(new jchemhub.controller.plugins.Zoom());
 	editor.registerPlugin(new jchemhub.controller.plugins.UndoRedo());
 	editor.registerPlugin(new jchemhub.controller.plugins.Highlight());
+	editor.registerPlugin(new jchemhub.controller.plugins.SymbolSelect());
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
 	editor.setModel(model);
