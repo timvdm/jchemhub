@@ -37,7 +37,7 @@ jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOver = function(e
 	} else {
 		e.currentTarget.atomHighlightGroup = this.highlightAtom(e.atom, e.currentTarget.atomHighlightGroup);
 	}
-	//goog.array.insert(this.editorObject.selected,e.atom);
+
 };
 
 jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOut = function(e) {
@@ -46,7 +46,7 @@ jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOut = function(e)
 		e.currentTarget.atomHighlightGroup.clear();
 		e.currentTarget.atomHighlightGroup = undefined;
 	}
-	//goog.array.remove(this.editorObject.selected, e.atom);
+
 };
 
 jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(e) {
@@ -56,7 +56,7 @@ jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(e
 	} else {
 		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond, e.currentTarget.bondHighlightGroup);
 	}
-	//goog.array.insert(this.editorObject.selected,e.bond);
+
 };
 jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOut = function(e) {
 
@@ -64,7 +64,7 @@ jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOut = function(e)
 		e.currentTarget.bondHighlightGroup.clear();
 		e.currentTarget.bondHighlightGroup = undefined;
 	}
-	//goog.array.remove(this.editorObject.selected, e.bond);
+
 };
 
 jchemhub.controller.plugins.Highlight.prototype.highlightBond = function(bond, opt_group){
