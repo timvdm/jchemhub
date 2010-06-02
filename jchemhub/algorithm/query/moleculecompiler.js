@@ -29,16 +29,18 @@ goog.require('jchemhub.query.Query');
         var query = new jchemhub.query.Query();
 
         for (var i = 0, li = molecule.countAtoms(); i < li; i++) {
-            var qatom = query.addAtom();
+            var qatom = new jchemhub.query.QueryAtom();
             qatom.symbols.push(molecule.getAtom(i).symbol);
+            query.addAtom(qatom);
         }
 
         for (i = 0, li = molecule.countBonds(); i < li; i++) {
             var bond = molecule.bonds[i];
             var source = query.getAtom(molecule.indexOfAtom(bond.source));
             var target = query.getAtom(molecule.indexOfAtom(bond.target));
-            var qbond = query.addBond(source, target);
+            var qbond = new jchemhub.query.QueryBond(source, target);
             qbond.orders.push(bond.constructor.ORDER);
+            query.addBond(qbond);
         }
 
         return query;

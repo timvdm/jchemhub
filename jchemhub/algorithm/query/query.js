@@ -85,18 +85,14 @@ goog.provide('jchemhub.query.Query');
         return this.atoms[index];
     };
 
-    jchemhub.query.Query.prototype.addAtom = function() {
-        var atom = new jchemhub.query.QueryAtom();
+    jchemhub.query.Query.prototype.addAtom = function(atom) {
         this.atoms.push(atom);
-        return atom;
     };
 
-    jchemhub.query.Query.prototype.addBond = function(source, target) {
-        var bond = new jchemhub.query.QueryBond(source, target);
+    jchemhub.query.Query.prototype.addBond = function(bond) {
+        bond.source.neighbors.push(bond.target);
+        bond.target.neighbors.push(bond.source);
         this.bonds.push(bond);
-        source.neighbors.push(target);
-        target.neighbors.push(source);
-        return bond;
     };
 
     jchemhub.query.Query.prototype.findBond = function(atom1, atom2) {

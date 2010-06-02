@@ -29,55 +29,21 @@ goog.require('goog.structs.Map');
         this.query = query;
 
         /**
-         * Since mapping a query can be time slow, it is important to start
-         * with the most unique atom. This avoids checking many paths which
-         * will lead to no full match.
+         * Select a start atom with the least number of neighbors. This ensures
+         * there is a path to all atoms in the query.
          */
-        function getAtomScore(qatom) {
-            if (qatom.symbols.length !== 1) {
-                return 0;
-            }
-            switch (qatom.symbols[0]) {
-                case 'H':
-                case 'C':
-                    return 0;
-                case 'N':
-                case 'O':
-                    return 1;
-                case 'P':
-                case 'S':
-                    return 3;
-                case 'F':
-                case 'Cl':
-                case 'Br':
-                case 'I':
-                    return 4;
-                default:
-                    return 5;
-            }
-        }
-        function getAtomUniqueScore(qatom) {
-            var score = 3 * getAtomScore(qatom);
-            var neighbors = qatom.getNeighbors();
-            for (var i = 0, li = neighbors.length; i < li; i++) {
-                score += getAtomScore(neighbors[i]);
-            }
-            return score;
-        }
-        function getUniqueStartAtom(query) {
-            var bestScore = 0;
+        function getStartAtom(query) {
             var startAtom = query.getAtom(0);
+            var leastNbrs = startAtom.neighbors.length;
             for (var i = 0, li = query.countAtoms(); i < li; i++) {
                 var qatom = query.getAtom(i);
-                var score = getAtomUniqueScore(qatom);
-                if (score > bestScore) {
-                    bestScore = score;
+                if (qatom.neighbors.length < leastNbrs) {
                     startAtom = qatom;
+                    leastNbrs = qatom.neighbors.length;
                 }
             }
             return startAtom;
         }
-
 
         /**
          * State to represent the current mapped state
@@ -88,6 +54,77 @@ goog.require('goog.structs.Map');
             this.queried = queried;
             this.queryPath = [];
             this.queriedPath = [];
+            this.candidates = [];
+        }
+
+        /**
+         * Check if the current state is a full mapping of the query.
+         */
+        function checkForMap(state, maps) {
+            // store the mapping if all atoms are mapped
+            if (state.queryPath.length === state.query.countAtoms()) {
+                // create the map
+                var map = new goog.structs.Map();
+                for (var k = 0, kl = state.queryPath.length; k < kl; k++) {
+                    map.set(state.query.indexOfAtom(state.queryPath[k]), state.queried.indexOfAtom(state.queriedPath[k]));
+                }
+                if (state.type === Type.MapUnique) {
+                    var values = map.getValues();
+                    values.sort(simpleSort);
+                    var isUnique = true;
+                    for (k = 0, kl = maps.length; k < kl; k++) {
+                        var kValues = maps[k].getValues();
+                        kValues.sort(simpleSort);
+                        if (goog.array.equals(values, kValues)) {
+                            isUnique = false;
+                        }
+                    }
+                    if (isUnique) {
+                        maps.push(map);
+                    }
+                } else {
+                    maps.push(map);
+                }
+
+                if (state.type === Type.MapFirst) {
+                    return;
+                }
+            }
+        }
+
+        /**
+         * Match the candidate atoms a bonds.
+         */
+        function matchCandidate(state, queryAtom, queriedAtom, queryNbr, queriedNbr, maps) {
+            // make sure the neighbor atom isn't in the paths already
+            if (goog.array.indexOf(state.queryPath, queryNbr) !== -1) {
+                return false;
+            }
+            if (goog.array.indexOf(state.queriedPath, queriedNbr) !== -1) {
+                return false;
+            }
+
+            // check if the atoms match
+            if (!queryNbr.matches(queriedNbr)) {
+                return false;
+            }
+
+            var queryBond = state.query.findBond(queryAtom, queryNbr);
+            var queriedBond = state.queried.findBond(queriedAtom, queriedNbr);
+
+            // check if the bonds match
+            if (!queryBond.matches(queriedBond)) {
+                return false;
+            }
+
+            // add the neighbors to the paths
+            state.queryPath.push(queryNbr);
+            state.queriedPath.push(queriedNbr);
+
+            // check if this is a full match
+            checkForMap(state, maps);
+
+            return true;
         }
 
         /**
@@ -96,76 +133,35 @@ goog.require('goog.structs.Map');
         function DFS(state, queryAtom, queriedAtom, maps) {
             var queryNbrs = queryAtom.getNeighbors();
             var queriedNbrs = queriedAtom.getNeighbors();
+
+            // load the possible candidates
+            var candidates = [];
             for (var i = 0, li = queryNbrs.length; i < li; i++) {
                 var queryNbr = queryNbrs[i];
-
                 for (var j = 0, lj = queriedNbrs.length; j < lj; j++) {
                     var queriedNbr = queriedNbrs[j];
-
-                    // make sure the neighbor atom isn't in the paths already
-                    if (goog.array.indexOf(state.queryPath, queryNbr) !== -1) {
-                        continue;
-                    }
-                    if (goog.array.indexOf(state.queriedPath, queriedNbr) !== -1) {
-                        continue;
-                    }
-
-                    // check if the atoms match
-                    if (!queryNbr.matches(queriedNbr)) {
-                        continue;
-                    }
-
-                    var queryBond = state.query.findBond(queryAtom, queryNbr);
-                    var queriedBond = state.queried.findBond(queriedAtom, queriedNbr);
-
-                    // check if the bonds match
-                    if (!queryBond.matches(queriedBond)) {
-                        continue;
-                    }
-
-                    // add the neighbors to the paths
-                    state.queryPath.push(queryNbr);
-                    state.queriedPath.push(queriedNbr);
-
-                    //debug(state.query.indexOfAtom(queryNbr) + " -> " + state.queried.indexOfAtom(queriedNbr));
-
-                    // store the mapping if all atoms are mapped
-                    if (state.queryPath.length === state.query.countAtoms()) {
-                        //debug("map:");
-                        var map = new goog.structs.Map();
-                        for (var k = 0, kl = state.queryPath.length; k < kl; k++) {
-                            //debug(state.query.indexOfAtom(state.queryPath[k]) + " -> " + state.queried.indexOfAtom(state.queriedPath[k]));
-                            map.set(state.query.indexOfAtom(state.queryPath[k]), state.queried.indexOfAtom(state.queriedPath[k]));
-                        }
-                        if (state.type === Type.MapUnique) {
-                            var values = map.getValues();
-                            values.sort(simpleSort);
-                            var isUnique = true;
-                            for (k = 0, kl = maps.length; k < kl; k++) {
-                                var kValues = maps[k].getValues();
-                                kValues.sort(simpleSort);
-                                if (goog.array.equals(values, kValues)) {
-                                    isUnique = false;
-                                }
-                            }
-                            if (isUnique) {
-                                maps.push(map);
-                            }
-                        } else {
-                            maps.push(map);
-                        }
-
-                        if (state.type === Type.MapFirst) {
-                            return;
-                        }
-                    }
-
-                    DFS(state, queryNbr, queriedNbr, maps);
+                    candidates.push({ queryAtom: queryAtom, queryNbr: queryNbr, queriedAtom: queriedAtom, queriedNbr: queriedNbr });
                 }
             }
+            // save the candidates for later (used to explore branches)
+            if (state.candidates.length) {
+                state.candidates.push(state.candidates[state.candidates.length-1].concat(candidates));
+            } else {
+                state.candidates.push(candidates);
+            }
 
-            state.queryPath.pop();
-            state.queriedPath.pop();
+            // do the mapping by checking the candidates
+            while (state.candidates[state.candidates.length-1].length) {
+                var candidate = state.candidates[state.candidates.length-1].pop();
+                if (matchCandidate(state, candidate.queryAtom, candidate.queriedAtom, candidate.queryNbr, candidate.queriedNbr, maps)) {
+                    DFS(state, candidate.queryNbr, candidate.queriedNbr, maps);
+
+                    // backtrack
+                    state.queryPath.pop();
+                    state.queriedPath.pop();
+                    state.candidates.pop();
+                }
+            }
         }
 
         /**
@@ -197,15 +193,22 @@ goog.require('goog.structs.Map');
          */
         this.mapAll = function(queried) {
             var maps = [];
-            var queryAtom = getUniqueStartAtom(this.query);
+            var queryAtom = getStartAtom(this.query);
             for (var i = 0, li = queried.countAtoms(); i < li; i++) {
                 var state = new State(Type.MapAll, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
+                if (!queryAtom.matches(queriedAtom)) {
+                    continue
+                }
 
-                if (queryAtom.matches(queriedAtom)) {
+                if (this.query.countAtoms() > 1) {
                     state.queryPath.push(queryAtom);
                     state.queriedPath.push(queriedAtom);
                     DFS(state, queryAtom, queriedAtom, maps);
+                } else {
+                    var map = new goog.structs.Map();
+                    map.set(state.query.indexOfAtom(queryAtom), state.queried.indexOfAtom(queriedAtom));
+                    maps.push(map);
                 }
             }
 
@@ -222,7 +225,7 @@ goog.require('goog.structs.Map');
          */
         this.mapAllCallback = function(queried, callback) {
             var maps = [];
-            var queryAtom = getUniqueStartAtom(this.query);
+            var queryAtom = getStartAtom(this.query);
             var i = 0;
             mapNext(i, Type.MapAll, this.query, queryAtom, queried, maps, callback);
         };
@@ -234,15 +237,21 @@ goog.require('goog.structs.Map');
          */
         this.mapUnique = function(queried) {
             var maps = [];
-            var queryAtom = getUniqueStartAtom(this.query);
+            var queryAtom = getStartAtom(this.query);
             for (var i = 0, li = queried.countAtoms(); i < li; i++) {
                 var state = new State(Type.MapUnique, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
-
-                if (queryAtom.matches(queriedAtom)) {
+                if (!queryAtom.matches(queriedAtom)) {
+                    continue;
+                }
+                if (this.query.countAtoms() > 1) {
                     state.queryPath.push(queryAtom);
                     state.queriedPath.push(queriedAtom);
                     DFS(state, queryAtom, queriedAtom, maps);
+                } else {
+                    var map = new goog.structs.Map();
+                    map.set(state.query.indexOfAtom(queryAtom), state.queried.indexOfAtom(queriedAtom));
+                    maps.push(map);
                 }
             }
 
@@ -259,7 +268,7 @@ goog.require('goog.structs.Map');
          */
         this.mapUniqueCallback = function(queried, callback) {
             var maps = [];
-            var queryAtom = getUniqueStartAtom(this.query);
+            var queryAtom = getStartAtom(this.query);
             var i = 0;
             mapNext(i, Type.MapUnique, this.query, queryAtom, queried, maps, callback);
         };
@@ -272,15 +281,22 @@ goog.require('goog.structs.Map');
          */
         this.mapFirst = function(queried) {
             var maps = [];
-            var queryAtom = getUniqueStartAtom(this.query);
+            var queryAtom = getStartAtom(this.query);
             for (var i = 0, li = queried.countAtoms(); i < li; i++) {
                 var state = new State(Type.MapFirst, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
+                if (!queryAtom.matches(queriedAtom)) {
+                    continue;
+                }
 
-                if (queryAtom.matches(queriedAtom)) {
+                if (this.query.countAtoms() > 1) {
                     state.queryPath.push(queryAtom);
                     state.queriedPath.push(queriedAtom);
                     DFS(state, queryAtom, queriedAtom, maps);
+                } else {
+                    var map = new goog.structs.Map();
+                    map.set(state.query.indexOfAtom(queryAtom), state.queried.indexOfAtom(queriedAtom));
+                    return map;
                 }
 
                 if (maps.length) {
