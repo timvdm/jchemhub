@@ -86,7 +86,7 @@ jchemhub.controller.plugins.BondSelect.prototype.logger = goog.debug.Logger
 jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 		e) {
 
-	if (this.bond_klass && (e.bond instanceof this.bond_klass==false)){
+	if (this.bond_klass){
 		var new_bond = new this.bond_klass(e.bond.source, e.bond.target);
 		var molecule = e.bond.molecule;
 		molecule.removeBond(e.bond);
