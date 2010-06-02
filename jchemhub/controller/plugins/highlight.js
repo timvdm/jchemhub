@@ -44,11 +44,13 @@ jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOut = function(e)
 
 	if (e.currentTarget.atomHighlightGroup) {
 		e.currentTarget.atomHighlightGroup.clear();
+		e.currentTarget.atomHighlightGroup = undefined;
 	}
 	//goog.array.remove(this.editorObject.selected, e.atom);
 };
 
 jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(e) {
+	this.logger.info("handleBondMouseOver");
 	if (!e.currentTarget.bondHighlightGroup) {
 		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond);
 	} else {
@@ -60,6 +62,7 @@ jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOut = function(e)
 
 	if (e.currentTarget.bondHighlightGroup) {
 		e.currentTarget.bondHighlightGroup.clear();
+		e.currentTarget.bondHighlightGroup = undefined;
 	}
 	//goog.array.remove(this.editorObject.selected, e.bond);
 };

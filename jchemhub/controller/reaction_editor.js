@@ -367,6 +367,7 @@ jchemhub.controller.ReactionEditor.prototype.handleAtomMouseOut_ = function(e){
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEOUT, e);
 }
 jchemhub.controller.ReactionEditor.prototype.handleBondMouseOver_ = function(e){
+	this.logger.info('handleBondMouseOver');
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEOVER, e);
 }
 
