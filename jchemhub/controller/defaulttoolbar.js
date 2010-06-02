@@ -7,8 +7,10 @@ goog.require('goog.string.StringBuffer');
 goog.require('goog.style');
 goog.require('goog.ui.ControlContent');
 goog.require('jchemhub.controller.ToolbarFactory');
+goog.require('jchemhub.controller.Command');
 
-goog.exportSymbol('jchemhub.controller.DefaultToolbar.makeToolbar', jchemhub.controller.DefaultToolbar.makeToolbar);
+// goog.exportSymbol('jchemhub.controller.DefaultToolbar.makeToolbar',
+// jchemhub.controller.DefaultToolbar.makeToolbar);
 
 // Font menu creation.
 
@@ -20,36 +22,13 @@ jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL_SERIF = goog
 		.getMsg('Normal / serif');
 
 /**
- * Common font descriptors for all locales. Each descriptor has the following
- * attributes:
- * <ul>
- * <li>{@code caption} - Caption to show in the font menu (e.g. 'Tahoma')
- * <li>{@code value} - Value for the corresponding 'font-family' CSS style
- * (e.g. 'Tahoma, Arial, sans-serif')
- * </ul>
+ * Common Atoms for toolbar button
  * 
- * @type {!Array.<{caption:string, value:string}>}
+ * @type {Array.<string>}
  * @private
  */
-jchemhub.controller.DefaultToolbar.FONTS_ = [ {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL,
-	value : 'arial,sans-serif'
-}, {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL_SERIF,
-	value : 'times new roman,serif'
-}, {
-	caption : 'Courier New',
-	value : 'courier new,monospace'
-}, {
-	caption : 'Georgia',
-	value : 'georgia,serif'
-}, {
-	caption : 'Trebuchet',
-	value : 'trebuchet ms,sans-serif'
-}, {
-	caption : 'Verdana',
-	value : 'verdana,sans-serif'
-} ];
+jchemhub.controller.DefaultToolbar.ATOMS_ = [ "C", "N", "O", "S", "P", "F",
+		"Cl", "Br" ];
 
 /**
  * Locale-specific font descriptors. The object is a map of locale strings to
@@ -120,9 +99,9 @@ jchemhub.controller.DefaultToolbar.setLocale = function(locale) {
 
 /**
  * Initializes the given font menu button by adding default fonts to the menu.
- * If jchemhub.controller.DefaultToolbar.setLocale was called to specify a locale for
- * which locale-specific default fonts exist, those are added before common
- * fonts.
+ * If jchemhub.controller.DefaultToolbar.setLocale was called to specify a
+ * locale for which locale-specific default fonts exist, those are added before
+ * common fonts.
  * 
  * @param {!goog.ui.Select}
  *            button Font menu button.
@@ -201,7 +180,8 @@ jchemhub.controller.DefaultToolbar.addDefaultFontSizes = function(button) {
 jchemhub.controller.DefaultToolbar.MSG_FORMAT_HEADING = goog.getMsg('Heading');
 
 /** @desc Caption for "Subheading" block format option. */
-jchemhub.controller.DefaultToolbar.MSG_FORMAT_SUBHEADING = goog.getMsg('Subheading');
+jchemhub.controller.DefaultToolbar.MSG_FORMAT_SUBHEADING = goog
+		.getMsg('Subheading');
 
 /** @desc Caption for "Minor heading" block format option. */
 jchemhub.controller.DefaultToolbar.MSG_FORMAT_MINOR_HEADING = goog
@@ -259,13 +239,9 @@ jchemhub.controller.DefaultToolbar.addDefaultFormatOptions = function(button) {
  *         parent element.
  * @see jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS
  */
-jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem,
-		opt_isRightToLeft) {
-	var isRightToLeft = opt_isRightToLeft || goog.style.isRightToLeft(elem);
-	var buttons = isRightToLeft ? jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS_RTL
-			: jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS;
-	return jchemhub.controller.DefaultToolbar.makeToolbar(buttons, elem,
-			opt_isRightToLeft);
+jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
+	return jchemhub.controller.DefaultToolbar.makeToolbar(
+			jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS, elem);
 };
 
 /**
@@ -275,7 +251,8 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem,
  * built-in button) or a subclass of {@link goog.ui.Control} (to create a custom
  * control).
  * 
- * @param {!Array.<string|goog.ui.Control>} items Toolbar items; each must be a
+ * @param {!Array.
+ *            <string|goog.ui.Control>} items Toolbar items; each must be a
  *            {@link goog.editor.Command} or a {@link goog.ui.Control}.
  * @param {!Element}
  *            elem Toolbar parent element.
@@ -285,23 +262,21 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem,
  * @return {!goog.ui.Toolbar} Editor toolbar, rendered into the given parent
  *         element.
  */
-jchemhub.controller.DefaultToolbar.makeToolbar = function(items, elem,
-		opt_isRightToLeft) {
+jchemhub.controller.DefaultToolbar.makeToolbar = function(items, elem) {
 	var domHelper = goog.dom.getDomHelper(elem);
 	var controls = [];
 
 	for ( var i = 0, button; button = items[i]; i++) {
 		if (goog.isString(button)) {
-			button = jchemhub.controller.DefaultToolbar.makeBuiltInToolbarButton(
-					button, domHelper);
+			button = jchemhub.controller.DefaultToolbar
+					.makeBuiltInToolbarButton(button, domHelper);
 		}
 		if (button) {
 			controls.push(button);
 		}
 	}
 
-	return jchemhub.controller.ToolbarFactory.makeToolbar(controls, elem,
-			opt_isRightToLeft);
+	return jchemhub.controller.ToolbarFactory.makeToolbar(controls, elem);
 };
 
 /**
@@ -350,7 +325,7 @@ jchemhub.controller.DefaultToolbar.makeBuiltInToolbarButton = function(command,
  * 
  * @type {!Array.<string>}
  */
-jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS = [  ];
+jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS = [ jchemhub.controller.Command.INSERT_ATOM ];
 
 /**
  * A set of built-in buttons to display in the default editor toolbar when the
@@ -383,10 +358,10 @@ jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS_RTL = [];
  * @return {!goog.ui.Button} A toolbar button.
  * @private
  */
-jchemhub.controller.DefaultToolbar.rtlButtonFactory_ = function(id, tooltip, caption,
-		opt_classNames, opt_renderer, opt_domHelper) {
-	var button = jchemhub.controller.ToolbarFactory.makeToggleButton(id, tooltip,
-			caption, opt_classNames, opt_renderer, opt_domHelper);
+jchemhub.controller.DefaultToolbar.rtlButtonFactory_ = function(id, tooltip,
+		caption, opt_classNames, opt_renderer, opt_domHelper) {
+	var button = jchemhub.controller.ToolbarFactory.makeToggleButton(id,
+			tooltip, caption, opt_classNames, opt_renderer, opt_domHelper);
 	button.updateFromValue = function(value) {
 		// Enable/disable right-to-left text editing mode in the toolbar.
 		var isRtl = !!value;
@@ -424,10 +399,10 @@ jchemhub.controller.DefaultToolbar.rtlButtonFactory_ = function(id, tooltip, cap
  * @return {!goog.ui.Button} A toolbar button.
  * @private
  */
-jchemhub.controller.DefaultToolbar.undoRedoButtonFactory_ = function(id, tooltip,
-		caption, opt_classNames, opt_renderer, opt_domHelper) {
-	var button = jchemhub.controller.ToolbarFactory.makeButton(id, tooltip, caption,
-			opt_classNames, opt_renderer, opt_domHelper);
+jchemhub.controller.DefaultToolbar.undoRedoButtonFactory_ = function(id,
+		tooltip, caption, opt_classNames, opt_renderer, opt_domHelper) {
+	var button = jchemhub.controller.ToolbarFactory.makeButton(id, tooltip,
+			caption, opt_classNames, opt_renderer, opt_domHelper);
 	button.updateFromValue = function(value) {
 		button.setEnabled(value);
 	}
@@ -457,12 +432,13 @@ jchemhub.controller.DefaultToolbar.undoRedoButtonFactory_ = function(id, tooltip
  * @return {!goog.ui.Button} A toolbar button.
  * @private
  */
-jchemhub.controller.DefaultToolbar.fontFaceFactory_ = function(id, tooltip, caption,
-		opt_classNames, opt_renderer, opt_domHelper) {
-	var button = jchemhub.controller.ToolbarFactory.makeSelectButton(id, tooltip,
-			caption, opt_classNames, opt_renderer, opt_domHelper);
+jchemhub.controller.DefaultToolbar.fontFaceFactory_ = function(id, tooltip,
+		caption, opt_classNames, opt_renderer, opt_domHelper) {
+	var button = jchemhub.controller.ToolbarFactory.makeSelectButton(id,
+			tooltip, caption, opt_classNames, opt_renderer, opt_domHelper);
 	jchemhub.controller.DefaultToolbar.addDefaultFonts(button);
-	button.setDefaultCaption(jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL);
+	button
+			.setDefaultCaption(jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL);
 	// Font options don't have keyboard accelerators.
 	goog.dom.classes.add(button.getMenu().getContentElement(), goog
 			.getCssName('goog-menu-noaccel'));
@@ -512,12 +488,13 @@ jchemhub.controller.DefaultToolbar.fontFaceFactory_ = function(id, tooltip, capt
  * @return {!goog.ui.Button} A toolbar button.
  * @private
  */
-jchemhub.controller.DefaultToolbar.fontSizeFactory_ = function(id, tooltip, caption,
-		opt_classNames, opt_renderer, opt_domHelper) {
-	var button = jchemhub.controller.ToolbarFactory.makeSelectButton(id, tooltip,
-			caption, opt_classNames, opt_renderer, opt_domHelper);
+jchemhub.controller.DefaultToolbar.fontSizeFactory_ = function(id, tooltip,
+		caption, opt_classNames, opt_renderer, opt_domHelper) {
+	var button = jchemhub.controller.ToolbarFactory.makeSelectButton(id,
+			tooltip, caption, opt_classNames, opt_renderer, opt_domHelper);
 	jchemhub.controller.DefaultToolbar.addDefaultFontSizes(button);
-	button.setDefaultCaption(jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_NORMAL);
+	button
+			.setDefaultCaption(jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_NORMAL);
 	// Font size options don't have keyboard accelerators.
 	goog.dom.classes.add(button.getMenu().getContentElement(), goog
 			.getCssName('goog-menu-noaccel'));
@@ -528,8 +505,8 @@ jchemhub.controller.DefaultToolbar.fontSizeFactory_ = function(id, tooltip, capt
 		// NOTE: Gecko returns "6" so can't just normalize all
 		// strings, only ones ending in "px".
 		if (goog.isString(value) && goog.style.getLengthUnits(value) == 'px') {
-			value = jchemhub.controller.ToolbarFactory.getLegacySizeFromPx(parseInt(
-					value, 10));
+			value = jchemhub.controller.ToolbarFactory
+					.getLegacySizeFromPx(parseInt(value, 10));
 		}
 		// Normalize value to null or a positive integer (sometimes we get
 		// the empty string, sometimes we get false, or -1 if the above
@@ -551,7 +528,8 @@ jchemhub.controller.DefaultToolbar.fontSizeFactory_ = function(id, tooltip, capt
  *            value Color value to update to.
  * @private
  */
-jchemhub.controller.DefaultToolbar.colorUpdateFromValue_ = function(button, value) {
+jchemhub.controller.DefaultToolbar.colorUpdateFromValue_ = function(button,
+		value) {
 	/** @preserveTry */
 	try {
 		if (goog.userAgent.IE) {
@@ -594,10 +572,10 @@ jchemhub.controller.DefaultToolbar.colorUpdateFromValue_ = function(button, valu
  * @return {!goog.ui.Button} A toolbar button.
  * @private
  */
-jchemhub.controller.DefaultToolbar.fontColorFactory_ = function(id, tooltip, caption,
-		opt_classNames, opt_renderer, opt_domHelper) {
-	var button = jchemhub.controller.ToolbarFactory.makeColorMenuButton(id, tooltip,
-			caption, opt_classNames, opt_renderer, opt_domHelper);
+jchemhub.controller.DefaultToolbar.fontColorFactory_ = function(id, tooltip,
+		caption, opt_classNames, opt_renderer, opt_domHelper) {
+	var button = jchemhub.controller.ToolbarFactory.makeColorMenuButton(id,
+			tooltip, caption, opt_classNames, opt_renderer, opt_domHelper);
 	// Initialize default foreground color.
 	button.setSelectedColor('#000');
 	button.updateFromValue = goog.partial(
@@ -628,10 +606,10 @@ jchemhub.controller.DefaultToolbar.fontColorFactory_ = function(id, tooltip, cap
  * @return {!goog.ui.Button} A toolbar button.
  * @private
  */
-jchemhub.controller.DefaultToolbar.backgroundColorFactory_ = function(id, tooltip,
-		caption, opt_classNames, opt_renderer, opt_domHelper) {
-	var button = jchemhub.controller.ToolbarFactory.makeColorMenuButton(id, tooltip,
-			caption, opt_classNames, opt_renderer, opt_domHelper);
+jchemhub.controller.DefaultToolbar.backgroundColorFactory_ = function(id,
+		tooltip, caption, opt_classNames, opt_renderer, opt_domHelper) {
+	var button = jchemhub.controller.ToolbarFactory.makeColorMenuButton(id,
+			tooltip, caption, opt_classNames, opt_renderer, opt_domHelper);
 	// Initialize default background color.
 	button.setSelectedColor('#FFF');
 	button.updateFromValue = goog.partial(
@@ -664,10 +642,11 @@ jchemhub.controller.DefaultToolbar.backgroundColorFactory_ = function(id, toolti
  */
 jchemhub.controller.DefaultToolbar.formatBlockFactory_ = function(id, tooltip,
 		caption, opt_classNames, opt_renderer, opt_domHelper) {
-	var button = jchemhub.controller.ToolbarFactory.makeSelectButton(id, tooltip,
-			caption, opt_classNames, opt_renderer, opt_domHelper);
+	var button = jchemhub.controller.ToolbarFactory.makeSelectButton(id,
+			tooltip, caption, opt_classNames, opt_renderer, opt_domHelper);
 	jchemhub.controller.DefaultToolbar.addDefaultFormatOptions(button);
-	button.setDefaultCaption(jchemhub.controller.DefaultToolbar.MSG_FORMAT_NORMAL);
+	button
+			.setDefaultCaption(jchemhub.controller.DefaultToolbar.MSG_FORMAT_NORMAL);
 	// Format options don't have keyboard accelerators.
 	goog.dom.classes.add(button.getMenu().getContentElement(), goog
 			.getCssName('goog-menu-noaccel'));
@@ -686,10 +665,12 @@ jchemhub.controller.DefaultToolbar.formatBlockFactory_ = function(id, tooltip,
 // Messages used for tooltips and captions.
 
 /** @desc Format menu tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_FORMAT_BLOCK_TITLE = goog.getMsg('Format');
+jchemhub.controller.DefaultToolbar.MSG_FORMAT_BLOCK_TITLE = goog
+		.getMsg('Format');
 
 /** @desc Format menu caption. */
-jchemhub.controller.DefaultToolbar.MSG_FORMAT_BLOCK_CAPTION = goog.getMsg('Format');
+jchemhub.controller.DefaultToolbar.MSG_FORMAT_BLOCK_CAPTION = goog
+		.getMsg('Format');
 
 /** @desc Undo button tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_UNDO_TITLE = goog.getMsg('Undo');
@@ -701,10 +682,12 @@ jchemhub.controller.DefaultToolbar.MSG_REDO_TITLE = goog.getMsg('Redo');
 jchemhub.controller.DefaultToolbar.MSG_FONT_FACE_TITLE = goog.getMsg('Font');
 
 /** @desc Font size menu tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_TITLE = goog.getMsg('Font size');
+jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_TITLE = goog
+		.getMsg('Font size');
 
 /** @desc Text foreground color menu tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_COLOR_TITLE = goog.getMsg('Text color');
+jchemhub.controller.DefaultToolbar.MSG_FONT_COLOR_TITLE = goog
+		.getMsg('Text color');
 
 /** @desc Bold button tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_BOLD_TITLE = goog.getMsg('Bold');
@@ -713,14 +696,16 @@ jchemhub.controller.DefaultToolbar.MSG_BOLD_TITLE = goog.getMsg('Bold');
 jchemhub.controller.DefaultToolbar.MSG_ITALIC_TITLE = goog.getMsg('Italic');
 
 /** @desc Underline button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_UNDERLINE_TITLE = goog.getMsg('Underline');
+jchemhub.controller.DefaultToolbar.MSG_UNDERLINE_TITLE = goog
+		.getMsg('Underline');
 
 /** @desc Text background color menu tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_BACKGROUND_COLOR_TITLE = goog
 		.getMsg('Text background color');
 
 /** @desc Link button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_LINK_TITLE = goog.getMsg('Add or remove link');
+jchemhub.controller.DefaultToolbar.MSG_LINK_TITLE = goog
+		.getMsg('Add or remove link');
 
 /** @desc Numbered list button tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_ORDERED_LIST_TITLE = goog
@@ -731,20 +716,24 @@ jchemhub.controller.DefaultToolbar.MSG_UNORDERED_LIST_TITLE = goog
 		.getMsg('Bullet list');
 
 /** @desc Outdent button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_OUTDENT_TITLE = goog.getMsg('Decrease indent');
+jchemhub.controller.DefaultToolbar.MSG_OUTDENT_TITLE = goog
+		.getMsg('Decrease indent');
 
 /** @desc Indent button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_INDENT_TITLE = goog.getMsg('Increase indent');
+jchemhub.controller.DefaultToolbar.MSG_INDENT_TITLE = goog
+		.getMsg('Increase indent');
 
 /** @desc Align left button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_ALIGN_LEFT_TITLE = goog.getMsg('Align left');
+jchemhub.controller.DefaultToolbar.MSG_ALIGN_LEFT_TITLE = goog
+		.getMsg('Align left');
 
 /** @desc Align center button tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_ALIGN_CENTER_TITLE = goog
 		.getMsg('Align center');
 
 /** @desc Align right button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_ALIGN_RIGHT_TITLE = goog.getMsg('Align right');
+jchemhub.controller.DefaultToolbar.MSG_ALIGN_RIGHT_TITLE = goog
+		.getMsg('Align right');
 
 /** @desc Justify button tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_JUSTIFY_TITLE = goog.getMsg('Justify');
@@ -754,17 +743,20 @@ jchemhub.controller.DefaultToolbar.MSG_REMOVE_FORMAT_TITLE = goog
 		.getMsg('Remove formatting');
 
 /** @desc Insert image button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_IMAGE_TITLE = goog.getMsg('Insert image');
+jchemhub.controller.DefaultToolbar.MSG_IMAGE_TITLE = goog
+		.getMsg('Insert image');
 
 /** @desc Strike through button tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_STRIKE_THROUGH_TITLE = goog
 		.getMsg('Strikethrough');
 
 /** @desc Left-to-right button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_DIR_LTR_TITLE = goog.getMsg('Left-to-right');
+jchemhub.controller.DefaultToolbar.MSG_DIR_LTR_TITLE = goog
+		.getMsg('Left-to-right');
 
 /** @desc Right-to-left button tooltip. */
-jchemhub.controller.DefaultToolbar.MSG_DIR_RTL_TITLE = goog.getMsg('Right-to-left');
+jchemhub.controller.DefaultToolbar.MSG_DIR_RTL_TITLE = goog
+		.getMsg('Right-to-left');
 
 /** @desc Blockquote button tooltip. */
 jchemhub.controller.DefaultToolbar.MSG_BLOCKQUOTE_TITLE = goog.getMsg('Quote');
@@ -783,11 +775,12 @@ jchemhub.controller.DefaultToolbar.MSG_SUBSCRIPT = goog.getMsg('Subscript');
 jchemhub.controller.DefaultToolbar.MSG_SUPERSCRIPT = goog.getMsg('Superscript');
 
 /** @desc Edit HTML button caption. */
-jchemhub.controller.DefaultToolbar.MSG_EDIT_HTML_CAPTION = goog.getMsg('Edit HTML');
+jchemhub.controller.DefaultToolbar.MSG_EDIT_HTML_CAPTION = goog
+		.getMsg('Edit HTML');
 
 /**
- * Map of {@code jchemhub.controller.Command}s to toolbar button descriptor objects,
- * each of which has the following attributes:
+ * Map of {@code jchemhub.controller.Command}s to toolbar button descriptor
+ * objects, each of which has the following attributes:
  * <ul>
  * <li>{@code command} - The command corresponding to the button (mandatory)
  * <li>{@code tooltip} - Tooltip text (optional); if unspecified, the button
@@ -803,8 +796,8 @@ jchemhub.controller.DefaultToolbar.MSG_EDIT_HTML_CAPTION = goog.getMsg('Edit HTM
  * accept {@code id}, {@code tooltip}, {@code caption}, and {@code classes}
  * as arguments, and must return an instance of {@link goog.ui.Button} or an
  * appropriate subclass (optional); if unspecified, defaults to
- * {@link jchemhub.controller.DefaultToolbar.makeToggleButton}, since most built-in
- * toolbar buttons are toggle buttons
+ * {@link jchemhub.controller.DefaultToolbar.makeToggleButton}, since most
+ * built-in toolbar buttons are toggle buttons
  * <li>(@code queryable} - Whether the button's state should be queried when
  * updating the toolbar (optional).
  * </ul>
@@ -829,13 +822,13 @@ jchemhub.controller.DefaultToolbar.ButtonDescriptor = goog.typedef;
  * Built-in toolbar button descriptors. See
  * {@link jchemhub.controller.DefaultToolbar.buttons_} for details on button
  * descriptor objects. This array is processed at JS parse time; each item is
- * inserted into {@link jchemhub.controller.DefaultToolbar.buttons_}, and the array
- * itself is deleted and (hopefully) garbage-collected.
+ * inserted into {@link jchemhub.controller.DefaultToolbar.buttons_}, and the
+ * array itself is deleted and (hopefully) garbage-collected.
  * 
  * @type {Array.<!jchemhub.controller.ReactionEditor.ButtonDescriptor>}.
  * @private
  */
-jchemhub.controller.DefaultToolbar.BUTTONS_ = [ ];
+jchemhub.controller.DefaultToolbar.BUTTONS_ = [];
 
 (function() {
 	// Create the jchemhub.controller.DefaultToolbar.buttons_ map from

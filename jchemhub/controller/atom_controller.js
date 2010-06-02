@@ -3,16 +3,15 @@ goog.provide('jchemhub.controller.AtomController.AtomEvent');
 goog.require('goog.events.EventTarget');
 goog.require('goog.debug.Logger');
 
-/** 
- * @constructor 
- * @extends {goog.events.EventTarget} 
- */ 
-jchemhub.controller.AtomController = function(parentController) { 
-  goog.events.EventTarget.call(this);
-  this.setParentEventTarget(parentController);
-}; 
-goog.inherits(jchemhub.controller.AtomController, goog.events.EventTarget); 
-
+/**
+ * @constructor
+ * @extends {goog.events.EventTarget}
+ */
+jchemhub.controller.AtomController = function(parentController) {
+	goog.events.EventTarget.call(this);
+	this.setParentEventTarget(parentController);
+};
+goog.inherits(jchemhub.controller.AtomController, goog.events.EventTarget);
 
 /**
  * Logging object.
@@ -23,26 +22,34 @@ goog.inherits(jchemhub.controller.AtomController, goog.events.EventTarget);
 jchemhub.controller.AtomController.prototype.logger = goog.debug.Logger
 		.getLogger('jchemhub.controller.AtomController');
 
-jchemhub.controller.AtomController.prototype.handleMouseOver = function(atom, e){
-
+jchemhub.controller.AtomController.prototype.handleMouseOver = function(atom, e) {
 	this.dispatchEvent(new jchemhub.controller.AtomController.AtomEvent(this,
 			atom, jchemhub.controller.AtomController.EventType.MOUSEOVER));
 };
 
-jchemhub.controller.AtomController.prototype.handleMouseOut = function(atom, e){
+jchemhub.controller.AtomController.prototype.handleMouseOut = function(atom, e) {
 	this.dispatchEvent(new jchemhub.controller.AtomController.AtomEvent(this,
 			atom, jchemhub.controller.AtomController.EventType.MOUSEOUT));
 };
-/** @enum {string} */ 
-jchemhub.controller.AtomController.EventType = { 
-  MOUSEOVER: 'atom_mouseover',
-  MOUSEOUT: 'atom_mouseout'
-}; 
+
+jchemhub.controller.AtomController.prototype.handleMouseDown = function(atom, e) {
+	this.dispatchEvent(new jchemhub.controller.AtomController.AtomEvent(this,
+			atom, jchemhub.controller.AtomController.EventType.MOUSEDOWN));
+};
+/** @enum {string} */
+jchemhub.controller.AtomController.EventType = {
+	MOUSEOVER : 'atom_mouseover',
+	MOUSEOUT : 'atom_mouseout',
+	MOUSEDOWN : 'atom_mousedown'
+};
 /**
  * 
- * @param {jchemhub.controller.AtomController} controller
- * @param {jchemhub.model.Atom} atom
- * @param {jchemhub.controller.AtomController.EventType} type
+ * @param {jchemhub.controller.AtomController}
+ *            controller
+ * @param {jchemhub.model.Atom}
+ *            atom
+ * @param {jchemhub.controller.AtomController.EventType}
+ *            type
  * @constructor
  * @extends {goog.events.Event}
  */

@@ -60,8 +60,8 @@
 	
 function initPage(){
 	// uncomment next two lines to debug to console
-	//var c = new goog.debug.Console(); 
-	//c.setCapturing(true); 
+	var c = new goog.debug.Console(); 
+	c.setCapturing(true); 
 
 	var buttons = []; 
 	buttons.push(jchemhub.controller.ToolbarFactory.makeButton( 
@@ -79,7 +79,8 @@ function initPage(){
     atom_select.setMenu(atom_menu);
     buttons.push(atom_select);
 
-	var toolbar = jchemhub.controller.DefaultToolbar.makeToolbar(buttons, goog.dom.getElement('reactionEditorToolbar')); 
+	//var toolbar = jchemhub.controller.DefaultToolbar.makeToolbar(buttons, goog.dom.getElement('reactionEditorToolbar'));
+	var toolbar = jchemhub.controller.DefaultToolbar.makeDefaultToolbar(goog.dom.getElement('reactionEditorToolbar'));  
 	var model = jchemhub.io.json.readReaction(reactionDrawing); 
 	var editor = new jchemhub.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'));
 	editor.registerPlugin(new jchemhub.controller.plugins.ClearEditor());

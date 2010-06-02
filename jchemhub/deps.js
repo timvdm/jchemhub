@@ -590,7 +590,8 @@ goog.addDependency("../../../../jchemhub/algorithm/symmetry/symmetry.js", ['jche
 goog.addDependency("../../../../jchemhub/config/render_params.js", ['jchemhub.config.RenderParams'], ['goog.graphics', 'goog.graphics.SolidFill', 'goog.graphics.Stroke', 'goog.graphics.Font']);
 goog.addDependency("../../../../jchemhub/controller/atom_controller.js", ['jchemhub.controller.AtomController', 'jchemhub.controller.AtomController.AtomEvent'], ['goog.events.EventTarget', 'goog.debug.Logger']);
 goog.addDependency("../../../../jchemhub/controller/bond_controller.js", ['jchemhub.controller.BondController', 'jchemhub.controller.BondController.BondEvent'], ['goog.events.EventTarget', 'goog.debug.Logger']);
-goog.addDependency("../../../../jchemhub/controller/defaulttoolbar.js", ['jchemhub.controller.DefaultToolbar'], ['goog.dom', 'goog.dom.TagName', 'goog.dom.classes', 'goog.string.StringBuffer', 'goog.style', 'goog.ui.ControlContent', 'jchemhub.controller.ToolbarFactory']);
+goog.addDependency("../../../../jchemhub/controller/command.js", ['jchemhub.controller.Command'], []);
+goog.addDependency("../../../../jchemhub/controller/defaulttoolbar.js", ['jchemhub.controller.DefaultToolbar'], ['goog.dom', 'goog.dom.TagName', 'goog.dom.classes', 'goog.string.StringBuffer', 'goog.style', 'goog.ui.ControlContent', 'jchemhub.controller.ToolbarFactory', 'jchemhub.controller.Command']);
 goog.addDependency("../../../../jchemhub/controller/molecule_controller.js", ['jchemhub.controller.MoleculeController'], ['goog.events.EventTarget']);
 goog.addDependency("../../../../jchemhub/controller/plugin.js", ['jchemhub.controller.Plugin'], ['goog.events.EventTarget', 'goog.functions', 'goog.debug.Logger', 'goog.object', 'goog.reflect']);
 goog.addDependency("../../../../jchemhub/controller/reaction_controller.js", ['jchemhub.controller.ReactionController'], ['goog.events.EventTarget']);

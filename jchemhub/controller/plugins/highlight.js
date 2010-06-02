@@ -37,14 +37,15 @@ jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOver = function(e
 	} else {
 		e.currentTarget.atomHighlightGroup = this.highlightAtom(e.atom, e.currentTarget.atomHighlightGroup);
 	}
-	goog.array.insert(this.editorObject.selected,e.atom);
+	//goog.array.insert(this.editorObject.selected,e.atom);
 };
+
 jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOut = function(e) {
 
 	if (e.currentTarget.atomHighlightGroup) {
 		e.currentTarget.atomHighlightGroup.clear();
 	}
-	goog.array.remove(this.editorObject.selected, e.atom);
+	//goog.array.remove(this.editorObject.selected, e.atom);
 };
 
 jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(e) {
@@ -53,14 +54,14 @@ jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(e
 	} else {
 		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond, e.currentTarget.bondHighlightGroup);
 	}
-	goog.array.insert(this.editorObject.selected,e.bond);
+	//goog.array.insert(this.editorObject.selected,e.bond);
 };
 jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOut = function(e) {
 
 	if (e.currentTarget.bondHighlightGroup) {
 		e.currentTarget.bondHighlightGroup.clear();
 	}
-	goog.array.remove(this.editorObject.selected, e.bond);
+	//goog.array.remove(this.editorObject.selected, e.bond);
 };
 
 jchemhub.controller.plugins.Highlight.prototype.highlightBond = function(bond, opt_group){

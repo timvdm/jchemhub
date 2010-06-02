@@ -87,14 +87,15 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 			this.controller.handleMouseOver, this.controller, atom));
 	group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
 			this.controller.handleMouseOut, this.controller, atom));
-
+	group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
+			this.controller.handleMouseDown, this.controller, atom));
 	return group;
 
 };
 
 jchemhub.view.AtomRenderer.prototype.highlightOn = function(atom, opt_group) {
 	var atom_config = this.config.get("atom");
-	var strokeWidth = atom_config.stroke.width * 3;
+	var strokeWidth = atom_config.stroke.width * 4;
 	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol).color
 			: atom_config.color;
 	var stroke = new goog.graphics.Stroke(strokeWidth, color);

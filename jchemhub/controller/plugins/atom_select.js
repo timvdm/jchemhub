@@ -29,6 +29,6 @@ jchemhub.controller.plugins.AtomSelect.prototype.getTrogClassId = goog.functions
 jchemhub.controller.plugins.AtomSelect.prototype.logger = goog.debug.Logger
 		.getLogger('jchemhub.controller.plugins.AtomSelect');
 
-jchemhub.controller.plugins.AtomSelect.prototype.handleMouseUp = function(e) {
-
-}
+jchemhub.controller.plugins.AtomSelect.prototype.handleAtomMouseDown = function(e) {
+	this.logger.info(e.atom.symbol);
+};
