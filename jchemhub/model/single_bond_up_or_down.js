@@ -8,8 +8,8 @@ goog.require('jchemhub.model.SingleBond');
  * @constructor
  * @extends {jchemhub.model.SingleBond}
  */
-jchemhub.model.SingleBondUpOrDown = function(source, target){
-	jchemhub.model.SingleBond.call(this, source, target);
+jchemhub.model.SingleBondUpOrDown = function(source, target, opt_molecule){
+	jchemhub.model.SingleBond.call(this, source, target, opt_molecule);
 }
 goog.inherits(jchemhub.model.SingleBondUpOrDown, jchemhub.model.SingleBond);	
 /**
@@ -17,3 +17,7 @@ goog.inherits(jchemhub.model.SingleBondUpOrDown, jchemhub.model.SingleBond);
  * @type{number}
  */
 jchemhub.model.SingleBondUpOrDown.ORDER = 1;
+
+jchemhub.model.SingleBondUpOrDown.clone = function(){
+	return new jchemhun.model.SingleBondUpOrDown(this.source, this.target, this.molecule);
+}

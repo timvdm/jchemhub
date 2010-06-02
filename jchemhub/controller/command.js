@@ -6,5 +6,4 @@ goog.provide('jchemhub.controller.Command');
  * @enum {string}
  */
 jchemhub.controller.Command = {
-  INSERT_ATOM: 'insertAtom'
  };

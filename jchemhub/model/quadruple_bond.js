@@ -8,8 +8,8 @@ goog.require('jchemhub.model.Bond');
  * @constructor
  * @extends {jchemhub.model.Bond}
  */
-jchemhub.model.QuadrupleBond = function(source, target){
-	jchemhub.model.Bond.call(this, source, target);
+jchemhub.model.QuadrupleBond = function(source, target, opt_molecule){
+	jchemhub.model.Bond.call(this, source, target, opt_molecule);
 }
 goog.inherits(jchemhub.model.QuadrupleBond, jchemhub.model.Bond);
 
@@ -18,3 +18,7 @@ goog.inherits(jchemhub.model.QuadrupleBond, jchemhub.model.Bond);
  * @type{number}
  */
 jchemhub.model.QuadrupleBond.ORDER = 4;
+
+jchemhub.model.QuadrupleBond.clone = function(bond){
+	return new jchemhub.model.QuadrupleBond(this.source, this.target, this.molecule);
+}

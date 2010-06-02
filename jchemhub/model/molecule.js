@@ -132,6 +132,7 @@ jchemhub.model.Molecule.prototype.removeAtom = function(atomOrId) {
 	});
 	atom.bonds.clear();
 	goog.array.remove(this.atoms, atom);
+	atom.molecule = undefined;
 
 };
 
@@ -152,7 +153,7 @@ jchemhub.model.Molecule.prototype.removeBond = function(bondOrId) {
 	bond.source.bonds.remove(bond);
 	bond.target.bonds.remove(bond);
 	goog.array.remove(this.bonds, bond);
-	bond.molecule = null;
+	bond.molecule = undefined;
 };
 
 /**
@@ -178,6 +179,7 @@ jchemhub.model.Molecule.prototype.countBonds = function() {
  */
 jchemhub.model.Molecule.prototype.addAtom = function(atom) {
 	this.atoms.push(atom);
+	atom.molecule = this;
 };
 
 /**
