@@ -601,7 +601,7 @@ goog.addDependency("../../../../jchemhub/controller/toolbarfactory.js", ['jchemh
 goog.addDependency("../../../../jchemhub/controller/plugins/clear_editor.js", ['jchemhub.controller.plugins.ClearEditor'], ['jchemhub.controller.Plugin', 'goog.functions']);
 goog.addDependency("../../../../jchemhub/controller/plugins/highlight.js", ['jchemhub.controller.plugins.Highlight'], ['jchemhub.controller.Plugin', 'goog.functions', 'goog.debug.Logger']);
 goog.addDependency("../../../../jchemhub/controller/plugins/selector_rectangle.js", ['jchemhub.controller.plugins.SelectorRectangle'], ['jchemhub.controller.Plugin', 'goog.functions', 'goog.debug.Logger']);
-goog.addDependency("../../../../jchemhub/controller/plugins/symbol_select.js", ['jchemhub.controller.plugins.SymbolSelect'], ['goog.debug.Logger']);
+goog.addDependency("../../../../jchemhub/controller/plugins/symbol_select.js", ['jchemhub.controller.plugins.SymbolSelect'], ['jchemhub.controller.Plugin', 'goog.debug.Logger']);
 goog.addDependency("../../../../jchemhub/controller/plugins/undoredo.js", ['jchemhub.controller.plugins.UndoRedo'], ['goog.debug.Logger']);
 goog.addDependency("../../../../jchemhub/controller/plugins/zoom.js", ['jchemhub.controller.plugins.Zoom'], ['goog.debug.Logger']);
 goog.addDependency("../../../../jchemhub/io/io_test_molsample.js", [], []);

@@ -1,4 +1,5 @@
 goog.provide('jchemhub.controller.plugins.SymbolSelect');
+goog.require('jchemhub.controller.Plugin');
 goog.require('goog.debug.Logger');
 
 /**
