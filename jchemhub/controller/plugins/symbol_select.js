@@ -51,7 +51,7 @@ jchemhub.controller.plugins.SymbolSelect.prototype.logger = goog.debug.Logger
 
 jchemhub.controller.plugins.SymbolSelect.prototype.handleAtomMouseDown = function(
 		e) {
-	if (this.symbol!=e.atom.symbol) {
+	if (this.symbol && (this.symbol!=e.atom.symbol)) {
 		var new_atom = new jchemhub.model.Atom(this.symbol, e.atom.coord.x, e.atom.coord.y)
 		goog.array.forEach(e.atom.bonds.getValues(), function(bond){
 			var new_bond = bond.clone();

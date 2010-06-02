@@ -5,7 +5,8 @@ goog.require('jchemhub.ring.RingFinder');
 /**
  * Class representing a Molecule
  * 
- * @param {string=} opt_name, Name of molecule, defaults to empty string.
+ * @param {string=}
+ *            opt_name, Name of molecule, defaults to empty string.
  * @constructor
  */
 jchemhub.model.Molecule = function(opt_name) {
@@ -16,14 +17,14 @@ jchemhub.model.Molecule = function(opt_name) {
 	 * 
 	 */
 	this.bonds = [];
-	
-	/** 
+
+	/**
 	 * atoms belonging to this molecule
 	 * 
 	 * @type {Array.<jchemhub.model.Atom>}
 	 */
 	this.atoms = [];
-	
+
 	/**
 	 * name of molecule
 	 * 
@@ -36,7 +37,8 @@ jchemhub.model.Molecule = function(opt_name) {
 /**
  * Add a bond to molecule.
  * 
- * @param {jchemhub.model.Bond} bond The bond to add.
+ * @param {jchemhub.model.Bond}
+ *            bond The bond to add.
  */
 
 jchemhub.model.Molecule.prototype.addBond = function(bond) {
@@ -147,7 +149,7 @@ jchemhub.model.Molecule.prototype.removeBond = function(bondOrId) {
 	var bond;
 	if (bondOrId.constructor == Number) {
 		bond = this.bonds[bondOrId];
-	} else if (bondOrId.constructor == jchemhub.model.Bond) {
+	} else {
 		bond = bondOrId;
 	}
 	bond.source.bonds.remove(bond);
@@ -158,6 +160,7 @@ jchemhub.model.Molecule.prototype.removeBond = function(bondOrId) {
 
 /**
  * Count atoms.
+ * 
  * @return{number}
  */
 jchemhub.model.Molecule.prototype.countAtoms = function() {
@@ -187,6 +190,6 @@ jchemhub.model.Molecule.prototype.addAtom = function(atom) {
  * 
  * @return{Array.<jchemhub.ring.Ring>}
  */
-jchemhub.model.Molecule.prototype.getRings = function(){
+jchemhub.model.Molecule.prototype.getRings = function() {
 	return jchemhub.ring.RingFinder.findRings(this);
 }
