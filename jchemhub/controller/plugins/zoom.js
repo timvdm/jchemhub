@@ -1,8 +1,8 @@
 goog.provide('jchemhub.controller.plugins.Zoom');
 goog.require('goog.debug.Logger');
 
-goog.exportSymbol('jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_IN', jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_IN);
-goog.exportSymbol('jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT', jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT);
+//goog.exportSymbol('jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_IN', jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_IN);
+//goog.exportSymbol('jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT', jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT);
 
 /**
  * @constructor

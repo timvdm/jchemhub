@@ -3,8 +3,8 @@ goog.provide('jchemhub.controller.plugins.ClearEditor');
 goog.require('jchemhub.controller.Plugin');
 goog.require('goog.functions');
 
-goog.exportSymbol('jchemhub.controller.plugins.ClearEditor.COMMAND',
-		jchemhub.controller.plugins.ClearEditor.COMMAND);
+//goog.exportSymbol('jchemhub.controller.plugins.ClearEditor.COMMAND',
+//		jchemhub.controller.plugins.ClearEditor.COMMAND);
 
 /**
  * simple Plugin for clearing editor.

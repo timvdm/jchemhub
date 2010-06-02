@@ -1,8 +1,8 @@
 goog.provide('jchemhub.controller.plugins.UndoRedo');
 goog.require('goog.debug.Logger');
 
-goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO', jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO);
-goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.REDO', jchemhub.controller.plugins.UndoRedo.COMMAND.REDO);
+//goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO', jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO);
+//goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.REDO', jchemhub.controller.plugins.UndoRedo.COMMAND.REDO);
 
 /**
  * @constructor

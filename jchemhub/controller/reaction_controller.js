@@ -1,5 +1,6 @@
 goog.provide('jchemhub.controller.ReactionController');
 goog.require('goog.events.EventTarget');
+goog.require('goog.debug.Logger');
 
 /** 
  * @constructor 
@@ -12,7 +13,6 @@ jchemhub.controller.ReactionController = function(parentController) {
 goog.inherits(jchemhub.controller.ReactionController, goog.events.EventTarget); 
 
 jchemhub.controller.ReactionController.prototype.handleMouseOver = function(Reaction, e){
-	console.log(Reaction.symbol);
 	this.dispatchEvent(jchemhub.controller.ReactionController.EventType.MOUSEOVER);
 };
 
@@ -24,3 +24,12 @@ jchemhub.controller.ReactionController.EventType = {
   MOUSEOVER: 'reaction_mouseover',
   MOUSEOUT: 'reaction_mouseout'
 }; 
+
+/**
+ * Logging object.
+ * 
+ * @type {goog.debug.Logger}
+ * @protected
+ */
+jchemhub.controller.ReactionController.prototype.logger = goog.debug.Logger
+		.getLogger('jchemhub.controller.ReactionController');

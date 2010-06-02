@@ -88,6 +88,9 @@ jchemhub.controller.ReactionEditor = function(element, opt_config) {
 
 	this.isModified_ = false;
 	this.isEverModified_ = false;
+	
+	// currently selected model objects
+	this.selected = [];
 
 };
 goog.inherits(jchemhub.controller.ReactionEditor, goog.events.EventTarget);
@@ -352,6 +355,10 @@ jchemhub.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEUP, e);
 }
 
+jchemhub.controller.ReactionEditor.prototype.handleAtomMouseDown_ = function(e){
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEDOWN, e);
+}
+
 jchemhub.controller.ReactionEditor.prototype.handleAtomMouseOver_ = function(e){
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEOVER, e);
 }
@@ -368,7 +375,6 @@ jchemhub.controller.ReactionEditor.prototype.handleBondMouseOut_ = function(e){
 }
 
 jchemhub.controller.ReactionEditor.prototype.handleBondMouseDown_ = function(e){
-
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEDOWN, e);
 }
 
@@ -953,6 +959,7 @@ jchemhub.controller.ReactionEditor.prototype.setupChangeListeners_ = function() 
 
 	this.addEventListener(jchemhub.controller.AtomController.EventType.MOUSEOUT, this.handleAtomMouseOut_);
 	this.addEventListener(jchemhub.controller.AtomController.EventType.MOUSEOVER, this.handleAtomMouseOver_);
+	this.addEventListener(jchemhub.controller.AtomController.EventType.MOUSEDOWN, this.handleAtomMouseDown_);
 	this.addEventListener(jchemhub.controller.BondController.EventType.MOUSEOUT, this.handleBondMouseOut_);
 	this.addEventListener(jchemhub.controller.BondController.EventType.MOUSEOVER, this.handleBondMouseOver_);
 	this.addEventListener(jchemhub.controller.BondController.EventType.MOUSEDOWN, this.handleBondMouseDown_);

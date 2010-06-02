@@ -61,8 +61,6 @@ jchemhub.io.smiles.aromaticAtoms = { c:1, n:1, o:1, s:1, as:1, se:1 };
 
 jchemhub.io.smiles.parse = function (smi) {
 	items = smi.match(this.smiPattern);
-	//console.log(items);
-	//console.log(smi);
 	var mol = new jchemhub.model.Molecule(smi);
 	var natoms = 0;
 	var previous_atom;
@@ -141,7 +139,7 @@ jchemhub.io.smiles.parse = function (smi) {
 			break;
 		}
 	}
-	//console.log(natoms + " atoms");
+
 	if (this.sanityCheck(branch, ring, bond_type, bond_stereo)) {
 		return mol;
 	} else {
