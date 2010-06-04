@@ -44,10 +44,10 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 	var h = font.size;
 	var group = graphics.createGroup();
 
-	group.atomLabelBackground = graphics.drawEllipse(point.x, point.y,
-			h * 0.7, h * 0.7, null, new goog.graphics.SolidFill(
-							this.config.get("background").color, 0.001), group);
 	if (symbol.text) {
+		group.atomLabelBackground = graphics.drawEllipse(point.x, point.y,
+				h * 0.7, h * 0.7, null, new goog.graphics.SolidFill(
+						this.config.get("background").color), group);
 
 		graphics.drawText(symbol.text, point.x - w / 2, point.y - h / 2, w, h,
 				symbol.justification, null, font, stroke, fill, group);
