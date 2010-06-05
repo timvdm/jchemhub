@@ -1,7 +1,9 @@
 [submodule "third-party/closure"]
 	path = third-party/closure
 	url = http://github.com/jarib/google-closure-library.git
-
+[submodule "jsdoc-toolkit"]
+	path = jsdoc-toolkit
+	url = http://github.com/timvdm/jsdoc-toolkit.git
 [submodule "third-party/jsdoc-toolkit"]
 	path = third-party/jsdoc-toolkit
-	url = git://github.com/timvdm/jsdoc-toolkit.git
+	url = http://github.com/timvdm/jsdoc-toolkit.git

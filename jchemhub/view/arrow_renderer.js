@@ -48,8 +48,8 @@ jchemhub.view.ArrowRenderer.prototype.render = function(coord, transform) {
  */
 jchemhub.view.ArrowRenderer.defaultConfig = {
 	arrow : {
-	width: 1,
-	height: .25,
+	width: 2,
+	height: .5,
 		stroke : {
 			width : 2,
 			color : "black"

@@ -44,10 +44,11 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 	var h = font.size;
 	var group = graphics.createGroup();
 
-	group.atomLabelBackground = graphics.drawEllipse(point.x, point.y,
-			h * 0.7, h * 0.7, null, new goog.graphics.SolidFill(
-							this.config.get("background").color, 0.001), group);
 	if (symbol.text) {
+		graphics
+				.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
+						new goog.graphics.SolidFill(this.config
+								.get("background").color), group);
 
 		graphics.drawText(symbol.text, point.x - w / 2, point.y - h / 2, w, h,
 				symbol.justification, null, font, stroke, fill, group);
@@ -82,7 +83,13 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 				}
 			}
 		}
+	} else {
+		graphics
+				.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
+						new goog.graphics.SolidFill(this.config
+								.get("background").color, 0.001), group);
 	}
+
 	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
 			this.controller.handleMouseOver, this.controller, atom));
 	group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
@@ -100,14 +107,14 @@ jchemhub.view.AtomRenderer.prototype.highlightOn = function(atom, opt_group) {
 			: atom_config.color;
 	var stroke = new goog.graphics.Stroke(strokeWidth, color);
 	var fill = null
-	var radius = atom_config.highlight.radius
-			* this.transform.getScaleX();
+	var radius = atom_config.highlight.radius * this.transform.getScaleX();
 	var coords = this.transform.transformCoords( [ atom.coord ])[0];
-	
+
 	if (!opt_group) {
 		opt_group = this.graphics.createGroup();
 	}
-	this.graphics.drawCircle(coords.x, coords.y, radius, stroke, fill, opt_group);
+	this.graphics.drawCircle(coords.x, coords.y, radius, stroke, fill,
+			opt_group);
 
 	return opt_group;
 };

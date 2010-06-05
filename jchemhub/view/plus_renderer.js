@@ -43,7 +43,7 @@ jchemhub.view.PlusRenderer.prototype.render=function(coord, transform){
  */
 jchemhub.view.PlusRenderer.defaultConfig = {
 		plus : {
-	size: .125,
+	size: .25,
 	stroke : {
 		width : 2,
 		color : "black"
