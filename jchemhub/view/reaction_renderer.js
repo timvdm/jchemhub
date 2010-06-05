@@ -106,8 +106,7 @@ jchemhub.view.ReactionRenderer.prototype.logger = goog.debug.Logger
 
 /**
  * 
- * @param {Array.
- *            <jchemhub.model.Molecule>} molecules
+ * @param {Array.<jchemhub.model.Molecule>} molecules
  * @return {goog.math.Rect}
  */
 jchemhub.view.ReactionRenderer.prototype.boundingRect = function(molecules) {

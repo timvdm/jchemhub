@@ -25,7 +25,7 @@ jchemhub.model.SingleBondDown.ORDER = 1;
 
 /**
  * 
- * @return
+ * @return {jchemhub.model.SingleBondDown}
  */
 jchemhub.model.SingleBondDown.prototype.clone = function() {
 	return new jchemhub.model.SingleBondDown(this.source, this.target,

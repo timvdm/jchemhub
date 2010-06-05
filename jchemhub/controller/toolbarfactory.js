@@ -47,8 +47,7 @@ jchemhub.controller.ToolbarFactory.getPrimaryFont = function(fontSpec) {
  * 
  * @param {!goog.ui.Select}
  *            button Font menu button.
- * @param {!Array.
- *            <{caption: string, value: string}>} fonts Array of font
+ * @param {!Array.<{caption: string, value: string}>} fonts Array of font
  *            descriptors.
  */
 jchemhub.controller.ToolbarFactory.addFonts = function(button, fonts) {
@@ -95,8 +94,7 @@ jchemhub.controller.ToolbarFactory.addFont = function(button, caption, value) {
  * 
  * @param {!goog.ui.Select}
  *            button Font size menu button.
- * @param {!Array.
- *            <{caption: string, value:number}>} sizes Array of font size
+ * @param {!Array.<{caption: string, value:number}>} sizes Array of font size
  *            descriptors.
  */
 jchemhub.controller.ToolbarFactory.addFontSizes = function(button, sizes) {
@@ -183,8 +181,7 @@ jchemhub.controller.ToolbarFactory.LEGACY_SIZE_TO_PX_MAP_ = [ 10, 10, 13, 16,
  * 
  * @param {!goog.ui.Select}
  *            button "Format block" menu button.
- * @param {!Array.
- *            <{caption: string, command: string}>} formats Array of format
+ * @param {!Array.<{caption: string, command: string}>} formats Array of format
  *            option descriptors.
  */
 jchemhub.controller.ToolbarFactory.addFormatOptions = function(button, formats) {
@@ -219,8 +216,7 @@ jchemhub.controller.ToolbarFactory.addFormatOption = function(button, caption,
  * buttons, and renders it into the given parent element. Each item in the
  * {@code items} array must a {@link goog.ui.Control}.
  * 
- * @param {!Array.
- *            <goog.ui.Control>} items Toolbar items; each must be a
+ * @param {!Array.<goog.ui.Control>} items Toolbar items; each must be a
  *            {@link goog.ui.Control}.
  * @param {!Element}
  *            elem Toolbar parent element.
