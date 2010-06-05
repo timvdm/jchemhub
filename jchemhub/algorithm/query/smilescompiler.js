@@ -19,14 +19,20 @@ goog.require('jchemhub.query.MoleculeCompiler');
 
 (function() {
 
+    /**
+     * The Smiles Query Compiler compiles SMILES strings into queries. This
+     * class implements {@link jchemhub.query.IQueryCompiler}. <a href="../Substructure Search.html">Substructure Search</a>
+     * @class Smiles Query Compiler
+     * @see jchemhub.query.IQueryCompiler
+     */
     jchemhub.query.SmilesCompiler = {};
 
     /**
      * Compile a query from smiles string.
-     * @param {String} smiles The smiles string
-     * @return {jchemhub.query.Query}
+     * @param smiles The smiles string
+     * @return {jchemhub.query.IQuery}
      */
-    jchemhub.query.SmilesCompiler.compile = function(smiles) {
+    jchemhub.query.SmilesCompiler.compile = function(/**string*/smiles) {
         var molecule = jchemhub.io.smiles.parse(smiles);
         var query = jchemhub.query.MoleculeCompiler.compile(molecule);
         return query;
