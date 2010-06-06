@@ -51,7 +51,7 @@ jchemhub.io.smiles.punctuation = {
  aromaticbond:jchemhub.io.smiles.BondType.AROMATIC_BOND,
  ringclosure: '%',
  cis:         '/',
- trans:       '\\',
+ trans:       '\\'
 };
 
 jchemhub.io.smiles.smiPattern =  new RegExp(/\[[^[]+\]|Br|B|Cl|C|N|F|O|P]|S|c|n|o|s|-|=|#|%[0-9][0-9]|[0-9]|\(|\)|./g);
@@ -384,5 +384,5 @@ Hs:{"number":108, "name":"Hassium"},
 Mt:{"number":109, "name":"Meitnerium"},
 Ds:{"number":110, "name":"Darmstadtium"},
 Rg:{"number":111, "name":"Roentgenium"},
-Cn:{"number":112, "name":"Copernicium"},
+Cn:{"number":112, "name":"Copernicium"}
 };
