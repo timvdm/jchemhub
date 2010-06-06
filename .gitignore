@@ -1,2 +1,3 @@
-third-party
+third-party/closure
+third-party/closure-compiler
 .project
