@@ -234,7 +234,6 @@ goog.provide('jchemhub.query.Query');
                 /**Array.<jchemhub.ring.Ring>=*/opt_sssr) {};
     };
 
-
     /**
      * Query compilers are used to convert various input sources to queries. 
      * To implement a query compiler, a single static "compile" member function
@@ -251,16 +250,43 @@ goog.provide('jchemhub.query.Query');
          */
         compile: function(/**?*/variable) {}
     }; 
-    
-
-
+   
+    /**
+     * Mappers are used to do substructure searching. The input is a query and molecule.
+     * @class Interface defining Substructure Mappers
+     * @interface
+     */
+    jchemhub.query.IMapper = function(/**jchemhub.query.IQuery*/query) {
+        /**
+         * Find the first mapping of the query onto the molecule.
+         * @param molecule The molecule to search.
+         * @return {goog.structs.Map} The mapping, can be empty if none found.
+         */
+        this.mapFirst = function(/**jchemhub.model.Molecule*/molecule) {};
+        /**
+         * Find all unqiue mappings of the query onto the molecule.
+         * @param molecule The molecule to search.
+         * @return {Array.<goog.structs.Map>} The mappings, can be an empty array if none found.
+         */
+        this.mapUnique = function(/**jchemhub.model.Molecule*/molecule) {};
+        /**
+         * Find all unqiue mappings of the query onto the molecule. Unlike mapUnique, this 
+         * method doesn't return the result directly. The specified callback function is 
+         * called when the results are ready. At intervals, control is released to the 
+         * browser to process events. This allows large molecules to be searched without
+         * creating a bad (i.e. unresponsive) user experience.
+         * @param molecule The molecule to search.
+         * @return {Array.<goog.structs.Map>} The mappings, can be an empty array if none found.
+         */
+        this.mapUniqueCallback = function(/**jchemhub.model.Molecule*/molecule, /**function(Array.<goog.structs.Map>)*/callback);
+    };
 
 
     /**
-     * @class Class representing a query
+     * @class Default query implementation.
      * @see jchemhub.query.QueryAtom
      * @see jchemhub.query.QueryBond
-     *
+     * @implements {jchemhub.query.IQuery}
      */
     jchemhub.query.Query = function() {
         this.atoms = [];
@@ -282,14 +308,14 @@ goog.provide('jchemhub.query.Query');
      * @return {number} The index of the specified atom or -1 if the atom is 
      * not part of this query.
      */
-    jchemhub.query.Query.prototype.indexOfAtom = function(/**jchemhub.query.QueryAtom*/atom) {
+    jchemhub.query.Query.prototype.indexOfAtom = function(/**jchemhub.query.IQueryAtom*/atom) {
         return goog.array.indexOf(this.atoms, atom);
     };
 
     /**
      * Get an atom by index.
      * @param index The atom index.
-     * @return The atom with the specified index or null if the index is invalid.
+     * @return {jchemhub.query.IQueryAtom} The atom with the specified index or null if the index is invalid.
      */
     jchemhub.query.Query.prototype.getAtom = function(/**number*/index) {
         return this.atoms[index];
@@ -299,7 +325,7 @@ goog.provide('jchemhub.query.Query');
      * Add an atom to this query.
      * @param atom The query atom to add.
      */
-    jchemhub.query.Query.prototype.addAtom = function(/**jchemhub.query.QueryAtom*/atom) {
+    jchemhub.query.Query.prototype.addAtom = function(/**jchemhub.query.IQueryAtom*/atom) {
         this.atoms.push(atom);
     };
 
@@ -307,7 +333,7 @@ goog.provide('jchemhub.query.Query');
      * Add a bond to this query.
      * @param bond The query bond to add.
      */
-    jchemhub.query.Query.prototype.addBond = function(/**jchemhub.query.QueryBond*/bond) {
+    jchemhub.query.Query.prototype.addBond = function(/**jchemhub.query.IQueryBond*/bond) {
         bond.source.neighbors.push(bond.target);
         bond.target.neighbors.push(bond.source);
         this.bonds.push(bond);
@@ -317,9 +343,9 @@ goog.provide('jchemhub.query.Query');
      * Find the bond connecting atom1 with atom2.
      * @param atom1 The first atom.
      * @param atom2 The second atom.
-     * @return {?jchemhub.query.QueryBond} The found bond or null if no such bond exists.
+     * @return {?jchemhub.query.IQueryBond} The found bond or null if no such bond exists.
      */
-    jchemhub.query.Query.prototype.findBond = function(/**jchemhub.query.QueryAtom*/atom1, /**jchemhub.query.QueryAtom*/atom2) {
+    jchemhub.query.Query.prototype.findBond = function(/**jchemhub.query.IQueryAtom*/atom1, /**jchemhub.query.IQueryAtom*/atom2) {
         for ( var i = 0, il = this.bonds.length; i < il; i++) {
             var bond = this.bonds[i];
             if ((atom1 === bond.source && atom2 === bond.target) || (atom2 === bond.source && atom1 === bond.target)) {
@@ -331,9 +357,10 @@ goog.provide('jchemhub.query.Query');
 
 
     /**
-     * @class Class representing an atom in a query
+     * @class Default query atom implementation
      * @see jchemhub.query.Query
      * @see jchemhub.query.QueryBond
+     * @implements {jchemhub.query.IQueryAtom}
      */
     jchemhub.query.QueryAtom = function() {
         // query properties
@@ -350,7 +377,7 @@ goog.provide('jchemhub.query.Query');
      * @param opt_sssr The SSSR for the molecule.
      * @return {boolean} True if the specified atom matches this query atom.
      */
-    jchemhub.query.QueryAtom.prototype.matches = function(/**jchemhub.query.QueryAtom*/atom, /**jchemhub.model.Moleculei=*/opt_molecule, 
+    jchemhub.query.QueryAtom.prototype.matches = function(/**jchemhub.query.IQueryAtom*/atom, /**jchemhub.model.Molecule=*/opt_molecule, 
             /**Array.<jchemhub.ring.Ring>=*/opt_sssr) {
         var symbolMatches = true;
         if (this.symbols.length) {
@@ -366,7 +393,7 @@ goog.provide('jchemhub.query.Query');
 
     /**
      * Get the neighbors for this query atom.
-     * @return {Array.<jchemhub.query.QueryAtom>} The neighbors for this query atom.
+     * @return {Array.<jchemhub.query.IQueryAtom>} The neighbors for this query atom.
      */
     jchemhub.query.QueryAtom.prototype.getNeighbors = function() {
         return this.neighbors;
@@ -377,7 +404,7 @@ goog.provide('jchemhub.query.Query');
      * @see jchemhub.query.Query 
      * @see jchemhub.query.QueryAtom
      */
-    jchemhub.query.QueryBond = function(source, target) {
+    jchemhub.query.QueryBond = function(/**jchemhub.query.IQueryAtom*/source, /**jchemhub.query.IQueryBond*/target) {
         // query properties
         this.orders = [];
         // topology properties
@@ -392,7 +419,7 @@ goog.provide('jchemhub.query.Query');
      * @param opt_sssr The SSSR for the molecule.
      * @return {boolean} True if the specified bond matches this query bond.
      */
-    jchemhub.query.QueryBond.prototype.matches = function(/**jchemhub.query.QueryBond*/bond, /**jchemhub.model.Molecule=*/opt_molecule, 
+    jchemhub.query.QueryBond.prototype.matches = function(/**jchemhub.query.IQueryBond*/bond, /**jchemhub.model.Molecule=*/opt_molecule, 
             /**Array.<jchemhub.ring.Ring>=*/opt_sssr) {
         if (!this.orders.length) {
             return true; // match any bond order

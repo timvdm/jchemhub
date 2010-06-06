@@ -21,9 +21,12 @@ goog.require('jchemhub.query.MoleculeCompiler');
 
     /**
      * The Smiles Query Compiler compiles SMILES strings into queries. This
-     * class implements {@link jchemhub.query.IQueryCompiler}. <a href="../Substructure Search.html">Substructure Search</a>
+     * class implements {@link jchemhub.query.IQueryCompiler}. See the 
+     * <a href="../Substructure Search.html">Substructure Search</a> page for more
+     * information.
      * @class Smiles Query Compiler
      * @see jchemhub.query.IQueryCompiler
+     * @implements jchemhub.query.IQueryCompiler
      */
     jchemhub.query.SmilesCompiler = {};
 
