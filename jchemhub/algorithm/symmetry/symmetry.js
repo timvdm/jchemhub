@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-goog.provide('jchemhub.symmetry');
+goog.provide('jchemhub.symmetry.Symmetry');
 
 goog.require('goog.array');
 

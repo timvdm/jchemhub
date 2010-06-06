@@ -278,7 +278,7 @@ goog.provide('jchemhub.query.Query');
          * @param molecule The molecule to search.
          * @return {Array.<goog.structs.Map>} The mappings, can be an empty array if none found.
          */
-        this.mapUniqueCallback = function(/**jchemhub.model.Molecule*/molecule, /**function(Array.<goog.structs.Map>)*/callback);
+        this.mapUniqueCallback = function(/**jchemhub.model.Molecule*/molecule, /**function(Array.<goog.structs.Map>)*/callback) {};
     };
 
 

@@ -11,7 +11,7 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
 <script>
             goog.require('goog.testing.jsunit');
             goog.require('jchemhub.io.mdl');
-            goog.require('jchemhub.symmetry');
+            goog.require('jchemhub.symmetry.Symmetry');
         </script>
 <script>
             function debug(text, noNewLine) {
@@ -50,7 +50,7 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
 
             function findSymmetryClasses(name, mdlString, count){
                 var mol = jchemhub.io.mdl.readMolfile(mdlString);
-                var symClasses = jchemhub.symmetry.findSymmetryClasses(mol);
+                var symClasses = jchemhub.symmetry.Symmetry.findSymmetryClasses(mol);
                 assertEquals(count, jchemhub.symmetry.countSymmetryClasses(symClasses));
                 debug(JSON.stringify(symClasses));
             }
