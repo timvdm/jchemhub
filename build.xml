@@ -20,9 +20,6 @@
 		<filelist dir="${js-src.dir}/io">
 			<file name="json.js" />
 		</filelist>
-		<filelist>
-			<file name="export.js" />
-		</filelist>
 	</path>
 
 	<pathconvert pathsep=' -i ' property="jsfiles" refid="input-files" />
