@@ -240,8 +240,36 @@ jchemhub.controller.DefaultToolbar.addDefaultFormatOptions = function(button) {
  * @see jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS
  */
 jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
-	return jchemhub.controller.DefaultToolbar.makeToolbar(
-			jchemhub.controller.DefaultToolbar.DEFAULT_BUTTONS, elem);
+	
+	var buttons = []; 
+	buttons.push(jchemhub.controller.ToolbarFactory.makeButton( 
+    	jchemhub.controller.plugins.ClearEditor.COMMAND, 'Clear Editor', 'Clear')); 
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_IN, 'zoom in', '+'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT, 'zoom out', '-'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO, 'undo', 'undo'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.REDO, 'redo', 'redo'));
+  
+    var atom_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.SymbolSelect.COMMAND, 'select Symbol', 'Symbol');
+    var atom_menu = new goog.ui.Menu();
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:black"},'C')));
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:blue"},'N')));
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:red"},'O')));
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:yellow"},'S')));
+    atom_menu.addItem(new goog.ui.Option('...'));
+    atom_select.setMenu(atom_menu);
+    buttons.push(atom_select);
+    
+    var bond_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.BondSelect.COMMAND, 'select Bond Type', 'Bond');
+    var bond_menu = new goog.ui.Menu();
+    
+    goog.array.forEach(jchemhub.controller.plugins.BondSelect.BOND_TYPES, function(entry){
+    	bond_menu.addItem(new goog.ui.Option(entry.caption, entry.klass));
+    });
+
+    bond_select.setMenu(bond_menu);
+    buttons.push(bond_select);	
+    return jchemhub.controller.DefaultToolbar.makeToolbar(buttons, elem);
+
 };
 
 /**
