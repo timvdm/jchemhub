@@ -25,7 +25,7 @@ goog.inherits(jchemhub.view.MoleculeRenderer, jchemhub.view.Renderer);
 jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans, group) {
 	this.transform = trans;
 	goog.array.forEach(molecule.bonds, function(bond) {
-		this.bondRendererFactory.get(bond).render(bond, trans, group);
+		this.bondRendererFactory.get(bond).render(bond, trans, undefined);
 	}, this);
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans, this.atomController);
