@@ -1,2 +1,6 @@
-third-party
+third-party/closure
+third-party/closure-compiler
+docs/*.html
+docs/*.css
+docs/symbols
 .project

@@ -17,13 +17,21 @@ goog.provide('jchemhub.query.MoleculeCompiler');
 goog.require('jchemhub.query.Query');
 
 (function() {
-
-    jchemhub.query.MoleculeCompiler = {};
+    /**
+     * The Molecule Query Compiler compiles existing molecules into queries. This
+     * class implements {@link jchemhub.query.IQueryCompiler}. See the 
+     * <a href="../Substructure Search.html">Substructure Search</a> page for more
+     * information.
+     * @class Smiles Query Compiler
+     * @see jchemhub.query.IQueryCompiler
+     * @implements jchemhub.query.IQueryCompiler
+     */
+   jchemhub.query.MoleculeCompiler = {};
 
     /**
      * Compile a query from an exising molecule.
      * @param {jchemhub.model.Molecule} molecule The molecule
-     * @return {jchemhub.query.Query}
+     * @return {jchemhub.query.IQuery}
      */
     jchemhub.query.MoleculeCompiler.compile = function(molecule) {
         var query = new jchemhub.query.Query();

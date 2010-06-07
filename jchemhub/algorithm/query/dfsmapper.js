@@ -14,14 +14,26 @@
 
 goog.provide('jchemhub.query.DFSMapper');
 
+goog.require('jchemhub.ring.SSSRFinder');
 goog.require('goog.structs.Map');
 
 (function() {
 
     function simpleSort(a, b) {
-        return a - b;
+        return a - b
     }
 
+    /**
+     * This class implements the {@link jchemhub.query.IMapper} interface and can
+     * be used for substructure searching. The algorithm compares each query atom
+     * with the molecule atoms in a depth-first order. As long as the atom pairs
+     * match, the path is extended. When the path contains the same number of 
+     * elements as there are atoms in the query, a match is found. See the
+     * <a href="../Substructure Search.html">Substructure Search</a> page for more
+     * details.
+     * @class Class implementing the jchemhub.query.IMapper interface.
+     * @implements {jchemhub.query.IMapper}
+     */
     jchemhub.query.DFSMapper = function(query) {
 
         var Type = { MapFirst: 0, MapUnique: 1, MapAll: 2 };
@@ -29,32 +41,24 @@ goog.require('goog.structs.Map');
         this.query = query;
 
         /**
-         * Select a start atom with the least number of neighbors. This ensures
-         * there is a path to all atoms in the query.
+         * Select a start atom. todo: select the most unique query atom,
+         * this avoids checking many paths that will never lead to a match. 
          */
         function getStartAtom(query) {
-            var startAtom = query.getAtom(0);
-            var leastNbrs = startAtom.neighbors.length;
-            for (var i = 0, li = query.countAtoms(); i < li; i++) {
-                var qatom = query.getAtom(i);
-                if (qatom.neighbors.length < leastNbrs) {
-                    startAtom = qatom;
-                    leastNbrs = qatom.neighbors.length;
-                }
-            }
-            return startAtom;
+            return query.getAtom(0);
         }
 
         /**
-         * State to represent the current mapped state
+         * State to represent the current mapped state.
          */
         function State(type, query, queried) {
-            this.type = type;
-            this.query = query;
-            this.queried = queried;
-            this.queryPath = [];
-            this.queriedPath = [];
-            this.candidates = [];
+            this.type = type; // MapFirst, MapUnique, MapAll
+            this.query = query; // the query
+            this.queried = queried; // the queried molecule
+            this.sssr = jchemhub.ring.findSSSR(queried); // sssr rings
+            this.queryPath = []; // the path in the query
+            this.queriedPath = []; // the path in the queried molecule
+            this.candidates = []; // the candidates to check
         }
 
         /**
@@ -93,7 +97,7 @@ goog.require('goog.structs.Map');
         }
 
         /**
-         * Match the candidate atoms a bonds.
+         * Match the candidate atoms and bonds.
          */
         function matchCandidate(state, queryAtom, queriedAtom, queryNbr, queriedNbr, maps) {
             // make sure the neighbor atom isn't in the paths already
@@ -105,7 +109,7 @@ goog.require('goog.structs.Map');
             }
 
             // check if the atoms match
-            if (!queryNbr.matches(queriedNbr)) {
+            if (!queryNbr.matches(queriedNbr, state.queried, state.sssr)) {
                 return false;
             }
 
@@ -113,7 +117,7 @@ goog.require('goog.structs.Map');
             var queriedBond = state.queried.findBond(queriedAtom, queriedNbr);
 
             // check if the bonds match
-            if (!queryBond.matches(queriedBond)) {
+            if (!queryBond.matches(queriedBond, state.queried, state.sssr)) {
                 return false;
             }
 
@@ -198,7 +202,7 @@ goog.require('goog.structs.Map');
                 var state = new State(Type.MapAll, this.query, queried);
                 var queriedAtom = queried.getAtom(i);
                 if (!queryAtom.matches(queriedAtom)) {
-                    continue
+                    continue;
                 }
 
                 if (this.query.countAtoms() > 1) {

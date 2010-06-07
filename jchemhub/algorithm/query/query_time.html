@@ -29,13 +29,7 @@ function debug(text, noNewLine) {
 }
 
         function callback(maps) {
-            debug("match " + (i+1) + ": " + maps.length);
-
-            i++;
-            if (i < smiles.length) {
-                doNext();
-            }
-        }
+       }
 
 
         var i = 0;
@@ -43,7 +37,12 @@ function debug(text, noNewLine) {
             var query = jchemhub.query.SmilesCompiler.compile('c1ccccc1');
             var mapper = new jchemhub.query.DFSMapper(query);
             var molecule = jchemhub.io.smiles.parse(smiles[i]);
-            var maps = mapper.mapAllCallback(molecule, callback);
+            var maps = mapper.mapAll(molecule);
+            debug("match " + (i+1) + ": " + maps.length);
+            i++;
+            if (i < smiles.length) {
+                setTimeout(doNext, 0);
+            }
         }
 
 

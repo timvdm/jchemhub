@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-goog.provide('jchemhub.symmetry');
+goog.provide('jchemhub.symmetry.Symmetry');
 
 goog.require('goog.array');
 
@@ -127,7 +127,27 @@ goog.require('goog.array');
         return newClasses;    
     }
 
-    jchemhub.symmetry.findSymmetryClasses = function(molecule) {
+    /**
+     * @namespace jchemhub
+     * @name jchemhub
+     */
+    /**
+     * @namespace jchemhub.symmetry
+     * @name jchemhub.symmetry
+     */
+
+    /**
+     * Class for finding symmetry classes for molecules.
+     * @class
+     */
+    jchemhub.symmetry.Symmetry = {};
+
+    /**
+     * Find the symmetry classes for a molecule.
+     * @param molecule The input molecule.
+     * @return {Array.<number>} The symmetry classes sorted by atom index.
+     */
+    jchemhub.symmetry.Symmetry.findSymmetryClasses = function(/**jchemhub.model.Molecule*/molecule) {
         var symmetry_classes = graphInvariants(molecule);
 
         var lastCount = jchemhub.symmetry.countSymmetryClasses(symmetry_classes);
