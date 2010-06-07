@@ -80,8 +80,8 @@ jchemhub.view.ReactionRenderer.prototype.center = function(molecules) {
 /**
  * finds bounding box of an array of molecules
  * 
- * @param molecules
- * @return goog.math.Box
+ * @param molecules {Array.<jchemhub.model.Molecule>}
+ * @return {goog.math.Box}
  */
 
 jchemhub.view.ReactionRenderer.prototype.boundingBox = function(molecules) {
@@ -91,7 +91,7 @@ jchemhub.view.ReactionRenderer.prototype.boundingBox = function(molecules) {
 	var coords = goog.array.map(atoms, function(a) {
 		return a.coord;
 	})
-	var m = this.config.get("margin");
+	var m = Number(this.config.get("margin"));
 	return goog.math.Box.boundingBox.apply(null, coords).expand(m, m, m, m);
 }
 

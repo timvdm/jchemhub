@@ -6,9 +6,10 @@ goog.require("goog.structs.Map");
  * Abstract Class to render a model object to a graphics object
  * 
  * @constructor
- * @param graphics
- *            {goog.graphics.AbstractGraphics} graphics to draw on.
- * @extends {jchemhub.view.Renderer}
+ * @param controller {goog.events.EventTarget} controller for this view
+ * @param graphics {goog.graphics.AbstractGraphics} graphics to draw on.
+ * @param opt_config {object} config to override defaults
+ * @defaultConfig {object} object holding default values
  */
 jchemhub.view.Renderer = function(controller, graphics, opt_config, defaultConfig) {
 	this.controller = controller;

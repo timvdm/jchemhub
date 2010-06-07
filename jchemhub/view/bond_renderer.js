@@ -10,7 +10,7 @@ goog.require('jchemhub.math.Line');
  *            {goog.graphics.AbstractGraphics} graphics to draw on.
  * @extends {jchemhub.view.Renderer}
  */
-jchemhub.view.BondRenderer = function(controller, graphics, opt_config) {
+jchemhub.view.BondRenderer = function(controller, graphics, opt_config, defaultConfig) {
 	jchemhub.view.Renderer.call(this, controller, graphics, opt_config,
 			jchemhub.view.BondRenderer.defaultConfig);
 }
@@ -22,7 +22,7 @@ goog.inherits(jchemhub.view.BondRenderer, jchemhub.view.Renderer);
  * @param {jchemhub.graphics.AffineTransform} transform
  * @return {goog.graphics.GroupElement}
  */
-jchemhub.view.BondRenderer.prototype.render = function(bond, transform) {
+jchemhub.view.BondRenderer.prototype.render = function(bond, transform, group) {
 	this.transform = transform;
 
 	var fill = new goog.graphics.SolidFill('red', 0.001); // 'transparent'
@@ -56,8 +56,9 @@ jchemhub.view.BondRenderer.prototype.render = function(bond, transform) {
 	bondBoxPath.lineTo(boxCoords[3].x, boxCoords[3].y);
 	bondBoxPath.lineTo(boxCoords[1].x, boxCoords[1].y);
 	bondBoxPath.close();
-
-	var group = this.graphics.createGroup();
+	if (!group){
+		var group = this.graphics.createGroup();
+	}
 	this.graphics.drawPath(bondBoxPath, stroke, fill, group);
 	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
 			this.controller.handleMouseOver, this.controller, bond));
