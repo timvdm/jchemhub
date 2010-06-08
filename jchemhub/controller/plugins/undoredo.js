@@ -123,11 +123,13 @@ jchemhub.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e)
 jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		editorObj) {
 	var content = editorObj.getModels();
+	var serialized = [];
 	if (content) {
 		// serialize to json object
-		content = goog.array.map(editorObj.getModels(), jchemhub.io.json
-				.reactionToJson);
+		serialized = goog.array.map(editorObj.getModels(),
+				jchemhub.io.json.reactionToJson);
 	}
+
 	var currentState = this.currentState_;
 
 	if (currentState) {
@@ -135,7 +137,7 @@ jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		this.addState(currentState);
 	}
 
-	this.currentState_ = content;
+	this.currentState_ = serialized;
 };
 
 /**
@@ -230,7 +232,8 @@ jchemhub.controller.plugins.UndoRedo.prototype.shiftState_ = function(
 
 		// Push the current state into the redo stack.
 		toStack.push(state);
-		this.editorObject.setModel(goog.array.map(state, jchemhub.io.json.readReaction));
+		this.editorObject.setModels(goog.array.map(state,
+				jchemhub.io.json.readReaction));
 
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state
