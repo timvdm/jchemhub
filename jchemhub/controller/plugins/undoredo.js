@@ -110,6 +110,7 @@ jchemhub.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e)
 	(e.target);
 
 	this.updateCurrentState_(editorObj);
+	this.logger.info("undoStack_.length " + this.undoStack_.length);
 
 };
 
@@ -238,6 +239,8 @@ jchemhub.controller.plugins.UndoRedo.prototype.shiftState_ = function(
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state
 		// change.
+		this.logger.info("fromStack.length " + fromStack.length);
+		this.logger.info("toStack.length " + toStack.length);
 		if (fromStack.length == 0 || toStack.length == 1) {
 			this.dispatchStateChange_();
 		}
