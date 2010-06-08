@@ -10,6 +10,7 @@
 <script src="../deps.js"></script>
 
 <script src="../io/json_test_rxn.js"></script>
+<script src="../json/json_templates.js"></script>
 
 <link rel="stylesheet"
 	href="../../third-party/closure/closure/goog/demos/css/demo.css">
@@ -105,7 +106,16 @@ function initPage(){
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
 	editor.setModel(model);
-
+	
+	
+	var container = goog.dom.getElement('moleculeContainers');
+	goog.array.forEach(templates, function(json_mol){
+		var mol = jchemhub.io.json.readMolecule(json_mol);
+		var el = goog.dom.createDom('div', {'style': 'width: 200px; height: 200px'});
+		goog.dom.appendChild(container, el);
+    	var ed = new jchemhub.controller.ReactionEditor(el);
+		ed.setModel(mol);
+	});
 };
 
 
@@ -123,6 +133,11 @@ goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 	<tr>
 		<td>
 		<div id="reactionEditorContainer" style="height: 400px"></div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<div id="moleculeContainers" 
 		</td>
 	</tr>
 </table>
