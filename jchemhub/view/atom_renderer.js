@@ -47,8 +47,9 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 	if (symbol.text) {
 		graphics
 				.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
-						new goog.graphics.SolidFill(this.config
-								.get("background").color), group);
+						new goog.graphics.SolidFill(this.config.get("background").color), 
+//						new goog.graphics.SolidFill("orange", 0.3),
+								group);
 
 		graphics.drawText(symbol.text, point.x - w / 2, point.y - h / 2, w, h,
 				symbol.justification, null, font, stroke, fill, group);
@@ -85,8 +86,9 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 		}
 	} else {
 		graphics.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
-				new goog.graphics.SolidFill(
-						this.config.get("background").color, 0.001), group);
+				new goog.graphics.SolidFill(this.config.get("background").color, 0.001), 
+//				new goog.graphics.SolidFill("orange", 0.3),
+						group);
 	}
 
 	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(

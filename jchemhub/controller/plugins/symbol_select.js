@@ -52,6 +52,7 @@ jchemhub.controller.plugins.SymbolSelect.prototype.logger = goog.debug.Logger
 jchemhub.controller.plugins.SymbolSelect.prototype.handleAtomMouseDown = function(
 		e) {
 	if (this.symbol && (this.symbol!=e.atom.symbol)) {
+		this.editorObject.dispatchBeforeChange();
 		var new_atom = new jchemhub.model.Atom(this.symbol, e.atom.coord.x, e.atom.coord.y)
 		goog.array.forEach(e.atom.bonds.getValues(), function(bond){
 			var new_bond = bond.clone();
@@ -62,19 +63,24 @@ jchemhub.controller.plugins.SymbolSelect.prototype.handleAtomMouseDown = functio
 		var molecule = e.atom.molecule
 		molecule.removeAtom(e.atom);
 		molecule.addAtom(new_atom);
+		
 		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.dispatchChange();
 	}
 };
 
 jchemhub.controller.plugins.SymbolSelect.prototype.handleMouseDown = function(e){
 	if(this.symbol){
+		this.editorObject.dispatchBeforeChange();
 		var trans = this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer.transform.createInverse();
 		var coords = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)]);
 		var atom = new jchemhub.model.Atom(this.symbol, coords[0].x, coords[0].y);
 		var bond = new jchemhub.model.SingleBond(atom, new jchemhub.model.Atom("C", coords[0].x + 1.25, coords[0].y  ));
 		var mol = new jchemhub.model.Molecule();
 		mol.addBond(bond);
+		mol.addAtom(atom);	
 		this.editorObject.getModels().push(mol);
 		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.dispatchChange();
 	}
 }

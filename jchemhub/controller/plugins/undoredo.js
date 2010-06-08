@@ -1,8 +1,10 @@
 goog.provide('jchemhub.controller.plugins.UndoRedo');
 goog.require('goog.debug.Logger');
 
-//goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO', jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO);
-//goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.REDO', jchemhub.controller.plugins.UndoRedo.COMMAND.REDO);
+// goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO',
+// jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO);
+// goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.REDO',
+// jchemhub.controller.plugins.UndoRedo.COMMAND.REDO);
 
 /**
  * @constructor
@@ -52,8 +54,8 @@ jchemhub.controller.plugins.UndoRedo.COMMAND = {
 
 /**
  * Inverse map of execCommand strings to
- * {@link jchemhub.controller.plugins.UndoRedo.COMMAND} constants. Used to determine
- * whether a string corresponds to a command this plugin handles
+ * {@link jchemhub.controller.plugins.UndoRedo.COMMAND} constants. Used to
+ * determine whether a string corresponds to a command this plugin handles
  * 
  * @type {Object}
  * @private
@@ -67,18 +69,19 @@ jchemhub.controller.plugins.UndoRedo.prototype.getTrogClassId = function() {
 };
 
 /** @inheritDoc */
-jchemhub.controller.plugins.UndoRedo.prototype.isSupportedCommand = function(command) {
+jchemhub.controller.plugins.UndoRedo.prototype.isSupportedCommand = function(
+		command) {
 	return command in jchemhub.controller.plugins.UndoRedo.SUPPORTED_COMMANDS_;
 };
 
 /** @inheritDoc */
-jchemhub.controller.plugins.UndoRedo.prototype.execCommandInternal = function(command) {
+jchemhub.controller.plugins.UndoRedo.prototype.execCommandInternal = function(
+		command) {
 	if (command == jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO) {
 		this.undo();
 	} else if (command == jchemhub.controller.plugins.UndoRedo.COMMAND.REDO) {
 		this.redo();
 	}
-
 
 };
 
@@ -121,8 +124,9 @@ jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		editorObj) {
 	var content = editorObj.getModels();
 	if (content) {
-		//serialize to json object
-		content = jchemhub.io.json.reactionToJson(editorObj.getModels());		
+		// serialize to json object
+		content = goog.array.map(editorObj.getModels(), jchemhub.io.json
+				.reactionToJson);
 	}
 	var currentState = this.currentState_;
 
@@ -170,7 +174,8 @@ jchemhub.controller.plugins.UndoRedo.prototype.addState = function(state) {
  * @private
  */
 jchemhub.controller.plugins.UndoRedo.prototype.dispatchStateChange_ = function() {
-	this.dispatchEvent(jchemhub.controller.plugins.UndoRedo.EventType.STATE_CHANGE);
+	this
+			.dispatchEvent(jchemhub.controller.plugins.UndoRedo.EventType.STATE_CHANGE);
 };
 
 /**
@@ -218,15 +223,14 @@ jchemhub.controller.plugins.UndoRedo.prototype.hasRedoState = function() {
  *            toStack Stack to move the state to.
  * @private
  */
-jchemhub.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
-		toStack) {
+jchemhub.controller.plugins.UndoRedo.prototype.shiftState_ = function(
+		fromStack, toStack) {
 	if (fromStack.length) {
 		var state = fromStack.pop();
 
 		// Push the current state into the redo stack.
 		toStack.push(state);
-		this.editorObject.setModel(jchemhub.io.json.readReaction(state));
-	
+		this.editorObject.setModel(goog.array.map(state, jchemhub.io.json.readReaction));
 
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state
@@ -239,12 +243,13 @@ jchemhub.controller.plugins.UndoRedo.prototype.shiftState_ = function(fromStack,
 
 /** @inheritDoc */
 jchemhub.controller.plugins.UndoRedo.prototype.enable = function(editorObject) {
-	jchemhub.controller.plugins.UndoRedo.superClass_.enable.call(this, editorObject);
+	jchemhub.controller.plugins.UndoRedo.superClass_.enable.call(this,
+			editorObject);
 
 	// Don't want pending delayed changes from when undo-redo was disabled
 	// firing after undo-redo is enabled since they might cause undo-redo stack
 	// updates.
-//	editorObject.clearDelayedChange();
+	// editorObject.clearDelayedChange();
 
 	this.eventHandler = new goog.events.EventHandler(this);
 	// It also seems like the if check below is just a bad one. We should do
@@ -263,8 +268,10 @@ jchemhub.controller.plugins.UndoRedo.prototype.enable = function(editorObject) {
 	this.eventHandler.listen(editorObject,
 			jchemhub.controller.ReactionEditor.EventType.DELAYEDCHANGE,
 			this.handleDelayedChange_);
-	this.eventHandler.listen(editorObject,
-			jchemhub.controller.ReactionEditor.EventType.BLUR, this.handleBlur_);
+	this.eventHandler
+			.listen(editorObject,
+					jchemhub.controller.ReactionEditor.EventType.BLUR,
+					this.handleBlur_);
 
 	// We want to capture the initial state of a Trogedit field before any
 	// editing has happened. This is necessary so that we can undo the first
@@ -292,44 +299,43 @@ jchemhub.controller.plugins.UndoRedo.prototype.disposeInternal = function() {
 
 };
 
-
 /**
- * Event types for the events dispatched by undo-redo 
+ * Event types for the events dispatched by undo-redo
+ * 
  * @enum {string}
  */
 jchemhub.controller.plugins.UndoRedo.EventType = {
-  /**
-   * Signifies that he undo or redo stack transitioned between 0 and 1 states,
-   * meaning that the ability to perform undo or redo operations has changed.
-   */
-  STATE_CHANGE: 'state_change',
+	/**
+	 * Signifies that he undo or redo stack transitioned between 0 and 1 states,
+	 * meaning that the ability to perform undo or redo operations has changed.
+	 */
+	STATE_CHANGE : 'state_change',
 
-  /**
-   * Signifies that a state was just added to the undo stack. Events of this
-   * type will have a {@code state} property whose value is the state that
-   * was just added.
-   */
-  STATE_ADDED: 'state_added',
+	/**
+	 * Signifies that a state was just added to the undo stack. Events of this
+	 * type will have a {@code state} property whose value is the state that was
+	 * just added.
+	 */
+	STATE_ADDED : 'state_added',
 
-  /**
-   * Signifies that the undo method of a state is about to be called.
-   * Events of this type will have a {@code state} property whose value is the
-   * state whose undo action is about to be performed. If the event is cancelled
-   * the action does not proceed, but the state will still transition between
-   * stacks.
-   */
-  BEFORE_UNDO: 'before_undo',
+	/**
+	 * Signifies that the undo method of a state is about to be called. Events
+	 * of this type will have a {@code state} property whose value is the state
+	 * whose undo action is about to be performed. If the event is cancelled the
+	 * action does not proceed, but the state will still transition between
+	 * stacks.
+	 */
+	BEFORE_UNDO : 'before_undo',
 
-  /**
-   * Signifies that the redo method of a state is about to be called.
-   * Events of this type will have a {@code state} property whose value is the
-   * state whose redo action is about to be performed. If the event is cancelled
-   * the action does not proceed, but the state will still transition between
-   * stacks.
-   */
-  BEFORE_REDO: 'before_redo'
+	/**
+	 * Signifies that the redo method of a state is about to be called. Events
+	 * of this type will have a {@code state} property whose value is the state
+	 * whose redo action is about to be performed. If the event is cancelled the
+	 * action does not proceed, but the state will still transition between
+	 * stacks.
+	 */
+	BEFORE_REDO : 'before_redo'
 };
-
 
 /**
  * The logger for this class.

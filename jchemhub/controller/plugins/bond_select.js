@@ -87,30 +87,40 @@ jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 		e) {
 
 	if (this.bond_klass) {
-		var new_bond = new this.bond_klass(e.bond.source, e.bond.target);
+		this.editorObject.dispatchBeforeChange();
+		if (e.bond instanceof jchemhub.model.SingleBondUp
+				&& this.bond_klass == jchemhub.model.SingleBondUp) {
+			var new_bond = new this.bond_klass(e.bond.target, e.bond.source);
+		} else {
+			var new_bond = new this.bond_klass(e.bond.source, e.bond.target);
+		}
 		var molecule = e.bond.molecule;
 		molecule.removeBond(e.bond);
 		molecule.addBond(new_bond);
 		this.editorObject.setModels(this.editorObject.getModels());
+		this.editorObject.dispatchChange();
 	}
 
 };
 
 jchemhub.controller.plugins.BondSelect.prototype.handleAtomMouseDown = function(
 		e) {
+
+	this.editorObject.dispatchBeforeChange();
 	this.addBondToAtom(e.atom);
-	
+	this.editorObject.dispatchChange();
+
 };
 
-jchemhub.controller.plugins.BondSelect.prototype.addBondToAtom = function(atom){
+jchemhub.controller.plugins.BondSelect.prototype.addBondToAtom = function(atom) {
 	if (this.bond_klass) {
 		var angles = goog.array.map(atom.bonds.getValues(), function(bond) {
 			return new jchemhub.math.Line(atom.coord,
 					bond.otherAtom(atom).coord).getTheta();
 		});
 
-//		this.logger.info("angles.length " + angles.length);
-//		this.logger.info("angles[0] " + angles[0]);
+		// this.logger.info("angles.length " + angles.length);
+		// this.logger.info("angles[0] " + angles[0]);
 
 		var new_angle;
 
@@ -131,11 +141,13 @@ jchemhub.controller.plugins.BondSelect.prototype.addBondToAtom = function(atom){
 			new_angle = Math.PI + (sum_angles / angles.length);
 		}
 		if (new_angle) {
-			var new_bond = new this.bond_klass(atom, new jchemhub.model.Atom(
-					"C", atom.coord.x + Math.cos(new_angle) * 1.25, atom.coord.y
-							+ Math.sin(new_angle) * 1.25));
+			var new_atom = new jchemhub.model.Atom("C", atom.coord.x
+					+ Math.cos(new_angle) * 1.25, atom.coord.y
+					+ Math.sin(new_angle) * 1.25);
+			var new_bond = new this.bond_klass(atom, new_atom);
 			var molecule = atom.molecule;
 			molecule.addBond(new_bond);
+			molecule.addAtom(new_atom);
 			this.editorObject.setModels(this.editorObject.getModels());
 		}
 	}

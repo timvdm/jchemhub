@@ -50,6 +50,7 @@ jchemhub.controller.ReactionEditor = function(element, opt_config) {
 		this.config.addAll(opt_config); // merge optional config into
 		// defaults
 	}
+	
 
 	this.graphics = goog.graphics.createGraphics(element.clientWidth,
 			element.clientHeight);
@@ -175,7 +176,7 @@ jchemhub.controller.ReactionEditor.prototype.getModels = function() {
  * This dispatches the beforechange event on the editable reaction editor
  */
 jchemhub.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
-	this.logger.info('dispatchBeforeChange');
+//	this.logger.info('dispatchBeforeChange');
 	// if (this
 	// .isEventStopped(jchemhub.controller.ReactionEditor.EventType.BEFORECHANGE))
 	// {
@@ -886,7 +887,7 @@ jchemhub.controller.ReactionEditor.prototype.handleEditorLoad = function() {
 jchemhub.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
 	this.installStyles();
 	// this.startChangeEvents();
-	this.logger.info('Dispatching load ' + this.id);
+//	this.logger.info('Dispatching load ' + this.id);
 	this.dispatchEvent(jchemhub.controller.ReactionEditor.EventType.LOAD);
 };
 

@@ -26,43 +26,36 @@ jchemhub.view.MoleculeRenderer = function(controller, graphics, opt_config) {
 }
 goog.inherits(jchemhub.view.MoleculeRenderer, jchemhub.view.Renderer);
 
+/**
+ * The logger for this class.
+ * 
+ * @type {goog.debug.Logger}
+ * @protected
+ */
+jchemhub.view.MoleculeRenderer.prototype.logger = goog.debug.Logger
+		.getLogger('jchemhub.view.MoleculeRenderer');
 jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans,
 		group) {
 	if (!trans) {
 		// if not part of a reaction, we need to create a transform
-		trans = this.getTransform(molecule);
+		var coords = goog.array.map(molecule.atoms, function(a) {
+			return a.coord;
+		});
+		var m = Number(this.config.get("margin"));
+		var box = goog.math.Box.boundingBox.apply(null, coords);
+		var fromRect = goog.math.Rect.createFromBox(box.expand(m, m, m, m));
+		trans = this.getTransform(fromRect);
 	}
 	this.transform = trans;
+	//this.logger.info("molecule has " + molecule.bonds.length + " bonds");
 	goog.array.forEach(molecule.bonds, function(bond) {
 		this.bondRendererFactory.get(bond).render(bond, trans, undefined);
 	}, this);
+	//this.logger.info("molecule has " + molecule.atoms.length + " atoms");
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans, this.atomController);
 	}, this);
 }
-
-/**
- * 
- * @param {jchemhub.model.Molecule}
- *            reaction
- * @return {jchemhub.graphics.AffineTransform}
- */
-jchemhub.view.MoleculeRenderer.prototype.getTransform = function(molecule) {
-	var coords = goog.array.map(molecule.atoms, function(a) {
-		return a.coord;
-	})
-	var m = Number(this.config.get("margin"));
-	var box = goog.math.Box.boundingBox.apply(null, coords);
-	var fromRect = goog.math.Rect.createFromBox(box.expand(m, m, m, m));
-
-	var toSize = fromRect.getSize().scaleToFit(this.graphics.getSize());
-	var scale = this.scale_factor * toSize.width / fromRect.getSize().width;
-
-	var transform = new jchemhub.graphics.AffineTransform(scale, 0, 0, -scale,
-			-fromRect.left * scale, -fromRect.top * scale);
-
-	return transform;
-};
 
 /**
  * A default configuration for renderer
