@@ -50,7 +50,7 @@ jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOut = function(e)
 };
 
 jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(e) {
-	this.logger.info("handleBondMouseOver");
+//	this.logger.info("handleBondMouseOver");
 	if (!e.currentTarget.bondHighlightGroup) {
 		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond);
 	} else {

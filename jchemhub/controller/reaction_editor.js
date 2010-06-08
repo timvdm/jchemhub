@@ -23,6 +23,7 @@ jchemhub.controller.ReactionEditor = function(element, opt_config) {
 	this.originalElement = element;
 	this.id = element.id;
 	this.editableDomHelper = goog.dom.getDomHelper(element);
+	this.models = [];
 	/**
 	 * Map of class id to registered plugin.
 	 * 
@@ -32,7 +33,7 @@ jchemhub.controller.ReactionEditor = function(element, opt_config) {
 	this.plugins_ = {};
 
 	/**
-	 * Plugins registered on this field, indexed by the
+	 * Plugins registered on this editor, indexed by the
 	 * jchemhub.controller.Plugin.Op that they support.
 	 * 
 	 * @type {Object.<Array>}

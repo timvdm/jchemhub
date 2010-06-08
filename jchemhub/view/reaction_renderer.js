@@ -114,22 +114,7 @@ jchemhub.view.ReactionRenderer.prototype.logger = goog.debug.Logger
 jchemhub.view.ReactionRenderer.prototype.boundingRect = function(molecules) {
 	return goog.math.Rect.createFromBox(this.boundingBox(molecules));
 }
-/**
- * 
- * @param {goog.math.Rect}
- *            fromRect
- * @return {jchemhub.graphics.AffineTransform}
- */
-jchemhub.view.ReactionRenderer.prototype.getTransform = function(fromRect) {
 
-	var toSize = fromRect.getSize().scaleToFit(this.graphics.getSize());
-	var scale = this.scale_factor * toSize.width / fromRect.getSize().width;
-
-	var transform = new jchemhub.graphics.AffineTransform(scale, 0, 0, -scale,
-			-fromRect.left * scale, -fromRect.top * scale);
-
-	return transform;
-};
 
 /**
  * A default configuration for renderer

@@ -23,3 +23,20 @@ jchemhub.view.Renderer = function(controller, graphics, opt_config, defaultConfi
 }
 
 jchemhub.view.Renderer.prototype.render = goog.abstractMethod;
+
+/**
+ * 
+ * @param {goog.math.Rect}
+ *            fromRect
+ * @return {jchemhub.graphics.AffineTransform}
+ */
+jchemhub.view.Renderer.prototype.getTransform = function(fromRect) {
+
+	var toSize = fromRect.getSize().scaleToFit(this.graphics.getSize());
+	var scale = this.scale_factor * toSize.width / fromRect.getSize().width;
+
+	var transform = new jchemhub.graphics.AffineTransform(scale, 0, 0, -scale,
+			-fromRect.left * scale, -fromRect.top * scale);
+
+	return transform;
+};
