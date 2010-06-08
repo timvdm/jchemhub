@@ -82,7 +82,7 @@ function initPage(){
 	var container = goog.dom.getElement('moleculeContainers');
 	goog.array.forEach(templates, function(json_mol){
 		var mol = jchemhub.io.json.readMolecule(json_mol);
-		var el = goog.dom.createDom('div', {'style': 'width: 200px; height: 200px'});
+		var el = goog.dom.createDom('td', {'style': 'width: 150px; height: 150px'});
 		goog.dom.appendChild(container, el);
     	var ed = new jchemhub.controller.ReactionEditor(el);
 		ed.setModel(mol);
@@ -107,9 +107,7 @@ goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 		</td>
 	</tr>
 	<tr>
-		<td>
-		<div id="moleculeContainers" 
-		</td>
+		<div id="moleculeContainers"></div>
 	</tr>
 </table>
 
