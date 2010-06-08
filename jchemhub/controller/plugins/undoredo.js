@@ -119,10 +119,10 @@ jchemhub.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e)
  */
 jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		editorObj) {
-	var content = editorObj.getModel();
+	var content = editorObj.getModels();
 	if (content) {
 		//serialize to json object
-		content = jchemhub.io.json.reactionToJson(editorObj.getModel());		
+		content = jchemhub.io.json.reactionToJson(editorObj.getModels());		
 	}
 	var currentState = this.currentState_;
 

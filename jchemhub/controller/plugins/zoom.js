@@ -53,7 +53,7 @@ jchemhub.controller.plugins.Zoom.prototype.execCommand = function(command,
 	  this.editorObject.setScaleFactor(current*0.9);
   }
 
-  this.editorObject.setModel(this.editorObject.getModel());
+  this.editorObject.setModels(this.editorObject.getModels());
 };
 
 

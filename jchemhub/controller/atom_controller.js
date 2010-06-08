@@ -33,6 +33,8 @@ jchemhub.controller.AtomController.prototype.handleMouseOut = function(atom, e) 
 };
 
 jchemhub.controller.AtomController.prototype.handleMouseDown = function(atom, e) {
+	this.logger.info("handleMouseDown");
+	e.stopPropagation();
 	this.dispatchEvent(new jchemhub.controller.AtomController.AtomEvent(this,
 			atom, jchemhub.controller.AtomController.EventType.MOUSEDOWN));
 };

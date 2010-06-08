@@ -51,3 +51,18 @@ jchemhub.graphics.AffineTransform.prototype.transformCoords = function(
 	;
 	return dest_coords;
 };
+
+/**
+ * @return {!jchemhub.graphics.AffineTransform} An AffineTransform object
+ *     representing the inverse transformation.
+ */
+jchemhub.graphics.AffineTransform.prototype.createInverse = function() {
+  var det = this.getDeterminant();
+  return new jchemhub.graphics.AffineTransform(
+      this.m11_ / det,
+      -this.m10_ / det,
+      -this.m01_ / det,
+      this.m00_ / det,
+      (this.m01_ * this.m12_ - this.m11_ * this.m02_) / det,
+      (this.m10_ * this.m02_ - this.m00_ * this.m12_) / det);
+};

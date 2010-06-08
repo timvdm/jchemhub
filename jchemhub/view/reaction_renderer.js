@@ -38,8 +38,10 @@ goog.inherits(jchemhub.view.ReactionRenderer, jchemhub.view.Renderer);
  * @return {goog.graphics.GroupElement}
  */
 jchemhub.view.ReactionRenderer.prototype.render = function(reaction) {
+	var molecules = goog.array.concat(reaction.reactants, reaction.products);
+	var fromRect = this.boundingRect(molecules);
+	var transform = this.getTransform(fromRect);
 	var previousReactant;
-	var transform = this.getTransform(reaction);
 	var group = this.graphics.createGroup();
 	goog.array.forEach(reaction.reactants, function(reactant) {
 		if (previousReactant) {
@@ -114,13 +116,11 @@ jchemhub.view.ReactionRenderer.prototype.boundingRect = function(molecules) {
 }
 /**
  * 
- * @param {jchemhub.model.Reaction}
- *            reaction
+ * @param {goog.math.Rect}
+ *            fromRect
  * @return {jchemhub.graphics.AffineTransform}
  */
-jchemhub.view.ReactionRenderer.prototype.getTransform = function(reaction) {
-	var molecules = goog.array.concat(reaction.reactants, reaction.products);
-	var fromRect = this.boundingRect(molecules);
+jchemhub.view.ReactionRenderer.prototype.getTransform = function(fromRect) {
 
 	var toSize = fromRect.getSize().scaleToFit(this.graphics.getSize());
 	var scale = this.scale_factor * toSize.width / fromRect.getSize().width;

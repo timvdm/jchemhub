@@ -84,10 +84,9 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 			}
 		}
 	} else {
-		graphics
-				.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
-						new goog.graphics.SolidFill(this.config
-								.get("background").color, 0.001), group);
+		graphics.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
+				new goog.graphics.SolidFill(
+						this.config.get("background").color, 0.001), group);
 	}
 
 	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
@@ -181,6 +180,9 @@ jchemhub.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
  * @return number
  */
 jchemhub.view.AtomRenderer.bondOrientation = function(atom, i) {
+	if (atom.bonds.length == 0) {
+		return 0;
+	}	
 	var bond = atom.bonds.getValues()[i];
 	var target = bond.target.coord;
 	var source = bond.source.coord;

@@ -91,7 +91,7 @@ jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 		var molecule = e.bond.molecule;
 		molecule.removeBond(e.bond);
 		molecule.addBond(new_bond);
-		this.editorObject.setModel(this.editorObject.getModel());
+		this.editorObject.setModels(this.editorObject.getModels());
 	}
 
 };
@@ -136,7 +136,7 @@ jchemhub.controller.plugins.BondSelect.prototype.addBondToAtom = function(atom){
 							+ Math.sin(new_angle) * 1.25));
 			var molecule = atom.molecule;
 			molecule.addBond(new_bond);
-			this.editorObject.setModel(this.editorObject.getModel());
+			this.editorObject.setModels(this.editorObject.getModels());
 		}
 	}
 }

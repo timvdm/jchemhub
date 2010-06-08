@@ -76,17 +76,16 @@ function initPage(){
 	editor.registerPlugin(new jchemhub.controller.plugins.BondSelect());
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
-	editor.setModel(model);
+	editor.setModels([model]);
 	
-	
-	var container = goog.dom.getElement('moleculeContainers');
-	goog.array.forEach(templates, function(json_mol){
-		var mol = jchemhub.io.json.readMolecule(json_mol);
-		var el = goog.dom.createDom('td', {'style': 'width: 150px; height: 150px'});
-		goog.dom.appendChild(container, el);
-    	var ed = new jchemhub.controller.ReactionEditor(el);
-		ed.setModel(mol);
-	});
+//	var container = goog.dom.getElement('moleculeContainers');
+//	goog.array.forEach(templates, function(json_mol){
+//		var mol = jchemhub.io.json.readMolecule(json_mol);
+//		var el = goog.dom.createDom('td', {'style': 'width: 150px; height: 150px'});
+//		goog.dom.appendChild(container, el);
+ //  	var ed = new jchemhub.controller.ReactionEditor(el);
+//		ed.setModel(mol);
+//	});
 };
 
 
@@ -103,15 +102,16 @@ goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 	</tr>
 	<tr>
 		<td>
-		<div style="width: 1000px; height: 400px; overflow: auto; padding: 5px">
-			<div id="reactionEditorContainer" style="width: 1000px;height: 400px"></div>
+		<div
+			style="width: 1000px; height: 400px; overflow: auto; padding: 5px">
+		<div id="reactionEditorContainer" style="width: 1000px; height: 400px"></div>
 		</div>
 		</td>
 	</tr>
 	<tr>
-
+		<td>
 		<div id="moleculeContainers"></div>
-
+		</td>
 	</tr>
 </table>
 
