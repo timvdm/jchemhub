@@ -21,14 +21,7 @@ jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL = goog.getMsg('Normal');
 jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL_SERIF = goog
 		.getMsg('Normal / serif');
 
-/**
- * Common Atoms for toolbar button
- * 
- * @type {Array.<string>}
- * @private
- */
-jchemhub.controller.DefaultToolbar.ATOMS_ = [ "C", "N", "O", "S", "P", "F",
-		"Cl", "Br" ];
+
 
 /**
  * Locale-specific font descriptors. The object is a map of locale strings to
@@ -255,7 +248,12 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
     atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:blue"},'N')));
     atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:red"},'O')));
     atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:yellow"},'S')));
-    atom_menu.addItem(new goog.ui.Option('...'));
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:orange"},'P')));
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:green"},'F')));
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:green"},'Cl')));
+    atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:DarkRed"},'Br')));
+    
+   // atom_menu.addItem(new goog.ui.Option('...'));//periodic table
     atom_select.setMenu(atom_menu);
     buttons.push(atom_select);
     

@@ -41,7 +41,7 @@ jchemhub.controller.plugins.Erase.prototype.logger = goog.debug.Logger
 
 jchemhub.controller.plugins.Erase.prototype.handleBondMouseDown = function(
 		e) {
-//erase bond
+	this.logger.info("handleBondMouseDown");
 
 
 };
@@ -49,6 +49,6 @@ jchemhub.controller.plugins.Erase.prototype.handleBondMouseDown = function(
 jchemhub.controller.plugins.Erase.prototype.handleAtomMouseDown = function(
 		e) {
 //erase atom	
-
+	this.logger.info("handlerAtomMouseDown");
 };
 

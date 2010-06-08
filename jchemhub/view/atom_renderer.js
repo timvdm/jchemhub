@@ -34,7 +34,7 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 	var scale = transform.getScaleX();
 
 	var font = new goog.graphics.Font(scale / 1.8, atom_config.fontName);
-	var stroke = new goog.graphics.Stroke(atom_config.stroke.width, color);
+	var stroke = new goog.graphics.Stroke(atom_config.stroke.width, "black");
 	var fill = new goog.graphics.SolidFill(color);
 
 	var point = transform.transformCoords( [ atom.coord ])[0];
@@ -262,7 +262,7 @@ jchemhub.view.AtomRenderer.defaultConfig = {
 			radius : .3
 		},
 		stroke : {
-			width : 1
+			width : .15
 		},
 		fontName : "Arial"
 	},
