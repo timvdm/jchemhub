@@ -86,7 +86,7 @@ jchemhub.controller.plugins.BondSelect.prototype.logger = goog.debug.Logger
 jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 		e) {
 
-	if (this.bond_klass){
+	if (this.bond_klass) {
 		var new_bond = new this.bond_klass(e.bond.source, e.bond.target);
 		var molecule = e.bond.molecule;
 		molecule.removeBond(e.bond);
@@ -94,4 +94,45 @@ jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 		this.editorObject.setModel(this.editorObject.getModel());
 	}
 
+};
+
+jchemhub.controller.plugins.BondSelect.prototype.handleAtomMouseDown = function(
+		e) {
+	if (this.bond_klass) {
+		var atom = e.atom;
+		var angles = goog.array.map(atom.bonds.getValues(), function(bond) {
+			return new jchemhub.math.Line(atom.coord,
+					bond.otherAtom(atom).coord).getTheta();
+		});
+
+		this.logger.info("angles.length " + angles.length);
+		this.logger.info("angles[0] " + angles[0]);
+
+		var new_angle;
+
+		if (angles.length == 0) {
+			new_angle = 0;
+		}
+		if (angles.length == 1) {
+			if (angles[0] > 0) {
+				new_angle = angles[0] - Math.PI * 2 / 3;
+			} else {
+				new_angle = angles[0] + Math.PI * 2 / 3;
+			}
+		} else if (angles.length == 2) {
+			var sum_angles = goog.array.reduce(angles, function(r, v) {
+				return r + v;
+			}, 0);
+
+			new_angle = Math.PI + (sum_angles / angles.length);
+		}
+		if (new_angle) {
+			var new_bond = new this.bond_klass(e.atom, new jchemhub.model.Atom(
+					"C", atom.coord.x + Math.cos(new_angle) * 1.25, atom.coord.y
+							+ Math.sin(new_angle) * 1.25));
+			var molecule = e.atom.molecule;
+			molecule.addBond(new_bond);
+			this.editorObject.setModel(this.editorObject.getModel());
+		}
+	}
 };
