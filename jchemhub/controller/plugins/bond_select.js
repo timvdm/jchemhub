@@ -98,15 +98,19 @@ jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 
 jchemhub.controller.plugins.BondSelect.prototype.handleAtomMouseDown = function(
 		e) {
+	this.addBondToAtom(e.atom);
+	
+};
+
+jchemhub.controller.plugins.BondSelect.prototype.addBondToAtom = function(atom){
 	if (this.bond_klass) {
-		var atom = e.atom;
 		var angles = goog.array.map(atom.bonds.getValues(), function(bond) {
 			return new jchemhub.math.Line(atom.coord,
 					bond.otherAtom(atom).coord).getTheta();
 		});
 
-		this.logger.info("angles.length " + angles.length);
-		this.logger.info("angles[0] " + angles[0]);
+//		this.logger.info("angles.length " + angles.length);
+//		this.logger.info("angles[0] " + angles[0]);
 
 		var new_angle;
 
@@ -127,12 +131,12 @@ jchemhub.controller.plugins.BondSelect.prototype.handleAtomMouseDown = function(
 			new_angle = Math.PI + (sum_angles / angles.length);
 		}
 		if (new_angle) {
-			var new_bond = new this.bond_klass(e.atom, new jchemhub.model.Atom(
+			var new_bond = new this.bond_klass(atom, new jchemhub.model.Atom(
 					"C", atom.coord.x + Math.cos(new_angle) * 1.25, atom.coord.y
 							+ Math.sin(new_angle) * 1.25));
-			var molecule = e.atom.molecule;
+			var molecule = atom.molecule;
 			molecule.addBond(new_bond);
 			this.editorObject.setModel(this.editorObject.getModel());
 		}
 	}
-};
+}
