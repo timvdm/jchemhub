@@ -76,7 +76,7 @@ jchemhub.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
 	var strokeWidth = this.config.get("bond").stroke.width * 2;
 	var color = this.config.get("highlight").color;
 	var stroke = new goog.graphics.Stroke(strokeWidth, color);
-	var fill = goog.graphics.SolidFill(color, 0.3);
+	var fill = null;
 	var radius = this.config.get("highlight").radius
 			* this.transform.getScaleX();
 	var theta = -jchemhub.view.BondRenderer.getTheta(bond) * 180 / Math.PI;
