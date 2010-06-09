@@ -33,8 +33,11 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 
 	var scale = transform.getScaleX();
 
-	var font = new goog.graphics.Font(scale / 1.8, atom_config.fontName);
+
+	var fontSize=(scale/1.8)>12 ? 15: (scale/1.8);
+	var font = new goog.graphics.Font(fontSize, atom_config.fontName);
 	var stroke = new goog.graphics.Stroke(atom_config.stroke.width, "black");
+
 	var fill = new goog.graphics.SolidFill(color);
 
 	var point = transform.transformCoords( [ atom.coord ])[0];

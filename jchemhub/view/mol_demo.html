@@ -5,7 +5,7 @@
 <title>jchemhub.view.MoleculeRenderer</title>
 <script src="../../third-party/closure/closure/goog/base.js"></script>
 <script src="../deps.js"></script>
-<script src="../io/io_test_molsample.js"></script>
+<script src="../io/io_test_molsample2.js"></script>
 
 <script>
     goog.require('jchemhub.view.MoleculeRenderer');
@@ -31,46 +31,92 @@
     goog.require('jchemhub.graphics.AffineTransform');
     goog.require('goog.debug.Console');
     goog.require('jchemhub.io.mdl');
-
 </script>
+
+
 <script>
-    
-function initPage(){
-
-    var c = new goog.debug.Console(); 
-    c.setCapturing(true); 
-    var element = goog.dom.getElement('container')
-    var graphics = goog.graphics.createGraphics(element.clientWidth,
-            element.clientHeight);
-    var group = graphics.createGroup();
-    graphics.render(element);
-    var r = new jchemhub.view.MoleculeRenderer(null, graphics);
-    var trans = new jchemhub.graphics.AffineTransform(50,0,0,50,0,0);
-
-    var sdfs = sdf.split("$$$$\n");
-    var displayIdx=[3,4,5,6]; 
-
-    var mol = new jchemhub.model.Molecule();
+function draw(){
 	
-    for (x=0; x<displayIdx.length; x++) {    
-	    var molfile=sdfs[displayIdx[x]];
-	    var mol=jchemhub.io.mdl.readMolfile(molfile);
+    var regexS = "[\\?&]mdl_num=([^&#]*)";
+    var regex = new RegExp( regexS );
+    var results = regex.exec( window.location.href );
+	_idx=results[1];
+	
+    var sdfs = sdf.split("$$$$\n");
+    var molfile=sdfs[_idx];
+    var mol=jchemhub.io.mdl.readMolfile(molfile);
 
-		//shift X
-		for(j=0; j<mol.countAtoms(); j++){
-			mol.getAtom(j).coord.x=mol.getAtom(j).coord.x+(x*10);
+    var element = goog.dom.getElement('container')
+    var graphics = goog.graphics.createGraphics(element.clientWidth,element.clientHeight);
+    
+	var group = graphics.createGroup();
+	graphics.clear();
+    graphics.render(element);
+
+	
+	//TEMP : correction for the Molfile coordinates and scale. This should be done in the renderer.
+		var minX=Infinity; var minY=Infinity;
+		var avgBondDist=0;
+	
+		for (atIdx=0; atIdx<mol.countAtoms(); atIdx++) {
+			if (mol.getAtom(atIdx).coord.x < minX) 
+			  minX = mol.getAtom(atIdx).coord.x ;
+	        if (mol.getAtom(atIdx).coord.y < minY) 
+	          minY = mol.getAtom(atIdx).coord.y ;
 		}
+	    for (bondIdx=0; bondIdx<mol.countBonds(); bondIdx++) {
+			avgBondDist+=goog.math.Coordinate.distance(mol.getBond(bondIdx).source.coord,mol.getBond(bondIdx).target.coord);
+	    }
+		avgBondDist=avgBondDist/mol.countBonds();
+		var scaleFactor=(50/avgBondDist)*avgBondDist;
+	
+	    var trans = new jchemhub.graphics.AffineTransform(1,0,0,1,0,0);
+	    trans.scale(scaleFactor,scaleFactor);
+		var transX=2-minX;
+		var transY=2-minY; 
+	    trans.translate(transX,transY);
+    //END TEMP
+    
+    var renderer = new jchemhub.view.MoleculeRenderer(null, graphics);
+    renderer.render(mol, trans, group);
 
-    	r.render(mol, trans, group);
-    }
 };
 
-goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 </script>
 </head>
 
-<body>
-<div id="container" style="width: 8192px; height: 800px"></div>
+<body onload="draw()">
+    Choose a number to render the corresponding molecule in io/io_test_molsample2.js:
+    <form name="id_form"> 
+
+        <select name="mdl_num" onchange="submitform()">
+            <option value="" selected>
+			<OPTION VALUE="1">1
+			<OPTION VALUE="2">2
+			<OPTION VALUE="3">3 (bucky ball)
+			<OPTION VALUE="4">4
+			<OPTION VALUE="5">5
+	        <OPTION VALUE="6">6
+	        <OPTION VALUE="7">7
+	        <OPTION VALUE="8">8
+	        <OPTION VALUE="9">9
+	        <OPTION VALUE="10">10
+	        <OPTION VALUE="11">11 (too large right now) 
+            <OPTION VALUE="12">12
+
+		</SELECT>
+
+    </form>
+	<p>
+
+    <script type="text/javascript">
+        function submitform()
+        {
+			document.id_form.submit();
+        }
+    </script>
+
+    <div id="container" style="width: 1024px; height: 600px"></span>
 
 </body>
 </html>
