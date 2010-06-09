@@ -69,8 +69,8 @@ jchemhub.controller.plugins.SymbolSelect.prototype.handleAtomMouseDown = functio
 	}
 };
 
-jchemhub.controller.plugins.SymbolSelect.prototype.handleMouseDown = function(e){
-	if(this.symbol){
+//jchemhub.controller.plugins.SymbolSelect.prototype.handleMouseDown = function(e){
+//	if(this.symbol){
 //		this.editorObject.dispatchBeforeChange();
 //		var trans = this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer.transform.createInverse();
 //		var coords = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)]);
@@ -82,5 +82,5 @@ jchemhub.controller.plugins.SymbolSelect.prototype.handleMouseDown = function(e)
 //		this.editorObject.getModels().push(mol);
 //		this.editorObject.setModels(this.editorObject.getModels());
 //		this.editorObject.dispatchChange();
-	}
-}
+//	}
+//}
