@@ -185,7 +185,7 @@ jchemhub.view.AtomRenderer.prototype.compoundSymbol = function(atom) {
  * @return number
  */
 jchemhub.view.AtomRenderer.bondOrientation = function(atom, i) {
-	if (atom.bonds.length == 0) {
+	if (atom.bonds.getValues().length == 0) {
 		return 0;
 	}	
 	var bond = atom.bonds.getValues()[i];

@@ -42,7 +42,7 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	var box = goog.math.Box.boundingBox.apply(null, atom_coords);
 	var group = this.graphics.createGroup();
 	var stroke = null;
-	var fill = new goog.graphics.SolidFill("green", 0.3);
+	var fill = new goog.graphics.SolidFill("green", 0.001);//'transparent' fill
 	
 	if (!trans) {
 		// if not part of a reaction, we need to create a transform

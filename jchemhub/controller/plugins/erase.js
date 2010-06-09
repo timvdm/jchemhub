@@ -54,10 +54,7 @@ jchemhub.controller.plugins.Erase.prototype.handleBondMouseDown = function(e) {
 
 	if (this.isActive) {
 		this.editorObject.dispatchBeforeChange();
-		var bond = e.bond;
-		var molecule = bond.molecule;
-		molecule.removeBond(bond);
-		this.editorObject.setModels(this.editorObject.getModels());
+		this.eraseBond(e.bond);
 		this.editorObject.dispatchChange();
 	}
 
@@ -75,4 +72,11 @@ jchemhub.controller.plugins.Erase.prototype.handleAtomMouseDown = function(e) {
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	}
+};
+
+jchemhub.controller.plugins.Erase.prototype.eraseBond=function(bond){
+	var molecule = bond.molecule;
+	molecule.removeBond(bond);
+	this.editorObject.setModels(this.editorObject.getModels());
+
 };

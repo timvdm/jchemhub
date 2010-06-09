@@ -155,8 +155,19 @@ jchemhub.model.Molecule.prototype.removeBond = function(bondOrId) {
 	}
 	bond.source.bonds.remove(bond);
 	bond.target.bonds.remove(bond);
+	if(bond.source.bonds.length==0){
+		goog.array.remove(this.atoms, bond.source);
+		bond.source.molecule = undefined;
+	}
+	if(bond.target.bonds.length==0){
+		goog.array.remove(this.atoms, bond.target);
+		bond.target.molecule = undefined;
+	
+	}
 	goog.array.remove(this.bonds, bond);
 	bond.molecule = undefined;
+	bond.source = undefined;
+	bond.target = undefined;
 };
 
 /**
