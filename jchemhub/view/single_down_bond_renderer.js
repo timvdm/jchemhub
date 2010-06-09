@@ -54,7 +54,10 @@ jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform
 	}
 	*/
     var lines=7;
-    for ( var j = 0; j < (lines-1); j++) {
+	var correct=0;
+	if( bond.target.symbol!="C")
+	   correct=1;
+    for ( var j = 0; j < (lines-correct); j++) {
         path.moveTo( (((lines-j)*coords[4].x)+(j*coords[1].x))/lines, 
                      (((lines-j)*coords[4].y)+(j*coords[1].y))/lines);
 
