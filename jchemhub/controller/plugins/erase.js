@@ -45,7 +45,7 @@ jchemhub.controller.plugins.Erase.prototype.logger = goog.debug.Logger
  * @return {Object|undefined} The result of the command.
  */
 jchemhub.controller.plugins.Erase.prototype.execCommandInternal = function(
-		command, active) {
+		command, value, active) {
 	this.isActive = active;
 
 };

@@ -88,8 +88,8 @@ jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 
 	if (this.bond_klass) {
 		this.editorObject.dispatchBeforeChange();
-		if (e.bond instanceof jchemhub.model.SingleBondUp
-				&& this.bond_klass == jchemhub.model.SingleBondUp) {
+		if ((e.bond instanceof jchemhub.model.SingleBondUp && this.bond_klass == jchemhub.model.SingleBondUp)
+				|| (e.bond instanceof jchemhub.model.SingleBondDown && this.bond_klass == jchemhub.model.SingleBondDown)) {
 			var new_bond = new this.bond_klass(e.bond.target, e.bond.source);
 		} else {
 			var new_bond = new this.bond_klass(e.bond.source, e.bond.target);

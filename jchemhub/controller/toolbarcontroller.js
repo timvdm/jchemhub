@@ -275,9 +275,9 @@ jchemhub.controller.ToolbarController.prototype.updateToolbarFromState = functio
  */
 jchemhub.controller.ToolbarController.prototype.handleAction = function(e) {
 	var command = this.getCommand(e.target.getId());
+	var checked;
 	if (e.target.isChecked) {
-		this.editor_.execCommand(command, e.target.isChecked());
-	} else {
-		this.editor_.execCommand(command, e.target.getValue());
-	}
+		checked = e.target.isChecked();
+	} 
+	this.editor_.execCommand(command, e.target.getValue(), checked);
 };
