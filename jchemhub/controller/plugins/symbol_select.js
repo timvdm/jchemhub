@@ -71,16 +71,16 @@ jchemhub.controller.plugins.SymbolSelect.prototype.handleAtomMouseDown = functio
 
 jchemhub.controller.plugins.SymbolSelect.prototype.handleMouseDown = function(e){
 	if(this.symbol){
-		this.editorObject.dispatchBeforeChange();
-		var trans = this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer.transform.createInverse();
-		var coords = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)]);
-		var atom = new jchemhub.model.Atom(this.symbol, coords[0].x, coords[0].y);
-		var bond = new jchemhub.model.SingleBond(atom, new jchemhub.model.Atom("C", coords[0].x + 1.25, coords[0].y  ));
-		var mol = new jchemhub.model.Molecule();
-		mol.addBond(bond);
-		mol.addAtom(atom);	
-		this.editorObject.getModels().push(mol);
-		this.editorObject.setModels(this.editorObject.getModels());
-		this.editorObject.dispatchChange();
+//		this.editorObject.dispatchBeforeChange();
+//		var trans = this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer.transform.createInverse();
+//		var coords = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)]);
+//		var atom = new jchemhub.model.Atom(this.symbol, coords[0].x, coords[0].y);
+//		var bond = new jchemhub.model.SingleBond(atom, new jchemhub.model.Atom("C", coords[0].x + 1.25, coords[0].y  ));
+//		var mol = new jchemhub.model.Molecule();
+//		mol.addBond(bond);
+//		mol.addAtom(atom);	
+//		this.editorObject.getModels().push(mol);
+//		this.editorObject.setModels(this.editorObject.getModels());
+//		this.editorObject.dispatchChange();
 	}
 }
