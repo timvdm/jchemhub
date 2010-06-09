@@ -8,6 +8,7 @@ goog.require('goog.style');
 goog.require('goog.ui.ControlContent');
 goog.require('jchemhub.controller.ToolbarFactory');
 goog.require('jchemhub.controller.Command');
+goog.require('jchemhub.controller.plugins.Erase');
 
 // goog.exportSymbol('jchemhub.controller.DefaultToolbar.makeToolbar',
 // jchemhub.controller.DefaultToolbar.makeToolbar);
@@ -241,6 +242,7 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT, 'zoom out', '-'));
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO, 'undo', 'undo'));
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.REDO, 'redo', 'redo'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeToggleButton(jchemhub.controller.plugins.Erase.COMMAND, 'erase', 'erase'));
   
     var atom_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.SymbolSelect.COMMAND, 'select Symbol', 'Symbol');
     var atom_menu = new goog.ui.Menu();
@@ -253,7 +255,7 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
     atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:green"},'Cl')));
     atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:DarkRed"},'Br')));
     
-   // atom_menu.addItem(new goog.ui.Option('...'));//periodic table
+   // atom_menu.addItem(new goog.ui.Option('...'));//TTD periodic table
     atom_select.setMenu(atom_menu);
     buttons.push(atom_select);
     

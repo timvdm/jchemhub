@@ -53,6 +53,7 @@
 	goog.require('jchemhub.controller.plugins.Highlight');
 	goog.require('jchemhub.controller.plugins.SymbolSelect');
 	goog.require('jchemhub.controller.plugins.BondSelect');
+	goog.require('jchemhub.controller.plugins.Erase');
 	goog.require('goog.debug.Console');
 
 </script>
@@ -74,6 +75,7 @@ function initPage(){
 	editor.registerPlugin(new jchemhub.controller.plugins.Highlight());
 	editor.registerPlugin(new jchemhub.controller.plugins.SymbolSelect());
 	editor.registerPlugin(new jchemhub.controller.plugins.BondSelect());
+	editor.registerPlugin(new jchemhub.controller.plugins.Erase());
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
 	editor.setModels([model]);

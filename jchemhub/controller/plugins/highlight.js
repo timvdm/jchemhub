@@ -1,5 +1,5 @@
-
 goog.provide('jchemhub.controller.plugins.Highlight');
+
 goog.require('jchemhub.controller.Plugin');
 goog.require('goog.functions');
 goog.require('goog.debug.Logger');
