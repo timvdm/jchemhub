@@ -48,6 +48,7 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		// if not part of a reaction, we need to create a transform
 		var m = Number(this.config.get("margin"));
 		var fromRect = goog.math.Rect.createFromBox(box.expand(m, m, m, m));
+		
 		trans = this.getTransform(fromRect);
 	}
 	this.transform = trans;

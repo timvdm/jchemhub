@@ -13,15 +13,17 @@
 	<property name="selenium-server.jar" value="${base.dir}/third-party/selenium-server-1.0.3/selenium-server.jar" />
 	<property name="selenium-java-client.jar" value="${base.dir}/third-party/selenium-java-client-driver-1.0.1/selenium-java-client-driver.jar" />
 	<property name="junit.jar" value="${base.dir}/third-party/junit/junit-4.8.2.jar" />
+	
 	<path id="input-files">
 		<filelist dir="${js-src.dir}/controller">
 			<file name="reaction_editor.js" />
 			<file name="defaulttoolbar.js" />
 			<file name="toolbarcontroller.js" />
 		</filelist>
-		<fileset dir="${js-src.dir}/controller/plugins" />
+
 		<filelist dir="${js-src.dir}/io">
 			<file name="json.js" />
+			<file name="mdl.js" />
 		</filelist>
 	</path>
 
@@ -71,7 +73,6 @@
 				<arg line='-f "--jscomp_warning=missingProperties"' />
 				<arg line='-f "--jscomp_warning=unknownDefines"' />
 				<arg line='-f "--jscomp_warning=strictModuleDepCheck"' />
-
 				<extraflags />
 			</exec>
 		</sequential>

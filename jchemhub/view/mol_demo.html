@@ -7,110 +7,77 @@
 <script src="../deps.js"></script>
 <script src="../io/io_test_molsample2.js"></script>
 
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/demos/css/demo.css">
+	<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/menus.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/menubutton.css">
+
 <script>
-    goog.require('jchemhub.view.MoleculeRenderer');
-    goog.require('jchemhub.view.SingleBondRenderer');
-    goog.require('jchemhub.view.SingleUpBondRenderer');
-    goog.require('jchemhub.view.SingleDownBondRenderer');
-    goog.require('jchemhub.view.SingleUpOrDownBondRenderer');
-    goog.require('jchemhub.view.DoubleBondRenderer');
-    goog.require('jchemhub.view.TripleBondRenderer');
-    goog.require('jchemhub.view.QuadrupleBondRenderer');
-    goog.require('jchemhub.model.Atom');
-    goog.require('jchemhub.model.Molecule');
-    goog.require('jchemhub.model.SingleBond');
-    goog.require('jchemhub.model.SingleBondUp');
-    goog.require('jchemhub.model.SingleBondDown');
-    goog.require('jchemhub.model.SingleBondUpOrDown');  
-    goog.require('jchemhub.model.DoubleBond');
-    goog.require('jchemhub.model.TripleBond');
-    goog.require('jchemhub.model.QuadrupleBond');
+    goog.require('jchemhub.controller.ReactionEditor');
     goog.require('goog.events.EventType');
     goog.require('goog.dom');
-    goog.require('goog.graphics');
-    goog.require('jchemhub.graphics.AffineTransform');
     goog.require('goog.debug.Console');
     goog.require('jchemhub.io.mdl');
+    goog.require('goog.ui.Select');
 </script>
 
 
 <script>
 function draw(){
-	
-    var regexS = "[\\?&]mdl_num=([^&#]*)";
-    var regex = new RegExp( regexS );
-    var results = regex.exec( window.location.href );
-	_idx=results[1];
-	
-    var sdfs = sdf.split("$$$$\n");
-    var molfile=sdfs[_idx];
-    var mol=jchemhub.io.mdl.readMolfile(molfile);
-
-    var element = goog.dom.getElement('container')
-    var graphics = goog.graphics.createGraphics(element.clientWidth,element.clientHeight);
+	var sdfs = sdf.split("$$$$\n");
+	var mol_renderer = new jchemhub.controller.ReactionEditor(goog.dom.getElement('container'),{background : {color : 'white'}});
+ 
+    var select1 = new goog.ui.Select();
+    select1.addItem(new goog.ui.MenuItem('1', 1));
+    select1.addItem(new goog.ui.MenuItem('2', 2));
+    select1.addItem(new goog.ui.MenuItem('3 (bucky ball)', 3));
+    select1.addItem(new goog.ui.MenuItem('4', 4));
+    select1.addItem(new goog.ui.MenuItem('5', 5));
+    select1.addItem(new goog.ui.MenuItem('6', 6));
+    select1.addItem(new goog.ui.MenuItem('7', 7));
+    select1.addItem(new goog.ui.MenuItem('8', 8));
+    select1.addItem(new goog.ui.MenuItem('9', 9));
+    select1.addItem(new goog.ui.MenuItem('10', 10));
+    select1.addItem(new goog.ui.MenuItem('11 (too large right now)', 11));
+    select1.addItem(new goog.ui.MenuItem('12', 12));
     
-	var group = graphics.createGroup();
-	graphics.clear();
-    graphics.render(element);
-
-	
-	//TEMP : correction for the Molfile coordinates and scale. This should be done in the renderer.
-		var minX=Infinity; var minY=Infinity;
-		var avgBondDist=0;
-	
-		for (atIdx=0; atIdx<mol.countAtoms(); atIdx++) {
-			if (mol.getAtom(atIdx).coord.x < minX) 
-			  minX = mol.getAtom(atIdx).coord.x ;
-	        if (mol.getAtom(atIdx).coord.y < minY) 
-	          minY = mol.getAtom(atIdx).coord.y ;
-		}
-	    for (bondIdx=0; bondIdx<mol.countBonds(); bondIdx++) {
-			avgBondDist+=goog.math.Coordinate.distance(mol.getBond(bondIdx).source.coord,mol.getBond(bondIdx).target.coord);
-	    }
-		avgBondDist=avgBondDist/mol.countBonds();
-		var scaleFactor=(50/avgBondDist)*avgBondDist;
-	
-	    var trans = new jchemhub.graphics.AffineTransform(1,0,0,1,0,0);
-	    trans.scale(scaleFactor,scaleFactor);
-		var transX=2-minX;
-		var transY=2-minY; 
-	    trans.translate(transX,transY);
-    //END TEMP
+    select1.setSelectedIndex(0);
+    select1.render(goog.dom.getElement('selectMolecule'));
     
-    var renderer = new jchemhub.view.MoleculeRenderer(null, graphics,{background : {color : 'white'}});
-    renderer.render(mol, trans, group);
-
-};
+        goog.events.listen(select1, goog.ui.Component.EventType.ACTION,
+        function(e) {
+          var timer = goog.now();
+          var select = e.target;
+          var idx = select.getValue();
+          var molfile=sdfs[idx];
+          var mol=jchemhub.io.mdl.readMolfile(molfile);
+	      mol_renderer.setModels([mol]);
+	      goog.dom.setTextContent(goog.dom.getElement('perf'), (goog.now() - timer) + 'ms');
+        });
+        
+        }
+	
 
 </script>
 </head>
 
 <body onload="draw()">
-Choose a number to render the corresponding molecule in
-io/io_test_molsample2.js:
-<form name="id_form"><select name="mdl_num"
-	onchange="submitform()">
-	<option value="" selected>
-	<OPTION VALUE="1">1
-	<OPTION VALUE="2">2
-	<OPTION VALUE="3">3 (bucky ball)
-	<OPTION VALUE="4">4
-	<OPTION VALUE="5">5
-	<OPTION VALUE="6">6
-	<OPTION VALUE="7">7
-	<OPTION VALUE="8">8
-	<OPTION VALUE="9">9
-	<OPTION VALUE="10">10
-	<OPTION VALUE="11">11 (too large right now)
-	<OPTION VALUE="12">12
-</SELECT></form>
-<p><script type="text/javascript">
-        function submitform()
-        {
-			document.id_form.submit();
-        }
-    </script>
+<h1>Molecule Rendering</h1>
+<fieldset>
+<legend>Demo:</legend> 
+<br>
+<label id="selectMolecule">Select a molecule to render below: </label>
+<br>
 
-<div id="container" style="width: 1024px; height: 600px"></span>
+<br>
+<div id="container" style="width: 1024px; height: 400px"></div>
+<br>
+</fieldset>
+<br> 
+  <div id="perf"></div> 
+
+
 </body>
 </html>
