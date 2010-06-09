@@ -38,20 +38,30 @@ jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform
 	var leftside = transleft.transformCoords([bond.source.coord, bond.target.coord]);
 	var rightside = transright.transformCoords([bond.source.coord, bond.target.coord]);
 
-	var coords = transform.transformCoords( [ leftside[0],
-			leftside[1], rightside[0], rightside[1] ]);
+    var coords = transform.transformCoords( [ leftside[0],leftside[1], rightside[0], rightside[1], bond.source.coord ]);
 
 	var stroke = new goog.graphics.Stroke(
 			this.config.get("bond").stroke.width, this.config.get(
 					"bond").stroke.color);
 	var fill = null;
 
+    /*
 	for ( var j = 1, lines = 6; j < lines; j++) {
 		path.moveTo(coords[0].x + (coords[1].x - coords[0].x) * j / lines,
 				coords[0].y + (coords[1].y - coords[0].y) * j / lines);
 		path.lineTo(coords[2].x + (coords[3].x - coords[2].x) * j / lines,
 				coords[2].y + (coords[3].y - coords[2].y) * j / lines);
 	}
+	*/
+    var lines=6;
+    for ( var j = 0; j <= lines; j++) {
+        path.moveTo( (((lines-j)*coords[4].x)+(j*coords[1].x))/lines, 
+                     (((lines-j)*coords[4].y)+(j*coords[1].y))/lines);
+
+        path.lineTo( (((lines-j)*coords[4].x)+(j*coords[3].x))/lines, 
+                     (((lines-j)*coords[4].y)+(j*coords[3].y))/lines);
+    }
+
 
 
 	this.graphics.drawPath(path, stroke, fill, group);
