@@ -22,7 +22,7 @@ jchemhub.view.MoleculeRenderer = function(controller, graphics, opt_config) {
 			this.bondController, graphics);
 	this.atomController = new jchemhub.controller.AtomController(controller);
 	this.atomRenderer = new jchemhub.view.AtomRenderer(this.atomController,
-			graphics);
+			graphics, opt_config);
 }
 goog.inherits(jchemhub.view.MoleculeRenderer, jchemhub.view.Renderer);
 

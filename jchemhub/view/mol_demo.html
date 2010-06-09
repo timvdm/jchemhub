@@ -77,7 +77,7 @@ function draw(){
 	    trans.translate(transX,transY);
     //END TEMP
     
-    var renderer = new jchemhub.view.MoleculeRenderer(null, graphics);
+    var renderer = new jchemhub.view.MoleculeRenderer(null, graphics,{background : {color : 'white'}});
     renderer.render(mol, trans, group);
 
 };
@@ -86,37 +86,31 @@ function draw(){
 </head>
 
 <body onload="draw()">
-    Choose a number to render the corresponding molecule in io/io_test_molsample2.js:
-    <form name="id_form"> 
-
-        <select name="mdl_num" onchange="submitform()">
-            <option value="" selected>
-			<OPTION VALUE="1">1
-			<OPTION VALUE="2">2
-			<OPTION VALUE="3">3 (bucky ball)
-			<OPTION VALUE="4">4
-			<OPTION VALUE="5">5
-	        <OPTION VALUE="6">6
-	        <OPTION VALUE="7">7
-	        <OPTION VALUE="8">8
-	        <OPTION VALUE="9">9
-	        <OPTION VALUE="10">10
-	        <OPTION VALUE="11">11 (too large right now) 
-            <OPTION VALUE="12">12
-
-		</SELECT>
-
-    </form>
-	<p>
-
-    <script type="text/javascript">
+Choose a number to render the corresponding molecule in
+io/io_test_molsample2.js:
+<form name="id_form"><select name="mdl_num"
+	onchange="submitform()">
+	<option value="" selected>
+	<OPTION VALUE="1">1
+	<OPTION VALUE="2">2
+	<OPTION VALUE="3">3 (bucky ball)
+	<OPTION VALUE="4">4
+	<OPTION VALUE="5">5
+	<OPTION VALUE="6">6
+	<OPTION VALUE="7">7
+	<OPTION VALUE="8">8
+	<OPTION VALUE="9">9
+	<OPTION VALUE="10">10
+	<OPTION VALUE="11">11 (too large right now)
+	<OPTION VALUE="12">12
+</SELECT></form>
+<p><script type="text/javascript">
         function submitform()
         {
 			document.id_form.submit();
         }
     </script>
 
-    <div id="container" style="width: 1024px; height: 600px"></span>
-
+<div id="container" style="width: 1024px; height: 600px"></span>
 </body>
 </html>
