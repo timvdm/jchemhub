@@ -53,8 +53,8 @@ jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform
 				coords[2].y + (coords[3].y - coords[2].y) * j / lines);
 	}
 	*/
-    var lines=6;
-    for ( var j = 0; j <= lines; j++) {
+    var lines=7;
+    for ( var j = 0; j < (lines-1); j++) {
         path.moveTo( (((lines-j)*coords[4].x)+(j*coords[1].x))/lines, 
                      (((lines-j)*coords[4].y)+(j*coords[1].y))/lines);
 

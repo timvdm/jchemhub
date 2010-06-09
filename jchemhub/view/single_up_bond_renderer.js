@@ -37,12 +37,23 @@ jchemhub.view.SingleUpBondRenderer.prototype.render = function(bond, transform,
 			* strokeWidth, Math.sin(angle_left) * strokeWidth);
 
 	var target1 = trans1.transformCoords( [ bond.target.coord ])[0];
-
+	
 	var trans2 = new jchemhub.graphics.AffineTransform(1, 0, 0, 1, Math
 			.cos(angle_right)
 			* strokeWidth, Math.sin(angle_right) * strokeWidth);
 
 	var target2 = trans2.transformCoords( [ bond.target.coord ])[0];
+
+
+    //make target1 and target2 drop short of the target (prettier)
+	if (bond.target.symbol!="C" ) { //TODO -> unless all Carbons are rendered (optional?)
+		var correct=3;
+	    target1.x= ((target1.x*(correct-1))+(bond.source.coord.x)) / correct;
+	    target1.y= ((target1.y*(correct-1))+(bond.source.coord.y)) / correct;
+	
+	    target2.x= ((target2.x*(correct-1))+(bond.source.coord.x)) / correct;
+	    target2.y= ((target2.y*(correct-1))+(bond.source.coord.y)) / correct;
+    }
 
 	var coords = transform.transformCoords( [ bond.source.coord, target1,
 			target2 ]);
