@@ -215,7 +215,8 @@ jchemhub.model.Molecule.prototype.getRings = function(){
 
     if (this.mustRecalcSSSR) {
 		  this.mustRecalcSSSR=false;
-          this.sssr = jchemhub.ring.findSSSR(this);
+          this.sssr = jchemhub.ring.RingFinder.findRings(this,6);
+		  //this.sssr = jchemhub.ring.findSSSR(this);
 	}
 	return this.sssr;
 }

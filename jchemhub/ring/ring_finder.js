@@ -39,7 +39,7 @@ jchemhub.ring.RingFinder = function(){
  * Hanser main loop, produces the rings for a given molecule.
  * @param {Object} _molecule
  */
-jchemhub.ring.RingFinder.findRings = function(_molecule){
+jchemhub.ring.RingFinder.findRings = function(_molecule,maxLen){
 
     var molecule = _molecule;
     var atomOnlyRings = new Array();
@@ -47,7 +47,7 @@ jchemhub.ring.RingFinder.findRings = function(_molecule){
     graph = new jchemhub.ring.PathGraph(molecule)
 
     for (var i = 0,il = molecule.countAtoms(); i < il; i++) {
-        var edges = graph.remove(molecule.getAtom(i));
+        var edges = graph.remove(molecule.getAtom(i),maxLen);
         for (var j = 0; j < edges.length; j++) {
             edge = edges[j];
             atom_ring = edge.atoms;
@@ -106,7 +106,7 @@ jchemhub.ring.PathGraph = function(molecule){
     }
 }
 
-jchemhub.ring.PathGraph.prototype.remove = function(atom){
+jchemhub.ring.PathGraph.prototype.remove = function(atom,maxLen){
     var oldEdges = this.getEdges(atom);
     result = new Array();
     for (var i = 0, il = oldEdges.length; i < il; i++) {
@@ -131,10 +131,20 @@ jchemhub.ring.PathGraph.prototype.remove = function(atom){
             goog.array.remove(this.edges, oldEdges[i]);
         }
     }
+
+    /*
+            for (Path newPath : newPaths) {
+            if (maxPathLen == null || newPath.size() <= (maxPathLen+1)) {
+                paths.add(newPath);
+            }
+        }
+     */
     
     for (var i = 0,il=newEdges.length; i < il; i++) {
-        if (!goog.array.contains(this.edges, newEdges[i])) {
+        if (!goog.array.contains(this.edges, newEdges[i])  && (newEdges[i].atoms.length<=maxLen+1) ) {
             this.edges.push(newEdges[i]);
+
+
         }
     }
     goog.array.remove(this.atoms, atom);

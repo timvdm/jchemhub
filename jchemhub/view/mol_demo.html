@@ -68,7 +68,7 @@ function draw(){
 			avgBondDist+=goog.math.Coordinate.distance(mol.getBond(bondIdx).source.coord,mol.getBond(bondIdx).target.coord);
 	    }
 		avgBondDist=avgBondDist/mol.countBonds();
-		var scaleFactor=(50/avgBondDist)*avgBondDist;
+		var scaleFactor=(40/avgBondDist)*avgBondDist;
 	
 	    var trans = new jchemhub.graphics.AffineTransform(1,0,0,1,0,0);
 	    trans.scale(scaleFactor,scaleFactor);
@@ -117,6 +117,6 @@ io/io_test_molsample2.js:
         }
     </script>
 
-<div id="container" style="width: 1024px; height: 600px"></span>
+<div id="container" style="width: 4000px; height: 1800px"></span>
 </body>
 </html>
