@@ -89,13 +89,13 @@ jchemhub.model.Molecule.prototype.getBond = function(id) {
  * @return{jchemhub.model.Bond}
  */
 jchemhub.model.Molecule.prototype.findBond = function(atom1, atom2) {
-	for ( var i = 0, il = this.bonds.length; i < il; i++) {
-		var bond = this.bonds[i];
-		if ((atom1 == bond.source && atom2 == bond.target)
-				|| (atom2 == bond.source && atom1 == bond.target))
-			return bond;
-	}
-	return null;
+    for (var i = 0, li = atom1.bonds.length; i < li; i++) {
+        var bond = atom1.bonds[i];
+        if (bond.getOtherAtom(atom1) == atom2) {
+            return bond;
+        }
+    }
+    return null;
 };
 
 /**
