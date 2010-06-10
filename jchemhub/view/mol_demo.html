@@ -26,6 +26,9 @@
 
 <script>
 function draw(){
+// uncomment next two lines to debug to console
+	var c = new goog.debug.Console(); 
+	c.setCapturing(true); 
 	var sdfs = sdf.split("$$$$\n");
 	var mol_renderer = new jchemhub.controller.ReactionEditor(goog.dom.getElement('container'),{background : {color : 'white'}});
  

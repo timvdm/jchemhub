@@ -59,7 +59,7 @@ jchemhub.controller.ReactionEditor = function(element, opt_config) {
 
 	this.reactionController = new jchemhub.controller.ReactionController(this);
 	this.reactionRenderer = new jchemhub.view.ReactionRenderer(
-			this.reactionController, this.graphics);
+			this.reactionController, this.graphics, this.config);
 
 	// The editor will not listen to change events until it has finished loading
 	// this.stoppedEvents_ = {};
@@ -1090,5 +1090,10 @@ jchemhub.controller.ReactionEditor.defaultConfig = {
 	background : {
 		color : '#F0FFF0'
 	},
-	margin : 20
+	margin : {
+		left : 2,
+		right : 0,
+		top : 0,
+		bottom : 8
+	}
 };
