@@ -32,6 +32,12 @@ jchemhub.model.Molecule = function(opt_name) {
 	 * @type {string}
 	 */
 	this.name = opt_name ? opt_name : "";
+	
+	/**
+	 * SSSR calculated for this molecule
+	 */
+	this.sssr=[];
+	this.mustRecalcSSSR=true;
 
 };
 
@@ -197,12 +203,18 @@ jchemhub.model.Molecule.prototype.addAtom = function(atom) {
 	atom.molecule = this;
 };
 
+
+
 /**
- * rings found in this molecule
+ * Get rings found in this molecule
  * 
  * @return{Array.<jchemhub.ring.Ring>}
  */
-jchemhub.model.Molecule.prototype.getRings = function() {
-	//return jchemhub.ring.RingFinder.findRings(this);
-	return jchemhub.ring.findSSSR(this);
+jchemhub.model.Molecule.prototype.getRings = function(){
+
+    if (this.mustRecalcSSSR) {
+		  this.mustRecalcSSSR=false;
+          this.sssr = jchemhub.ring.findSSSR(this);
+	}
+	return this.sssr;
 }
