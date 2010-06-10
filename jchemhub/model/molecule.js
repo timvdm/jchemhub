@@ -89,9 +89,10 @@ jchemhub.model.Molecule.prototype.getBond = function(id) {
  * @return{jchemhub.model.Bond}
  */
 jchemhub.model.Molecule.prototype.findBond = function(atom1, atom2) {
-    for (var i = 0, li = atom1.bonds.length; i < li; i++) {
-        var bond = atom1.bonds[i];
-        if (bond.getOtherAtom(atom1) == atom2) {
+    var bonds = atom1.bonds.getValues();
+    for (var i = 0, li = bonds.length; i < li; i++) {
+        var bond = bonds[i];
+        if (bond.otherAtom(atom1) == atom2) {
             return bond;
         }
     }
