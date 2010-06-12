@@ -22,7 +22,11 @@
 		<fileset dir="${js-src.dir}/controller/plugins" />
 		<filelist dir="${js-src.dir}/io">
 			<file name="json.js" />
+			<file name="mdl.js" />
 		</filelist>
+                <filelist dir="${js-src.dir}/ring">
+                        <file name="sssr.js" />
+                </filelist>
 	</path>
 
 	<pathconvert pathsep=' -i ' property="jsfiles" refid="input-files" />
@@ -77,6 +81,20 @@
 		</sequential>
 	</macrodef>
 
+        <!-- Prepare for use in NodeJs -->
+        <macrodef name="addnamespaces">
+		<attribute name="inputfile" />
+		<attribute name="outputfile" />
+		<sequential>
+			<exec executable="python" failonerror="true" logError="true">
+				<arg value="scripts/addnamespaces.py" />
+				<arg value='${build.dir}/@{inputfile}' />
+				<arg value='${build.dir}/@{outputfile}' />
+			</exec>
+		</sequential>
+	</macrodef>
+
+
 	<target name="clean" description="delete generated files">
 		<delete dir="${build.dir}" />
 		<delete dir="${doc.dir}" />
@@ -108,10 +126,13 @@
 			<arg line='-c "${closure-compiler.jar}"' />
 			<arg line='-f "--compilation_level=ADVANCED_OPTIMIZATIONS"' />
 			<arg line='-f "--jscomp_warning=checkTypes"' />
+			<arg line='-f "--jscomp_warning=checkTypes"' />
 		</exec>
 	</target>
 
-	<target name="compile-advanced" description="compile with ADVANCED_OPTIMIZATIONS setting">
+        <!-- Default Google Closure Compiler compilation levels -->
+
+        <target name="compile-advanced" description="compile with ADVANCED_OPTIMIZATIONS setting">
 		<calcdeps outputfile="jchemhub-advanced.js" />
 	</target>
 
@@ -122,6 +143,24 @@
 	<target name="compile-whitespace-only" description="compile with WHITESPACE_ONLY setting">
 		<calcdeps outputfile="jchemhub-whitespace-only.js" compilationlevel="WHITESPACE_ONLY" />
 	</target>
+
+        <!-- Add namespaces to enable use in NodeJs -->
+
+        <target name="compile-advanced-nodejs" depends="compile-advanced" 
+            description="compile with ADVANCED_OPTIMIZATIONS setting for NodeJs deployment">
+		<addnamespaces inputfile="jchemhub-advanced.js" outputfile="jchemhub-advanced-node.js" />
+	</target>
+
+        <target name="compile-simple-nodejs" depends="compile-simple" 
+            description="compile with SIMPLE_OPTIMIZATIONS setting for NodeJs deployment">
+		<addnamespaces inputfile="jchemhub-simple.js" outputfile="jchemhub-simple-node.js" />
+	</target>
+
+       <target name="compile-whitespace-only-nodejs" depends="compile-whitespace-only" 
+            description="compile with WHITESPACE_ONLY setting for NodeJs deployment">
+		<addnamespaces inputfile="jchemhub-whitespace-only.js" outputfile="jchemhub-whitespace-only-node.js" />
+	</target>
+
 
 	<target name="usage" description="Display main targets by running 'ant -projecthelp'">
 		<java classname="org.apache.tools.ant.Main">
