@@ -12,12 +12,13 @@
  * limitations under the License.
  */
 
-goog.provide('jchemhub.ring.SSSRFinder');
+goog.provide('jchemhub.ring.SSSR');
 
 goog.require('goog.structs.Set');
 goog.require('goog.array');
 goog.require('jchemhub.ring.Ring');
 
+/*
 function debug(text, noNewLine) {
     var logDiv = document.getElementById("logDiv");
     if (!logDiv) {
@@ -32,6 +33,7 @@ function debug(text, noNewLine) {
         logDiv.innerHTML += text + "<br>";
     }
 };
+*/
 
 (function() {
 
@@ -286,10 +288,9 @@ function debug(text, noNewLine) {
      * ring count less than it's valence minus one, the ring candidate is part
      * of the SSSR.
      */
-    function isCandidateInSet(C, Csssr, valences) {
-        var ringCount = goog.array.repeat(0, C.length);
+    jchemhub.ring.SSSR.isCandidateInSet = function(C, Csssr, valences, ringCount) {
         for (var i = 0, li = Csssr.length; i < li; i++) {
-            var sssr = Csssr[i].atoms;
+            var sssr = Csssr[i];
             // the part from the paper
             if (C.length >= sssr.length) {
                 var candidateContainsRing = true;
@@ -314,17 +315,20 @@ function debug(text, noNewLine) {
         // on paper for tetrahedron, cube, ...
         var isNewRing = false;
         for (j = 0, lj = C.length; j < lj; j++) {
-            if (ringCount[j] < valences[C[j]] - 1) {
+            if (ringCount[C[j]] < valences[C[j]] - 1) {
                 isNewRing = true;
             }
         }
 
 
         if (isNewRing) {
+            for (j = 0, lj = C.length; j < lj; j++) {
+                ringCount[C[j]]++;
+            }
             return false;
         }
         return true;
-    }
+    };
 
     /**
      * Convert an array of bond indexes to an array of atom indexes.
@@ -349,7 +353,7 @@ function debug(text, noNewLine) {
      * Process a candidate by checking if it is already in the set.
      * Add the ring ring to the SSSR set if it is not.
      */
-    function processCandidate(bondIndexes, Csssr, molecule, valences) {
+    function processCandidate(bondIndexes, Csssr, molecule, valences, ringCount) {
         var atomIndexes = bondRingToAtomRing(bondIndexes, molecule);
         if (bondIndexes.length !== atomIndexes.length) {
             // these are two connected rings for example;
@@ -359,8 +363,8 @@ function debug(text, noNewLine) {
             //   2 --- 3
             return;
         }
-        if (!isCandidateInSet(atomIndexes, Csssr, valences)) {
-            Csssr.push({ bonds: bondIndexes, atoms: atomIndexes });
+        if (!jchemhub.ring.SSSR.isCandidateInSet(atomIndexes, Csssr, valences, ringCount)) {
+            Csssr.push(atomIndexes);
         }
     }
 
@@ -368,7 +372,7 @@ function debug(text, noNewLine) {
      * Search the candidates to find the Smallest Set of Smallest rings. This
      * is algorithm 3 from the supplementary information.
      */
-    function candidateSearch(Cset, nsssr, molecule) {
+    function candidateSearch(Cset, nsssr, molecule, D) {
         // The final SSSR set
         var Csssr = [];
         // store the valences for all atoms
@@ -376,22 +380,26 @@ function debug(text, noNewLine) {
         for (var i = 0, li = molecule.countAtoms(); i < li; i++) {
             valences.push(molecule.getAtom(i).countBonds());
         }
+        
+        var ringCount = goog.array.repeat(0, molecule.countAtoms());
 
         for (var i = 0, li = Cset.length; i < li; i++) {
-            if (Cset[i].Cnum % 2) {
+            var set = Cset[i];
+            
+            if (set.Cnum % 2) {
                 // odd ring
-                for (var j = 0, lj = Cset[i].Pe2.length; j < lj; j++) {
-                    var bondIndexes = Cset[i].Pe1[0].concat(Cset[i].Pe2[j]);
-                    processCandidate(bondIndexes, Csssr, molecule, valences);
+                for (var j = 0, lj = set.Pe2.length; j < lj; j++) {
+                    var bondIndexes = set.Pe1[0].concat(set.Pe2[j]);
+                    processCandidate(bondIndexes, Csssr, molecule, valences, ringCount);
                     if (Csssr.length == nsssr) {
                         return Csssr;
                     }
                 }
             } else {
                 // even ring
-                for (var j = 0, lj = Cset[i].Pe1.length - 1; j < lj; j++) {
-                    var bondIndexes = Cset[i].Pe1[j].concat(Cset[i].Pe1[j+1]);
-                    processCandidate(bondIndexes, Csssr, molecule, valences);
+                for (var j = 0, lj = set.Pe1.length - 1; j < lj; j++) {
+                    var bondIndexes = set.Pe1[j].concat(set.Pe1[j+1]);
+                    processCandidate(bondIndexes, Csssr, molecule, valences, ringCount);
                     if (Csssr.length == nsssr) {
                         return Csssr;
                     }
@@ -402,10 +410,33 @@ function debug(text, noNewLine) {
         return Csssr;
     };
 
+    function sortByPath(atomIndexes, molecule) {
+        var pathAtomIndexes = [atomIndexes[0]];
+        var beginAtom = molecule.getAtom(atomIndexes[0]);
+        var l = 0;
+        while (atomIndexes.length != pathAtomIndexes.length) {
+            l++;
+            if (l > 1000) break;
+        for (var i = 1, li = atomIndexes.length; i < li; i++) {
+            var iAtom = molecule.getAtom(pathAtomIndexes[pathAtomIndexes.length-1]);
+            var jAtom = molecule.getAtom(atomIndexes[i]);
+            if (goog.array.contains(pathAtomIndexes, atomIndexes[i])) { continue; }
+            if (molecule.findBond(iAtom, jAtom)) {
+                pathAtomIndexes.push(atomIndexes[i]);
+            }else 
+            if (molecule.findBond(beginAtom, jAtom)) {
+                goog.array.insertAt(pathAtomIndexes, atomIndexes[i], 0);                    
+            }        
+        }
+        }
+        return pathAtomIndexes;    
+    }
+
     /**
      * Find the Smallest Set of Smallest rings.
      */
-    jchemhub.ring.findSSSR = function(molecule) {
+    jchemhub.ring.SSSR.findRings = function(molecule) {
+        //var start = new Date().getTime();
         // Compute the number of rings in the SSSR using Euler's formula.
         //
         //   nsssr = m - n + 1    m: number of bonds
@@ -421,23 +452,13 @@ function debug(text, noNewLine) {
         // Create the initial candidate set. This will be  sets with bond indexes.
         var Cset = makeCandidateSet(matrices.D, matrices.Pe1, matrices.Pe2);
         // Select the SSSR from the candidates
-        var indexes = candidateSearch(Cset, nsssr, molecule);
+        var indexes = candidateSearch(Cset, nsssr, molecule, matrices.D);
 
-        // Use the atom and bond indexes to create Ring objects
-        var rings = [];
         for (var i = 0, li = indexes.length; i < li; i++) {
-            var index = indexes[i];
-            var atoms = [];
-            var bonds = [];
-            for (var j = 0, lj = index.atoms.length; j < lj; j++) {
-                atoms.push(molecule.getAtom(index.atoms[j]));
-                bonds.push(molecule.getBond(index.bonds[j]));
-            }
-
-            rings.push(new jchemhub.ring.Ring(atoms, bonds));
+            indexes[i] = sortByPath(indexes[i], molecule);
         }
 
-        return rings;
+        return indexes;
     }
 
 })();

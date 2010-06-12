@@ -14,7 +14,7 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
             goog.require('jchemhub.model.Molecule');
             goog.require('jchemhub.model.Atom');
             goog.require('jchemhub.model.SingleBond');
-            goog.require('jchemhub.ring.SSSRFinder');
+            goog.require('jchemhub.ring.SSSR');
         </script>
 <script>
 
@@ -81,7 +81,7 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
                 //var rings = jchemhub.ring._makePIDMatrixes(molecule);
                 //var rings = jchemhub.ring._makeCandidateSet(D, Pe1, Pe2);
 
-                var rings = jchemhub.ring.findSSSR(molecule);
+                var rings = jchemhub.ring.SSSR.findRings(molecule);
                 
                 // print the rings
                 //for (var i = 0; i < rings.length; i++) {
@@ -90,8 +90,8 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
                 //}
 
                 assertEquals(2, rings.length);
-                assertEquals(4, rings[0].atoms.length);
-                assertEquals(5, rings[1].atoms.length);
+                assertEquals(4, rings[0].length);
+                assertEquals(5, rings[1].length);
             }
             
             function testBenzene(){
@@ -120,10 +120,10 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
             
             function findRings(name, mdlString, ringSizes){
                 var mol = jchemhub.io.mdl.readMolfile(mdlString);
-                var rings = jchemhub.ring.findSSSR(mol);
+                var rings = jchemhub.ring.SSSR.findRings(mol);
                 assertEquals(ringSizes.length, rings.length);
                 for (var i = 0; i < ringSizes.length; i++) {
-                    assertEquals(ringSizes[i], rings[i].atoms.length);
+                    assertEquals(ringSizes[i], rings[i].length);
                 }
             }
             

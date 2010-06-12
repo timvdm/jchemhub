@@ -14,7 +14,7 @@
 
 goog.provide('jchemhub.query.DFSMapper');
 
-goog.require('jchemhub.ring.SSSRFinder');
+goog.require('jchemhub.ring.RingFinder');
 goog.require('goog.structs.Map');
 
 (function() {

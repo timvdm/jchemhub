@@ -1,7 +1,6 @@
 goog.provide('jchemhub.model.Molecule');
 goog.require('goog.array');
 goog.require('jchemhub.ring.RingFinder');
-goog.require('jchemhub.ring.SSSRFinder');
 
 /**
  * Class representing a Molecule
@@ -214,9 +213,8 @@ jchemhub.model.Molecule.prototype.addAtom = function(atom) {
 jchemhub.model.Molecule.prototype.getRings = function(){
 
     if (this.mustRecalcSSSR) {
-		  this.mustRecalcSSSR=false;
-          this.sssr = jchemhub.ring.RingFinder.findRings(this,6);
-		  //this.sssr = jchemhub.ring.findSSSR(this);
-	}
-	return this.sssr;
+        this.mustRecalcSSSR = false;
+        this.sssr = jchemhub.ring.RingFinder.findRings(this);
+    }
+    return this.sssr;
 }
