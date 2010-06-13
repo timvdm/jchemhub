@@ -38,6 +38,14 @@ jchemhub.model.Molecule = function(opt_name) {
 	this.sssr=[];
 	this.mustRecalcSSSR=true;
 
+        /**
+         * Keep track of fragments, this avoids the need to ever compute it
+         * which is potentially time consuming. This array stores the fragment 
+         * index for each atom.
+         */
+        this.fragments = [];
+        this.fragmentCount = 0;
+
 };
 
 /**
@@ -48,6 +56,27 @@ jchemhub.model.Molecule = function(opt_name) {
  */
 
 jchemhub.model.Molecule.prototype.addBond = function(bond) {
+        var sourceIndex = this.indexOfAtom(bond.source);
+        var targetIndex = this.indexOfAtom(bond.target);
+        // check if the bond connects two previously unconnected fragments
+        if (this.fragments[sourceIndex] != this.fragments[targetIndex]) {
+            var before, after;
+            if (this.fragments[sourceIndex] < this.fragments[targetIndex]) {
+                before = this.fragments[sourceIndex];
+                after = this.fragments[targetIndex];
+            } else {
+                after = this.fragments[sourceIndex];
+                before = this.fragments[targetIndex];
+            }
+
+            this.fragmentCount--;
+
+            for (var i = 0, li = this.atoms.length; i < li; i++) {
+                if (this.fragments[i] == before) {
+                    this.fragments[i] = after;
+                }
+            }
+        }
 	this.bonds.push(bond);
 	bond.source.bonds.add(bond);
 	bond.target.bonds.add(bond);
@@ -199,6 +228,10 @@ jchemhub.model.Molecule.prototype.countBonds = function() {
  *            atom The atom to add.
  */
 jchemhub.model.Molecule.prototype.addAtom = function(atom) {
+        var index = this.atoms.length;
+        // a new atom is always a new fragment
+        this.fragmentCount++;
+        this.fragments[index] = this.fragmentCount;
 	this.atoms.push(atom);
 	atom.molecule = this;
 };
