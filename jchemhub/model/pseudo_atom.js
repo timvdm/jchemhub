@@ -6,11 +6,11 @@ goog.require('jchemhub.model.Atom');
  * Class representing a pseudo atom (*, RGroup etc) 
  * 
  * @param {string}
- *            _label, text label for the PseudoAtom (like R1, R10 or what u like) 
+ *            _label text label for the PseudoAtom (like R1, R10 or what u like) 
  * @param {number}
- *            x, X-coordinate of atom.
+ *            x X-coordinate of atom.
  * @param {number}
- *            y, Y-coordinate of atom.
+ *            y Y-coordinate of atom.
  * @constructor
  * @extends {jchemhub.model.Atom}
  */
