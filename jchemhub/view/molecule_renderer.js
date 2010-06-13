@@ -65,13 +65,15 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans, this.atomController);
 	}, this);
-	
-	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
+
+        if (this.controller) {        
+	    group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
 			this.controller.handleMouseOver, this.controller, molecule));
-	group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
+	    group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
 			this.controller.handleMouseOut, this.controller, molecule));
-	group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
+	    group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
 			this.controller.handleMouseDown, this.controller, molecule));
+        }
 }
 
 /**
