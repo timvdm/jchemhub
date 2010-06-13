@@ -19,14 +19,16 @@
 			<file name="defaulttoolbar.js" />
 			<file name="toolbarcontroller.js" />
 		</filelist>
-		<fileset dir="${js-src.dir}/controller/plugins" />
+	
 		<filelist dir="${js-src.dir}/io">
 			<file name="json.js" />
 			<file name="mdl.js" />
 		</filelist>
+<!--
                 <filelist dir="${js-src.dir}/ring">
                         <file name="sssr.js" />
                 </filelist>
+-->
 	</path>
 
 	<pathconvert pathsep=' -i ' property="jsfiles" refid="input-files" />
