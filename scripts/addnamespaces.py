@@ -1,6 +1,7 @@
 import os, sys
 
 namespaces = '''
+var sys = require('sys');
 goog={};
 goog.array={};
 goog.array.forEach={};
@@ -51,6 +52,8 @@ jchemhub.query={};
 jchemhub.io={};
 jchemhub.io.json={};
 jchemhub.io.mdl={};
+jchemhub.io.smiles={};
+jchemhub.query={};
 var document=this;
 '''
 
