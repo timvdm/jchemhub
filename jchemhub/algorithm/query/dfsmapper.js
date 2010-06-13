@@ -55,7 +55,7 @@ goog.require('goog.structs.Map');
             this.type = type; // MapFirst, MapUnique, MapAll
             this.query = query; // the query
             this.queried = queried; // the queried molecule
-            this.sssr = jchemhub.ring.findSSSR(queried); // sssr rings
+            this.sssr = queried.getRings(); // sssr rings
             this.queryPath = []; // the path in the query
             this.queriedPath = []; // the path in the queried molecule
             this.candidates = []; // the candidates to check
