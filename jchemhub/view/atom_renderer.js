@@ -110,7 +110,7 @@ jchemhub.view.AtomRenderer.prototype.highlightOn = function(atom, opt_group) {
 	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol).color
 			: atom_config.color;
 	var stroke = new goog.graphics.Stroke(strokeWidth, color);
-	var fill = null
+	var fill = null;
 	var radius = atom_config.highlight.radius * this.transform.getScaleX();
 	var coords = this.transform.transformCoords( [ atom.coord ])[0];
 

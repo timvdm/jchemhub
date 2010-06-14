@@ -10,7 +10,8 @@
 <script src="../deps.js"></script>
 
 <script src="../io/json_test_rxn.js"></script>
-<script src="../json/json_templates.js"></script>
+
+<script src="../io/io_test_molsample2.js"></script>
 
 <link rel="stylesheet"
 	href="../../third-party/closure/closure/goog/demos/css/demo.css">
@@ -23,6 +24,8 @@
 	href="../../third-party/closure/closure/goog/css/linkbutton.css" />
 <link rel="stylesheet"
 	href="../../third-party/closure/closure/goog/css/menus.css" />
+<link rel="stylesheet"
+	href="../../third-party/closure/closure/goog/css/menubutton.css">
 <link rel="stylesheet"
 	href="../../third-party/closure/closure/goog/css/tab.css" />
 <link rel="stylesheet"
@@ -54,6 +57,7 @@
 	goog.require('jchemhub.controller.plugins.SymbolSelect');
 	goog.require('jchemhub.controller.plugins.BondSelect');
 	goog.require('jchemhub.controller.plugins.Erase');
+    goog.require('jchemhub.io.mdl');
 	goog.require('goog.debug.Console');
 
 </script>
@@ -63,8 +67,8 @@
 	
 function initPage(){
 	// uncomment next two lines to debug to console
-	var c = new goog.debug.Console(); 
-	c.setCapturing(true); 
+	//var c = new goog.debug.Console(); 
+	//c.setCapturing(true); 
 
 	var toolbar = jchemhub.controller.DefaultToolbar.makeDefaultToolbar(goog.dom.getElement('reactionEditorToolbar'));  
 	var model = jchemhub.io.json.readReaction(reactionDrawing); 
@@ -79,16 +83,40 @@ function initPage(){
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
 	editor.setModels([model]);
+
 	
-//	var container = goog.dom.getElement('moleculeContainers');
-//	goog.array.forEach(templates, function(json_mol){
-//		var mol = jchemhub.io.json.readMolecule(json_mol);
-//		var el = goog.dom.createDom('td', {'style': 'width: 150px; height: 150px'});
-//		goog.dom.appendChild(container, el);
- //  	var ed = new jchemhub.controller.ReactionEditor(el);
-//		ed.setModels([mol]);
-//	});
-};
+	var sdfs = sdf.split("$$$$\n");
+	var mol_renderer = new jchemhub.controller.ReactionEditor(goog.dom.getElement('moleculeContainer'),{background : {color : 'white'}});
+ 
+    var select1 = new goog.ui.Select();
+    select1.addItem(new goog.ui.MenuItem('1', 1));
+    select1.addItem(new goog.ui.MenuItem('2', 2));
+    select1.addItem(new goog.ui.MenuItem('3 (bucky ball)', 3));
+    select1.addItem(new goog.ui.MenuItem('4', 4));
+    select1.addItem(new goog.ui.MenuItem('5', 5));
+    select1.addItem(new goog.ui.MenuItem('6', 6));
+    select1.addItem(new goog.ui.MenuItem('7', 7));
+    select1.addItem(new goog.ui.MenuItem('8', 8));
+    select1.addItem(new goog.ui.MenuItem('9', 9));
+    select1.addItem(new goog.ui.MenuItem('10', 10));
+  //  select1.addItem(new goog.ui.MenuItem('11 (too large right now)', 11));
+    select1.addItem(new goog.ui.MenuItem('12', 12));
+    
+    select1.setSelectedIndex(0);
+    select1.render(goog.dom.getElement('selectMolecule'));
+    
+        goog.events.listen(select1, goog.ui.Component.EventType.ACTION,
+        function(e) {
+          var timer = goog.now();
+          var select = e.target;
+          var idx = select.getValue();
+          var molfile=sdfs[idx];
+          var mol=jchemhub.io.mdl.readMolfile(molfile);
+	      mol_renderer.setModels([mol]);
+	      goog.dom.setTextContent(goog.dom.getElement('perf'), (goog.now() - timer) + 'ms');
+        });
+        
+        };
 
 
 goog.events.listen(window, goog.events.EventType.LOAD, initPage);
@@ -96,6 +124,9 @@ goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 </head>
 
 <body>
+<h1>Reaction Editing</h1>
+<fieldset>
+<legend>Demo:</legend>
 <table style="width: 100%">
 	<tr>
 		<td>
@@ -110,12 +141,23 @@ goog.events.listen(window, goog.events.EventType.LOAD, initPage);
 		</div>
 		</td>
 	</tr>
-	<tr>
-		<td>
-		<div id="moleculeContainers"></div>
-		</td>
-	</tr>
+
 </table>
+
+</fieldset>
+<h1>Molecule Rendering</h1>
+<fieldset>
+<legend>Demo:</legend> 
+<br>
+<label id="selectMolecule">Select a molecule to render: </label>
+<br>
+
+<br>
+<div id="moleculeContainer" style="width: 600px; height: 600px"></div>
+<br>
+</fieldset>
+  <div id="perf"></div> 
+<br> 
 
 
 

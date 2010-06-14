@@ -40,23 +40,34 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		return a.coord;
 	});
 	var box = goog.math.Box.boundingBox.apply(null, atom_coords);
+	
+
+
 	var group = this.graphics.createGroup();
 	var stroke = null;
-	var fill = new goog.graphics.SolidFill("green", 0.001);//'transparent' fill
-	
+	var fill = new goog.graphics.SolidFill("green", 0.001);// 'transparent'
+	// fill
+
 	if (!trans) {
 		// if not part of a reaction, we need to create a transform
-		var m = Number(this.config.get("margin"));
-		var fromRect = goog.math.Rect.createFromBox(box.expand(m, m, m, m));
-		trans = this.getTransform(fromRect);
+		var m = this.config.get("margin");
+//		this.logger.info("box t: " + box.top + " r: " + box.right + " b: "
+//				+ box.bottom + " l: " + box.left);
+		var ex_box = box.expand(m.top, m.right, m.bottom, m.left);
+		this.logger.info("ex_box t: " + ex_box.top + " r: " + ex_box.right
+				+ " b: " + ex_box.bottom + " l: " + ex_box.left);
+		trans = this.getTransform(ex_box);
+
 	}
 	this.transform = trans;
-	var center = new goog.math.Coordinate((box.left + box.right)/2, (box.top + box.bottom)/2);
-	var t_center = this.transform.transformCoords([center])[0];
-	var rx = Math.abs(this.transform.getScaleX() * (box.right - box.left)/2);
-	var ry = Math.abs(this.transform.getScaleY() * (box.bottom - box.top)/2);
-	
-	this.graphics.drawEllipse(t_center.x, t_center.y,rx, ry,stroke, fill, group);
+	var center = new goog.math.Coordinate((box.left + box.right) / 2,
+			(box.top + box.bottom) / 2);
+	var t_center = this.transform.transformCoords( [ center ])[0];
+	var rx = Math.abs(this.transform.getScaleX() * (box.right - box.left) / 2);
+	var ry = Math.abs(this.transform.getScaleY() * (box.bottom - box.top) / 2);
+
+	this.graphics.drawEllipse(t_center.x, t_center.y, rx, ry, stroke, fill,
+			group);
 	// this.logger.info("molecule has " + molecule.bonds.length + " bonds");
 	goog.array.forEach(molecule.bonds, function(bond) {
 		this.bondRendererFactory.get(bond).render(bond, trans, undefined);

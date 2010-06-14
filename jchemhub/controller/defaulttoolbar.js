@@ -9,6 +9,12 @@ goog.require('goog.ui.ControlContent');
 goog.require('jchemhub.controller.ToolbarFactory');
 goog.require('jchemhub.controller.Command');
 goog.require('jchemhub.controller.plugins.Erase');
+goog.require('jchemhub.controller.plugins.ClearEditor');
+goog.require('jchemhub.controller.plugins.Zoom');
+goog.require('jchemhub.controller.plugins.BondSelect');
+goog.require('jchemhub.controller.plugins.Highlight');
+goog.require('jchemhub.controller.plugins.SymbolSelect');
+goog.require('jchemhub.controller.plugins.UndoRedo');
 
 // goog.exportSymbol('jchemhub.controller.DefaultToolbar.makeToolbar',
 // jchemhub.controller.DefaultToolbar.makeToolbar);

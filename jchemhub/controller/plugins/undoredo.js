@@ -1,5 +1,6 @@
 goog.provide('jchemhub.controller.plugins.UndoRedo');
 goog.require('goog.debug.Logger');
+goog.require('goog.json');
 
 // goog.exportSymbol('jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO',
 // jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO);
@@ -110,7 +111,6 @@ jchemhub.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e)
 	(e.target);
 
 	this.updateCurrentState_(editorObj);
-	this.logger.info("undoStack_.length " + this.undoStack_.length);
 
 };
 
@@ -123,28 +123,36 @@ jchemhub.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e)
  */
 jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		editorObj) {
+	this.logger.info("updateCurrentState_");
+	this.logger.info("    undoStack_.length " + this.undoStack_.length);
+	this.logger.info("    redoStack_.length " + this.redoStack_.length);
+
 	var content = editorObj.getModels();
-	var serialized = [];
+	var serialized = "[]";
 	if (content) {
 		// serialize to json object
-		serialized = goog.array.map(editorObj.getModels(),
-				jchemhub.io.json.reactionToJson);
+		serialized = goog.json.serialize(goog.array.map(editorObj.getModels(),
+				jchemhub.io.json.reactionToJson));
+		this.logger.info(serialized);
 	}
 
 	var currentState = this.currentState_;
 
-	if (currentState) {
+	if (currentState!=serialized) {
 
 		this.addState(currentState);
 	}
 
 	this.currentState_ = serialized;
+
+	this.logger.info("    undoStack_.length " + this.undoStack_.length);
+	this.logger.info("    redoStack_.length " + this.redoStack_.length);
 };
 
 /**
  * Add state to the undo stack. This clears the redo stack.
  * 
- * @param {goog.editor.plugins.UndoRedoState}
+ * @param {object}
  *            state The state to add to the undo stack.
  */
 jchemhub.controller.plugins.UndoRedo.prototype.addState = function(state) {
@@ -228,19 +236,23 @@ jchemhub.controller.plugins.UndoRedo.prototype.hasRedoState = function() {
  */
 jchemhub.controller.plugins.UndoRedo.prototype.shiftState_ = function(
 		fromStack, toStack) {
+	this.logger.info("shiftState");
+
+	this.logger.info("    fromStack.length " + fromStack.length);
+	this.logger.info("    toStack.length " + toStack.length);
 	if (fromStack.length) {
 		var state = fromStack.pop();
 
-		// Push the current state into the redo stack.
+		// Push the current state into the to-stack.
 		toStack.push(state);
-		this.editorObject.setModels(goog.array.map(state,
+		this.editorObject.setModels(goog.array.map(goog.json.unsafeParse(state),
 				jchemhub.io.json.readReaction));
 
 		// If either stack transitioned between 0 and 1 in size then the ability
 		// to do an undo or redo has changed and we must dispatch a state
 		// change.
-		this.logger.info("fromStack.length " + fromStack.length);
-		this.logger.info("toStack.length " + toStack.length);
+		this.logger.info("    fromStack.length " + fromStack.length);
+		this.logger.info("    toStack.length " + toStack.length);
 		if (fromStack.length == 0 || toStack.length == 1) {
 			this.dispatchStateChange_();
 		}

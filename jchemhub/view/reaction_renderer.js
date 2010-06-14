@@ -39,8 +39,12 @@ goog.inherits(jchemhub.view.ReactionRenderer, jchemhub.view.Renderer);
  */
 jchemhub.view.ReactionRenderer.prototype.render = function(reaction) {
 	var molecules = goog.array.concat(reaction.reactants, reaction.products);
-	var fromRect = this.boundingRect(molecules);
-	var transform = this.getTransform(fromRect);
+	var box = this.boundingBox(molecules);
+	var m = this.config.get("margin");
+	box.expand(m.top, m.right, m.bottom, m.left);
+//	this.logger.info("box t: " + box.top + " r: " + box.right
+//			+ " b: " + box.bottom + " l: " + box.left);
+	var transform = this.getTransform(box);
 	var previousReactant;
 	var group = this.graphics.createGroup();
 	goog.array.forEach(reaction.reactants, function(reactant) {
@@ -93,8 +97,7 @@ jchemhub.view.ReactionRenderer.prototype.boundingBox = function(molecules) {
 	var coords = goog.array.map(atoms, function(a) {
 		return a.coord;
 	})
-	var m = Number(this.config.get("margin"));
-	return goog.math.Box.boundingBox.apply(null, coords).expand(m, m, m, m);
+	return goog.math.Box.boundingBox.apply(null, coords);
 }
 
 /**
@@ -106,14 +109,14 @@ jchemhub.view.ReactionRenderer.prototype.boundingBox = function(molecules) {
 jchemhub.view.ReactionRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('jchemhub.view.ReactionRenderer');
 
-/**
- * 
- * @param {Array.<jchemhub.model.Molecule>} molecules
- * @return {goog.math.Rect}
- */
-jchemhub.view.ReactionRenderer.prototype.boundingRect = function(molecules) {
-	return goog.math.Rect.createFromBox(this.boundingBox(molecules));
-}
+///**
+// * 
+// * @param {Array.<jchemhub.model.Molecule>} molecules
+// * @return {goog.math.Rect}
+// */
+//jchemhub.view.ReactionRenderer.prototype.boundingRect = function(molecules) {
+//	return goog.math.Rect.createFromBox(this.boundingBox(molecules));
+//}
 
 
 /**

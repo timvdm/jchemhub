@@ -9,82 +9,97 @@
  -->
 <script src="build/jchemhub-whitespace-only.js"></script>
 <script src="jchemhub/io/json_test_rxn.js"></script>
+<script src="jchemhub/io/io_test_molsample2.js"></script>
 
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/demos/css/demo.css">
+	href="css/demo.css">
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/button.css" />
+	href="css/button.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/dialog.css" />
+	href="css/dialog.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/linkbutton.css" />
+	href="css/linkbutton.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/menus.css" />
+	href="css/menus.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/tab.css" />
+	href="css/menubutton.css">
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/tabbar.css" />
+	href="css/tab.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/toolbar.css" />
+	href="css/tabbar.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/colormenubutton.css" />
+	href="css/toolbar.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/palette.css" />
+	href="css/colormenubutton.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/colorpalette.css" />
+	href="css/palette.css" />
 <link rel="stylesheet"
-	href="third-party/closure/closure/goog/css/editortoolbar.css" />
+	href="css/colorpalette.css" />
+<link rel="stylesheet"
+	href="css/editortoolbar.css" />
 
 <script>
-    
 function initPage(){
 
-	var buttons = []; 
-	buttons.push(jchemhub.controller.ToolbarFactory.makeButton( 
-    	jchemhub.controller.plugins.ClearEditor.COMMAND, 'Clear Editor', 'Clear')); 
-    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_IN, 'zoom in', '+'));
-    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.Zoom.COMMAND.ZOOM_OUT, 'zoom out', '-'));
-    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.UNDO, 'undo', 'undo'));
-    buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.REDO, 'redo', 'redo'));
-    var atom_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.SymbolSelect.COMMAND, 'select Symbol', 'Symbol');
-    var atom_menu = new goog.ui.Menu();
-    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:black"},'C')));
-    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:blue"},'N')));
-    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:red"},'O')));
-    atom_menu.addItem(m1 = new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:yellow"},'S')));
-    atom_menu.addItem(m1 = new goog.ui.Option('...'));
-    atom_select.setMenu(atom_menu);
-    buttons.push(atom_select);
+// uncomment next two lines to debug to console
+	//var c = new goog.debug.Console(); 
+	//c.setCapturing(true); 
 
- 	var bond_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.BondSelect.COMMAND, 'select Bond Type', 'Bond');
-    var bond_menu = new goog.ui.Menu();  
-    goog.array.forEach(jchemhub.controller.plugins.BondSelect.BOND_TYPES, function(entry){
-    	bond_menu.addItem(new goog.ui.Option(entry.caption, entry.klass));
-    });
-    bond_select.setMenu(bond_menu);
-    buttons.push(bond_select);
-
-
-	var toolbar = jchemhub.controller.DefaultToolbar.makeToolbar(buttons, goog.dom.getElement('reactionEditorToolbar')); 
+	var toolbar = jchemhub.controller.DefaultToolbar.makeDefaultToolbar(goog.dom.getElement('reactionEditorToolbar'));  
 	var model = jchemhub.io.json.readReaction(reactionDrawing); 
-	var editor = new jchemhub.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'));
+	var editor = new jchemhub.controller.ReactionEditor(goog.dom.getElement('reactionEditorContainer'),{background : {color : 'white'}});
 	editor.registerPlugin(new jchemhub.controller.plugins.ClearEditor());
 	editor.registerPlugin(new jchemhub.controller.plugins.Zoom());
 	editor.registerPlugin(new jchemhub.controller.plugins.UndoRedo());
 	editor.registerPlugin(new jchemhub.controller.plugins.Highlight());
 	editor.registerPlugin(new jchemhub.controller.plugins.SymbolSelect());
 	editor.registerPlugin(new jchemhub.controller.plugins.BondSelect());
+	editor.registerPlugin(new jchemhub.controller.plugins.Erase());
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
-	editor.setModel(model);
+	editor.setModels([model]);
+	var sdfs = sdf.split("$$$$\n");
+	var mol_renderer = new jchemhub.controller.ReactionEditor(goog.dom.getElement('moleculeContainer'),{background : {color : 'white'}});
+ 
+    var select1 = new goog.ui.Select();
+    select1.addItem(new goog.ui.MenuItem('1', 1));
+    select1.addItem(new goog.ui.MenuItem('2', 2));
+    select1.addItem(new goog.ui.MenuItem('3 (bucky ball)', 3));
+    select1.addItem(new goog.ui.MenuItem('4', 4));
+    select1.addItem(new goog.ui.MenuItem('5', 5));
+    select1.addItem(new goog.ui.MenuItem('6', 6));
+    select1.addItem(new goog.ui.MenuItem('7', 7));
+    select1.addItem(new goog.ui.MenuItem('8', 8));
+    select1.addItem(new goog.ui.MenuItem('9', 9));
+    select1.addItem(new goog.ui.MenuItem('10', 10));
+  //  select1.addItem(new goog.ui.MenuItem('11 (too large right now)', 11));
+    select1.addItem(new goog.ui.MenuItem('12', 12));
+    
+    select1.setSelectedIndex(0);
+    select1.render(goog.dom.getElement('selectMolecule'));
+    
+        goog.events.listen(select1, goog.ui.Component.EventType.ACTION,
+        function(e) {
+          var timer = goog.now();
+          var select = e.target;
+          var idx = select.getValue();
+          var molfile=sdfs[idx];
+          var mol=jchemhub.io.mdl.readMolfile(molfile);
+	      mol_renderer.setModels([mol]);
+	      goog.dom.setTextContent(goog.dom.getElement('perf'), (goog.now() - timer) + 'ms');
+        });
+        
+
+
+	
 };
-
-
 </script>
 </head>
 
 <body onload="initPage();">
-
+<h1>Reaction Editor</h1>
+<fieldset>
+<legend>Demo:</legend>
 <table style="width: 100%">
 	<tr>
 		<td>
@@ -93,10 +108,29 @@ function initPage(){
 	</tr>
 	<tr>
 		<td>
-		<div id="reactionEditorContainer" style="height: 400px"></div>
+		<div
+			style="width: 1000px; height: 400px; overflow: auto; padding: 5px">
+		<div id="reactionEditorContainer" style="width: 1000px; height: 400px"></div>
+		</div>
 		</td>
 	</tr>
+
 </table>
+
+</fieldset>
+<h1>Molecule Renderer</h1>
+<fieldset>
+<legend>Demo:</legend> 
+<br>
+<label id="selectMolecule">Select a molecule to render: </label>
+<br>
+
+<br>
+<div id="moleculeContainer" style="width: 600px; height: 600px"></div>
+<br>
+</fieldset>
+  <div id="perf"></div> 
+<br> 
 
 </body>
 </html>
