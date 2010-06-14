@@ -69,7 +69,7 @@ jchemhub.io.smiles.parse = function (smi) {
 	var branch = new Array();
 	var ring   = new Array();
 	var errstr = "";
-	for (var i in items) {
+	for (var i = 0; i < items.length; i++) {
 		var item = items[i];
 		if (item == this.punctuation.nobond) {
 		} else if (item == this.punctuation.openbranch) {

@@ -20,7 +20,7 @@ var _allTests = [ "jchemhub/algorithm/symmetry/symmetry_test.html",
 		  "jchemhub/io/json_test.html",
 		  "jchemhub/io/mdl_test.html", 
 		  "jchemhub/model/model_test.html", 
-		  "jchemhub/ring/ring_finder_test.html",
+		  "jchemhub/ring/hanser_test.html",
 		  "jchemhub/ring/sssr_test.html",
 		  "jchemhub/controller/plugin_test.html",  
 		  "jchemhub/controller/reaction_editor_test.html"];

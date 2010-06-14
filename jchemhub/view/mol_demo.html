@@ -27,8 +27,8 @@
 <script>
 function draw(){
 // uncomment next two lines to debug to console
-	var c = new goog.debug.Console(); 
-	c.setCapturing(true); 
+	//var c = new goog.debug.Console(); 
+	//c.setCapturing(true); 
 	var sdfs = sdf.split("$$$$\n");
 	var mol_renderer = new jchemhub.controller.ReactionEditor(goog.dom.getElement('container'),{background : {color : 'white'}});
  
@@ -46,8 +46,10 @@ function draw(){
     select1.addItem(new goog.ui.MenuItem('11 (too large right now)', 11));
     select1.addItem(new goog.ui.MenuItem('12', 12));
     
+
     select1.setSelectedIndex(0);
     select1.render(goog.dom.getElement('selectMolecule'));
+
     
         goog.events.listen(select1, goog.ui.Component.EventType.ACTION,
         function(e) {
@@ -67,6 +69,7 @@ function draw(){
 </head>
 
 <body onload="draw()">
+
 <h1>Molecule Rendering</h1>
 <fieldset>
 <legend>Demo:</legend> 
@@ -81,6 +84,8 @@ function draw(){
 <br> 
   <div id="perf"></div> 
 
+
+<div id="container" style="width: 4000px; height: 1800px">
 
 </body>
 </html>

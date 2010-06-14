@@ -1,7 +1,6 @@
 goog.provide('jchemhub.model.Molecule');
 goog.require('goog.array');
 goog.require('jchemhub.ring.RingFinder');
-goog.require('jchemhub.ring.SSSRFinder');
 
 /**
  * Class representing a Molecule
@@ -32,6 +31,12 @@ jchemhub.model.Molecule = function(opt_name) {
 	 * @type {string}
 	 */
 	this.name = opt_name ? opt_name : "";
+	
+	/**
+	 * SSSR calculated for this molecule
+	 */
+	this.sssr=[];
+	this.mustRecalcSSSR=true;
 
 };
 
@@ -83,13 +88,14 @@ jchemhub.model.Molecule.prototype.getBond = function(id) {
  * @return{jchemhub.model.Bond}
  */
 jchemhub.model.Molecule.prototype.findBond = function(atom1, atom2) {
-	for ( var i = 0, il = this.bonds.length; i < il; i++) {
-		var bond = this.bonds[i];
-		if ((atom1 == bond.source && atom2 == bond.target)
-				|| (atom2 == bond.source && atom1 == bond.target))
-			return bond;
-	}
-	return null;
+    var bonds = atom1.bonds.getValues();
+    for (var i = 0, li = bonds.length; i < li; i++) {
+        var bond = bonds[i];
+        if (bond.otherAtom(atom1) == atom2) {
+            return bond;
+        }
+    }
+    return null;
 };
 
 /**
@@ -197,12 +203,18 @@ jchemhub.model.Molecule.prototype.addAtom = function(atom) {
 	atom.molecule = this;
 };
 
+
+
 /**
- * rings found in this molecule
+ * Get rings found in this molecule
  * 
  * @return{Array.<jchemhub.ring.Ring>}
  */
-jchemhub.model.Molecule.prototype.getRings = function() {
-	//return jchemhub.ring.RingFinder.findRings(this);
-	return jchemhub.ring.findSSSR(this);
+jchemhub.model.Molecule.prototype.getRings = function(){
+
+    if (this.mustRecalcSSSR) {
+        this.mustRecalcSSSR = false;
+        this.sssr = jchemhub.ring.RingFinder.findRings(this);
+    }
+    return this.sssr;
 }
