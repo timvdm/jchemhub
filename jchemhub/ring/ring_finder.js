@@ -53,6 +53,9 @@ goog.require('jchemhub.ring.Ring');
         return ring;
     }
 
+    /**
+     * Check if a candidate ring is already in the SSSR ring set.
+     */
     function isCandidateInSet(C, Csssr, valences, ringCount) {
         for (var i = 0, li = Csssr.length; i < li; i++) {
             var sssr = Csssr[i];
@@ -95,7 +98,9 @@ goog.require('jchemhub.ring.Ring');
     };
 
 
-
+    /**
+     * Verify if a ring set is the SSSR ring set.
+     */
     function verifySSSR(sssr, nsssr, molecule) {
         // The final SSSR set
         var Csssr = [];
@@ -120,26 +125,38 @@ goog.require('jchemhub.ring.Ring');
     }
 
     /**
-     * Make a copy of the molecule.
+     * Make a copy of the molecule. This is needed since we modify the molecule
+     * to increase ring perception performance.
      */
+    /*
     function copyMolecule(molecule) {
         var moleculeCopy = new jchemhub.model.Molecule();
         for (var i = 0, li = molecule.countAtoms(); i < li; i++) {
             var atomCopy = new jchemhub.model.Atom();
+            atomCopy.index = i;
             moleculeCopy.addAtom(atomCopy)
         }
         for (i = 0, li = molecule.countBonds(); i < li; i++) {
             var bond = molecule.getBond(i);
-            var sourceIndex = molecule.indexOfAtom(bond.source);
-            var targetIndex = molecule.indexOfAtom(bond.target);
+            var sourceIndex = bond.source.index;
+            var targetIndex = bond.target.index;
             var sourceCopy = moleculeCopy.getAtom(sourceIndex);
             var targetCopy = moleculeCopy.getAtom(targetIndex);
             var bondCopy = new jchemhub.model.SingleBond(sourceCopy, targetCopy);
+            bondCopy.index = i;
             moleculeCopy.addBond(bondCopy);
         }
         return moleculeCopy;
     }
+    */
 
+    /**
+     * Reduce the size of a molecule by progressively removing atoms with a
+     * connectivity of 1. These terminal atoms can never be in a ring. The
+     * aim of this function is to reduce the number of molecules considered
+     * during ring perception to speed up the process.
+     */
+    /*
     function reduceMolecule(molecule) {
         var atomCount = molecule.countAtoms();
         var lastAtomCount = atomCount + 1;
@@ -159,63 +176,259 @@ goog.require('jchemhub.ring.Ring');
 
         }
     }
+    */
 
-    jchemhub.ring.RingFinder.findRings = function(molecule) {
+    /**
+     * Detect ring membership of atoms and set the isInCycle property. Ring membership
+     * of atoms can be computed in O(n) time by creating a spanning tree. For this,
+     * a breath-first iteration is performed on the atoms and the tree is
+     * constructed. During construction visited atoms and bonds are stored in
+     * arrays. If a bond isn't visited yet but the atom it connects to is, the
+     * bond is a ring-closure. When a closure bond is found, a backtracking loop
+     * assigns the isInCycle property for all atoms in the cycle. The end of the
+     * cycle is where the atoms come back together. For even rings, there is
+     * always a single last (depth) atom. For odd rings, the closure bond
+     * connects two atoms of the same depth. This function is has an O(n) runtime.
+     */
+    function detectRingAtoms(molecule) {
+        var n = molecule.countAtoms();
+        var visitedAtoms = goog.array.repeat(false, n);
+        var visitedBonds = goog.array.repeat(false, n);
 
-        var start = new Date().getTime();
+        var queue = [];
 
-        // If there are no rings, we're done
-        var nsssr = molecule.countBonds() - molecule.countAtoms() + molecule.fragmentCount;
-        if (!nsssr) {
-            return [];
-        }
+        var startAtom = molecule.atoms[0];
+        startAtom.depth = 0;
+        queue.push(startAtom);
+        //visitedAtoms.push(0);
+        visitedAtoms[0] = true;
 
-//        var moleculeCopy = molecule;
-        // make a copy of the molecule so we can remove atoms
-        var moleculeCopy = copyMolecule(molecule);
-        // store the atom indexes in the atoms
-        for (var i = 0, li = moleculeCopy.atoms.length; i < li; i++) {
-            moleculeCopy.atoms[i].index = i;
-        }
-        reduceMolecule(moleculeCopy);
-
-        var sssr;
-        // Use Hanser ring finder to find all 3-6 membered rings.
-        var hanser = jchemhub.ring.Hanser.findRings(moleculeCopy, 6);
-        if (hanser.length >= nsssr) {
-            // Use the Hanser rings to make the first SSSR
-            sssr = verifySSSR(hanser, nsssr, moleculeCopy);
-            // Check the size of the first SSSR
-            if (sssr.length < nsssr) {
-                // Hanser rings don't contain the SSSR, do a full SSSR search
-                sssr = jchemhub.ring.SSSR.findRings(moleculeCopy);
+        while (true) {
+            if (!queue.length) {
+                break;
             }
-        } else {
-            // Hanser rings don't contain the SSSR, do a full SSSR search (there
-            // are not enough candidates so we skip the candidateSearch.
-            sssr = jchemhub.ring.SSSR.findRings(moleculeCopy);
-        }
+            var atom = queue[0];
+            goog.array.removeAt(queue, 0);
 
-        // translate the indexes from the reduced moleculeCopy back to
-        // the original indexes
-        for (i = 0, li = sssr.length; i < li; i++) {
-            var ring = sssr[i];
-            for (var j = 0, lj = ring.length; j < lj; j++) {
-                ring[j] = moleculeCopy.atoms[ring[j]].index;
+            var bonds = atom.bonds.getValues();
+            for (var i = 0, li = bonds.length; i < li; i++) {
+                var bond = bonds[i];
+                var bondIndex = bond.index;
+                // skip the path we're comming from
+                //if (goog.array.contains(visitedBonds, bondIndex)) {
+                if (visitedBonds[bondIndex]) {
+                    continue;
+                }
+                visitedBonds[bondIndex] = true;
+
+                var neighbor = bond.otherAtom(atom);
+                var neighborIndex = neighbor.index;
+
+                // if the bond is not visited yet but the neighbor is, the bond
+                // is a ring closure or chord
+                if (visitedAtoms[neighborIndex]) {
+                    var previous = [], depth;
+                    if (atom.depth == neighbor.depth) {
+                        // odd sized ring
+                        previous.push(atom);
+                        previous.push(neighbor);
+                        depth = atom.depth;
+                    } else {
+                        // even sized ring
+                        neighbor.isInCycle = true;
+                        var nbrNeighbors = neighbor.getNeighbors();
+                        for (var j = 0, lj = nbrNeighbors.length; j < lj; j++) {
+                            var nbrNeighbor = nbrNeighbors[j];
+                            if (nbrNeighbor.depth == neighbor.depth - 1) {
+                                previous.push(nbrNeighbor);
+                            }
+                        }
+                        depth = atom.depth;
+                    }
+
+                    // backtrack ring and assign isInCylce to all cycle atoms
+                    while (true) {
+                        previous[0].isInCycle = true;
+                        previous[1].isInCycle = true;
+                        depth--;
+                        var prevNeighbors1 = previous[0].getNeighbors();
+                        for (var j = 0, lj = prevNeighbors1.length; j < lj; j++) {
+                            if (prevNeighbors1[j].depth == depth) {
+                                previous[0] = prevNeighbors1[j];
+                                break;
+                            }
+                        }
+                        var prevNeighbors2 = previous[1].getNeighbors();
+                        for (var j = 0, lj = prevNeighbors2.length; j < lj; j++) {
+                            if (prevNeighbors2[j].depth == depth) {
+                                previous[1] = prevNeighbors2[j];
+                                break;
+                            }
+                        }
+
+                        if (previous[0] == previous[1]) {
+                            previous[0].isInCycle = true;
+                            break;
+                        }
+
+                    }
+                } else {
+                    neighbor.depth = atom.depth + 1;
+                    visitedAtoms[neighborIndex] = true;
+                    queue.push(neighbor);
+                }
             }
         }
+        /*
+        debug('before: ' + molecule.countAtoms());
+        var after = 0;
+        for (var i = 0, li = molecule.countAtoms(); i < li; i++) {
+            if (molecule.atoms[i].isInCycle) {
+                after++;
+            }
+        }
+        debug('after: ' + after);
+        */
+    }
 
-        debug(new Date().getTime() - start + 'ms');
+    /**
+     * Create ring systems. These are molecules containing only ring atoms.
+     * Each disconnected ring system in the original molecule will result in
+     * a single ring system molecule. Ring perception is done on each ring
+     * system individually for optimal performance.
+     */
+    function createRingSystems(molecule) {
 
         var rings = [];
-        for (var i = 0, il = sssr.length; i < il; i++) {
-            rings.push(createRing(sssr[i], molecule));
+
+        var n = molecule.countAtoms();
+        var visitedAtoms = goog.array.repeat(false, n);
+        var visitedBonds = goog.array.repeat(false, n);
+        var indexMap = goog.array.repeat(-1, n); // molecule -> ringSystem
+
+
+        for (var k = 0, lk = molecule.countAtoms(); k < lk; k++) {
+            var startAtom = molecule.atoms[k];
+            // skip visited atoms
+            if (visitedAtoms[startAtom.index]) {
+                continue;
+            }
+            // skip acyclic atoms
+            if (!startAtom.isInCycle) {
+                continue;
+            }
+
+            // create a new ring system
+            var ringSystem = new jchemhub.model.Molecule();
+
+            var queue = [];
+
+            queue.push(startAtom);
+            visitedAtoms[0] = true;
+            var newAtom = new jchemhub.model.Atom();
+            newAtom.index2 = startAtom.index;
+            indexMap[startAtom.index] = 0;
+            ringSystem.addAtom(newAtom);
+
+            while (true) {
+                if (!queue.length) {
+                    break;
+                }
+
+                var atom = queue[0];
+                goog.array.removeAt(queue, 0);
+
+                var bonds = atom.bonds.getValues();
+                for (var i = 0, li = bonds.length; i < li; i++) {
+                    var bond = bonds[i];
+                    var bondIndex = bond.index;
+                    // skip the path we're comming from
+                    if (visitedBonds[bondIndex]) {
+                        continue;
+                    }
+                    visitedBonds[bondIndex] = true;
+
+                    var neighbor = bond.otherAtom(atom);
+                    var neighborIndex = neighbor.index;
+
+                    if (!neighbor.isInCycle) {
+                        continue;
+                    }
+
+                    // if the bond is not visited yet but the neighbor is, the bond
+                    // is a ring closure or chord
+                    if (visitedAtoms[neighborIndex]) {
+                        // create the ring closure bond
+                        var closureBond = molecule.findBond(atom, neighbor);
+                        var newBond = new jchemhub.model.Bond(ringSystem.atoms[indexMap[atom.index]], ringSystem.atoms[indexMap[neighbor.index]]);
+                        newBond.index2 = closureBond.index;
+                        ringSystem.addBond(newBond);
+                    } else {
+                        visitedAtoms[neighborIndex] = true;
+                        queue.push(neighbor);
+                        // create the new atom
+                        newAtom = new jchemhub.model.Atom();
+                        newAtom.index2 = neighbor.index;
+                        indexMap[neighbor.index] = ringSystem.atoms.length;
+                        ringSystem.addAtom(newAtom);
+                        // create the new bond
+                        var bond = molecule.findBond(atom, neighbor);
+                        var newBond = new jchemhub.model.Bond(ringSystem.atoms[indexMap[atom.index]], newAtom);
+                        newBond.index2 = bond.index;
+                        ringSystem.addBond(newBond);
+                    }
+                }
+
+
+            }
+
+            // assign indexes
+            for (var i = 0, li = ringSystem.atoms.length; i < li; i++) {
+                ringSystem.atoms[i].index = i;
+            }
+            for (var i = 0, li = ringSystem.bonds.length; i < li; i++) {
+                ringSystem.bonds[i].index = i;
+            }
+
+            var nsssr = ringSystem.bonds.length - ringSystem.atoms.length + 1;
+
+            var sssr;
+            // Use Hanser ring finder to find all 3-6 membered rings.
+            var hanser = jchemhub.ring.Hanser.findRings(ringSystem, 6);
+            if (hanser.length >= nsssr) {
+                // Use the Hanser rings to make the first SSSR
+                sssr = verifySSSR(hanser, nsssr, ringSystem);
+                // Check the size of the first SSSR
+                if (sssr.length < nsssr) {
+                    // Hanser rings don't contain the SSSR, do a full SSSR search
+                    sssr = jchemhub.ring.SSSR.findRings(ringSystem);
+                }
+            } else {
+                // Hanser rings don't contain the SSSR, do a full SSSR search (there
+                // are not enough candidates so we skip the candidateSearch.
+                sssr = jchemhub.ring.SSSR.findRings(ringSystem);
+            }
+
+            // translate the indexes from the reduced ringSystem back to
+            // the original indexes
+            for (i = 0, li = sssr.length; i < li; i++) {
+                var ring = sssr[i];
+                for (var j = 0, lj = ring.length; j < lj; j++) {
+                    ring[j] = ringSystem.atoms[ring[j]].index2;
+                }
+            }
+
+            for (var i = 0, il = sssr.length; i < il; i++) {
+                rings.push(createRing(sssr[i], molecule));
+            }
+
         }
+
         return rings;
     }
 
 
-    jchemhub.ring.RingFinder.findRingsCallback = function(molecule, callback) {
+    jchemhub.ring.RingFinder.findRings = function(molecule) {
 
         // If there are no rings, we're done
         var nsssr = molecule.countBonds() - molecule.countAtoms() + molecule.fragmentCount;
@@ -223,52 +436,18 @@ goog.require('jchemhub.ring.Ring');
             return [];
         }
 
-        // make a copy of the molecule so we can remove atoms
-        var moleculeCopy = copyMolecule(molecule);
-        // store the atom indexes in the atoms
-        for (var i = 0, li = moleculeCopy.atoms.length; i < li; i++) {
-            moleculeCopy.atoms[i].index = i;
+        // assign indexes
+        for (var i = 0, li = molecule.atoms.length; i < li; i++) {
+            molecule.atoms[i].index = i;
         }
-        reduceMolecule(moleculeCopy);
-
-        var sssr;
-        // Use Hanser ring finder to find all 3-6 membered rings.
-        var hanser = jchemhub.ring.Hanser.findRings(moleculeCopy, 6);
-
-        function callStep2() { findRingsCallbackStep2(molecule, moleculeCopy, nsssr, hanser, callback); }
-        setTimeout(callStep2, 0);
-    }
-
-    function findRingsCallbackStep2(molecule, moleculeCopy, nsssr, hanser, callback) {
-        if (hanser.length >= nsssr) {
-            // Use the Hanser rings to make the first SSSR
-            sssr = verifySSSR(hanser, nsssr, moleculeCopy);
-            // Check the size of the first SSSR
-            if (sssr.length < nsssr) {
-                // Hanser rings don't contain the SSSR, do a full SSSR search
-                sssr = jchemhub.ring.SSSR.findRings(moleculeCopy);
-            }
-        } else {
-            // Hanser rings don't contain the SSSR, do a full SSSR search (there
-            // are not enough candidates so we skip the candidateSearch.
-            sssr = jchemhub.ring.SSSR.findRings(moleculeCopy);
+        for (var i = 0, li = molecule.bonds.length; i < li; i++) {
+            molecule.bonds[i].index = i;
         }
 
-        // translate the indexes from the reduced moleculeCopy back to
-        // the original indexes
-        for (i = 0, li = sssr.length; i < li; i++) {
-            var ring = sssr[i];
-            for (var j = 0, lj = ring.length; j < lj; j++) {
-                ring[j] = moleculeCopy.atoms[ring[j]].index;
-            }
-        }
-
-        var rings = [];
-        for (var i = 0, il = sssr.length; i < il; i++) {
-            rings.push(createRing(sssr[i], molecule));
-        }
-
-        callback(rings);
+        // detect ring atoms in O(n) time
+        detectRingAtoms(molecule);
+        // process the ring systems
+        return createRingSystems(molecule);
     }
 
 }());
