@@ -43,16 +43,22 @@ jchemhub.view.Renderer.prototype.logger = goog.debug.Logger
  * @return {jchemhub.graphics.AffineTransform}
  */
 jchemhub.view.Renderer.prototype.getTransform = function(fromBox) {
-	this.logger.info("fromBox t: " + fromBox.top + " r: " + fromBox.right
-			+ " b: " + fromBox.bottom + " l: " + fromBox.left);
-	var fromSize = goog.math.Rect.createFromBox(fromBox).getSize()
-	var toSize = fromSize.scaleToFit(this.graphics.getSize());
-	this.logger.info("toSize w: " + toSize.width + " h: " + toSize.height);
-	var scale = this.scale_factor * toSize.width / fromSize.width;
-	this.logger.info("scale: " + scale);
-
+//	this.logger.info("fromBox t: " + fromBox.top + " r: " + fromBox.right
+//			+ " b: " + fromBox.bottom + " l: " + fromBox.left);
+	var size = goog.math.Rect.createFromBox(fromBox).getSize();
+//	this.logger.info("from size w: " + size.width + " h: " + size.height);
+	var fromWidth = size.width;
+	size.scaleToFit(this.graphics.getSize());
+	var toWidth = size.width;
+//	this.logger.info("to size w: " + size.width + " h: " + size.height);
+	var scale = this.scale_factor * toWidth / fromWidth;
+	var top = Math.max(fromBox.top, fromBox.bottom);
+	var left = Math.min(fromBox.left, fromBox.right);
+//	this.logger.info("scale: " + scale + " top: " + top + " left: " + left);
+	
 	var transform = new jchemhub.graphics.AffineTransform(scale, 0, 0, -scale,
-			-fromBox.left * scale, -fromBox.top * scale);
+			-left * scale, top * scale);
+//	this.logger.info("transform:  " + transform);
 
 	return transform;
 };

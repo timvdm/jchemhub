@@ -40,6 +40,9 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		return a.coord;
 	});
 	var box = goog.math.Box.boundingBox.apply(null, atom_coords);
+	
+
+
 	var group = this.graphics.createGroup();
 	var stroke = null;
 	var fill = new goog.graphics.SolidFill("green", 0.001);// 'transparent'
@@ -48,12 +51,13 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	if (!trans) {
 		// if not part of a reaction, we need to create a transform
 		var m = this.config.get("margin");
-		this.logger.info("box t: " + box.top + " r: " + box.right + " b: "
-				+ box.bottom + " l: " + box.left);
+//		this.logger.info("box t: " + box.top + " r: " + box.right + " b: "
+//				+ box.bottom + " l: " + box.left);
 		var ex_box = box.expand(m.top, m.right, m.bottom, m.left);
-	
+		this.logger.info("ex_box t: " + ex_box.top + " r: " + ex_box.right
+				+ " b: " + ex_box.bottom + " l: " + ex_box.left);
 		trans = this.getTransform(ex_box);
-		this.logger.info("trans: " + trans);
+
 	}
 	this.transform = trans;
 	var center = new goog.math.Coordinate((box.left + box.right) / 2,
@@ -73,12 +77,14 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		this.atomRenderer.render(atom, trans, this.atomController);
 	}, this);
 
-	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
-			this.controller.handleMouseOver, this.controller, molecule));
-	group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
-			this.controller.handleMouseOut, this.controller, molecule));
-	group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
-			this.controller.handleMouseDown, this.controller, molecule));
+	if (this.controller) {
+		group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
+				this.controller.handleMouseOver, this.controller, molecule));
+		group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
+				this.controller.handleMouseOut, this.controller, molecule));
+		group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
+				this.controller.handleMouseDown, this.controller, molecule));
+	}
 }
 
 /**
@@ -86,9 +92,9 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
  */
 jchemhub.view.MoleculeRenderer.defaultConfig = {
 	margin : {
-		left : 4,
-		right : 4,
-		top : 4,
-		bottom : 4
+		left : Number(1),
+		right : Number(1),
+		top : Number(1),
+		bottom : Number(1)
 	}
 };

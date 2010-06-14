@@ -1091,9 +1091,9 @@ jchemhub.controller.ReactionEditor.defaultConfig = {
 		color : '#F0FFF0'
 	},
 	margin : {
-		left : 2,
-		right : 0,
-		top : 0,
-		bottom : 8
+		left : 1,
+		right : 1,
+		top : 1,
+		bottom : 1
 	}
 };
