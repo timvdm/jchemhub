@@ -192,6 +192,9 @@ goog.require('jchemhub.ring.Ring');
      */
     function detectRingAtoms(molecule) {
         var n = molecule.countAtoms();
+        if (!n) {
+            return;
+        }
         var visitedAtoms = goog.array.repeat(false, n);
         var visitedBonds = goog.array.repeat(false, n);
 
