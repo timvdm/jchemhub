@@ -25,6 +25,14 @@
 			<file name="json.js" />
 			<file name="mdl.js" />
 		</filelist>
+                <filelist dir="${js-src.dir}/ring">
+                        <file name="sssr.js" />
+                </filelist>
+                <filelist dir="${js-src.dir}/algorithm/query">
+                        <file name="dfsmapper.js" />
+                        <file name="smilescompiler.js" />
+                </filelist>
+	
 	</path>
 
 	<pathconvert pathsep=' -i ' property="jsfiles" refid="input-files" />
@@ -61,7 +69,7 @@
 		<sequential>
 			<mkdir dir="${build.dir}" />
 			<exec executable="python" failonerror="true" logError="true" output="${build.dir}/@{outputfile}">
-				<arg value="${closure-library.dir}/bin/calcdeps.py" />
+				<arg value="${base.dir}/scripts/calcdeps.py" />
 				<arg line='-i ${jsfiles}' />
 				<arg line='-p ${closure-library.dir}' />
 				<arg line='-p ${js-src.dir}' />
