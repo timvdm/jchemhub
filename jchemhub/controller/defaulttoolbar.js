@@ -266,6 +266,7 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
     atom_select.setMenu(atom_menu);
     buttons.push(atom_select);
     
+    
     var bond_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.BondSelect.COMMAND, 'select Bond Type', 'Bond');
     var bond_menu = new goog.ui.Menu();
     
@@ -275,6 +276,8 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
 
     bond_select.setMenu(bond_menu);
     buttons.push(bond_select);	
+    buttons.push(jchemhub.controller.ToolbarFactory.makeToggleButton(jchemhub.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_ARROW, 'arrow', 'arrow'));
+    buttons.push(jchemhub.controller.ToolbarFactory.makeToggleButton(jchemhub.controller.plugins.ArrowPlusEdit.COMMAND.EDIT_PLUS, 'plus', 'plus'));
     return jchemhub.controller.DefaultToolbar.makeToolbar(buttons, elem);
 
 };

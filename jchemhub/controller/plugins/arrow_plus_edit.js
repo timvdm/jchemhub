@@ -2,7 +2,6 @@ goog.provide('jchemhub.controller.plugins.ArrowPlusEdit');
 goog.require('jchemhub.controller.Plugin');
 goog.require('goog.debug.Logger');
 
-
 /**
  * @constructor
  * @extends{jchemhubn.controller.Plugin}s
@@ -54,8 +53,8 @@ jchemhub.controller.plugins.ArrowPlusEdit.prototype.getTrogClassId = goog.functi
  */
 jchemhub.controller.plugins.ArrowPlusEdit.prototype.execCommandInternal = function(
 		command, value, active) {
+	this.logger.info(command + " active: " + active);
 	this.activeCommand[command] = active;
-	this.logger.info(command + " active=" + active);
 };
 
 /**
@@ -66,4 +65,3 @@ jchemhub.controller.plugins.ArrowPlusEdit.prototype.execCommandInternal = functi
  */
 jchemhub.controller.plugins.ArrowPlusEdit.prototype.logger = goog.debug.Logger
 		.getLogger('jchemhub.controller.plugins.ArrowPlusEdit');
-

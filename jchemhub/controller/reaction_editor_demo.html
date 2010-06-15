@@ -56,6 +56,7 @@
 	goog.require('jchemhub.controller.plugins.Highlight');
 	goog.require('jchemhub.controller.plugins.SymbolSelect');
 	goog.require('jchemhub.controller.plugins.BondSelect');
+	goog.require('jchemhub.controller.plugins.ArrowPlusEdit');
 	goog.require('jchemhub.controller.plugins.Erase');
     goog.require('jchemhub.io.mdl');
 	goog.require('goog.debug.Console');
@@ -67,8 +68,8 @@
 	
 function initPage(){
 	// uncomment next two lines to debug to console
-	//var c = new goog.debug.Console(); 
-	//c.setCapturing(true); 
+	var c = new goog.debug.Console(); 
+	c.setCapturing(true); 
 
 	var toolbar = jchemhub.controller.DefaultToolbar.makeDefaultToolbar(goog.dom.getElement('reactionEditorToolbar'));  
 	var model = jchemhub.io.json.readReaction(reactionDrawing); 
@@ -80,6 +81,7 @@ function initPage(){
 	editor.registerPlugin(new jchemhub.controller.plugins.SymbolSelect());
 	editor.registerPlugin(new jchemhub.controller.plugins.BondSelect());
 	editor.registerPlugin(new jchemhub.controller.plugins.Erase());
+	editor.registerPlugin(new jchemhub.controller.plugins.ArrowPlusEdit());
 	
     var toolbarController = new jchemhub.controller.ToolbarController(editor, toolbar);
 	editor.setModels([model]);
