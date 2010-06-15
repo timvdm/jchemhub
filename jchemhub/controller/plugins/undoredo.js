@@ -105,7 +105,7 @@ jchemhub.controller.plugins.UndoRedo.prototype.clearHistory = function() {
  * @private
  */
 jchemhub.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e) {
-	this.logger.info('handleBeforeChange');
+
 
 	var editorObj = /** @type {jchemhub.controller.ReactionEditor} */
 	(e.target);
@@ -123,9 +123,9 @@ jchemhub.controller.plugins.UndoRedo.prototype.handleBeforeChange_ = function(e)
  */
 jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		editorObj) {
-	this.logger.info("updateCurrentState_");
-	this.logger.info("    undoStack_.length " + this.undoStack_.length);
-	this.logger.info("    redoStack_.length " + this.redoStack_.length);
+//	this.logger.info("updateCurrentState_");
+//	this.logger.info("    undoStack_.length " + this.undoStack_.length);
+//	this.logger.info("    redoStack_.length " + this.redoStack_.length);
 
 	var content = editorObj.getModels();
 	var serialized = "[]";
@@ -133,7 +133,7 @@ jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 		// serialize to json object
 		serialized = goog.json.serialize(goog.array.map(editorObj.getModels(),
 				jchemhub.io.json.reactionToJson));
-		this.logger.info(serialized);
+		//this.logger.info(serialized);
 	}
 
 	var currentState = this.currentState_;
@@ -145,8 +145,8 @@ jchemhub.controller.plugins.UndoRedo.prototype.updateCurrentState_ = function(
 
 	this.currentState_ = serialized;
 
-	this.logger.info("    undoStack_.length " + this.undoStack_.length);
-	this.logger.info("    redoStack_.length " + this.redoStack_.length);
+//	this.logger.info("    undoStack_.length " + this.undoStack_.length);
+//	this.logger.info("    redoStack_.length " + this.redoStack_.length);
 };
 
 /**

@@ -50,30 +50,30 @@ jchemhub.view.ReactionRenderer.prototype.render = function(reaction) {
 //			+ " b: " + box.bottom + " l: " + box.left);
 	var transform = this.getTransform(box);
 	var previousReactant;
-	var group = this.graphics.createGroup();
+	//var group = this.graphics.createGroup();
 	goog.array.forEach(reaction.reactants, function(reactant) {
 		if (previousReactant) {
 			var center = this.center( [ previousReactant, reactant ]);
-			this.plusRenderer.render(center, transform, group);
+			this.plusRenderer.render(center, transform);
 		}
 		previousReactant = reactant;
-		this.moleculeRenderer.render(reactant, transform, group);
+		this.moleculeRenderer.render(reactant, transform);
 	}, this);
 
 	var reaction_center = this.center(goog.array.concat(reaction.reactants,
 			reaction.products));
-	this.arrowRenderer.render(reaction_center, transform, group);
+	this.arrowRenderer.render(reaction_center, transform);
 
 	var previousProduct = null;
 	goog.array.forEach(reaction.products, function(product) {
 		if (previousProduct) {
 			var center = this.center( [ previousProduct, product ]);
-			this.plusRenderer.render(center, transform, group);
+			this.plusRenderer.render(center, transform);
 		}
 		previousProduct = product;
-		this.moleculeRenderer.render(product, transform, group);
+		this.moleculeRenderer.render(product, transform);
 	}, this);
-	return group;
+	//return group;
 }
 
 /**

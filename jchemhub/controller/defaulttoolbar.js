@@ -22,12 +22,12 @@ goog.require('jchemhub.controller.plugins.ArrowPlusEdit');
 
 // Font menu creation.
 
-/** @desc Font menu item caption for the default sans-serif font. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL = goog.getMsg('Normal');
-
-/** @desc Font menu item caption for the default serif font. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL_SERIF = goog
-		.getMsg('Normal / serif');
+///** @desc Font menu item caption for the default sans-serif font. */
+//jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL = goog.getMsg('Normal');
+//
+///** @desc Font menu item caption for the default serif font. */
+//jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL_SERIF = goog
+//		.getMsg('Normal / serif');
 
 
 //

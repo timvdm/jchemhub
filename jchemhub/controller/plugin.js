@@ -166,7 +166,10 @@ jchemhub.controller.Plugin.Op = {
 	BOND_MOUSEDOWN: 17,
 	ARROW_MOUSEOVER: 18,
 	ARROW_MOUSEOUT: 19, 
-	ARROW_MOUSEDOWN: 20
+	ARROW_MOUSEDOWN: 20,
+	PLUS_MOUSEOVER: 21,
+	PLUS_MOUSEOUT: 22,
+	PLUS_MOUSEDOWN: 23
 };
 
 /**
@@ -197,7 +200,13 @@ jchemhub.controller.Plugin.OPCODE = goog.object.transpose(goog.reflect.object(
 			handleAtomMouseDown : jchemhub.controller.Plugin.Op.ATOM_MOUSEDOWN,
 			handleBondMouseOver : jchemhub.controller.Plugin.Op.BOND_MOUSEOVER,
 			handleBondMouseOut : jchemhub.controller.Plugin.Op.BOND_MOUSEOUT,
-			handleBondMouseDown : jchemhub.controller.Plugin.Op.BOND_MOUSEDOWN
+			handleBondMouseDown : jchemhub.controller.Plugin.Op.BOND_MOUSEDOWN,
+			handleArrowMouseOver : jchemhub.controller.Plugin.Op.ARROW_MOUSEOVER,
+			handleArrowMouseOut : jchemhub.controller.Plugin.Op.ARROW_MOUSEOUT,
+			handleArrowMouseDown : jchemhub.controller.Plugin.Op.ARROW_MOUSEDOWN,
+			handlePlusMouseOver : jchemhub.controller.Plugin.Op.PLUS_MOUSEOVER,
+			handlePlusMouseOut: jchemhub.controller.Plugin.Op.PLUS_MOUSEOUT,
+			handlePlusMouseDown: jchemhub.controller.Plugin.Op.PLUS_MOUSEDOWN
 		}));
 
 /**

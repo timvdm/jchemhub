@@ -40,9 +40,9 @@ jchemhub.controller.PlusController.prototype.handleMouseDown = function(coord, e
 };
 /** @enum {string} */
 jchemhub.controller.PlusController.EventType = {
-	MOUSEOVER : 'Plus_mouseover',
-	MOUSEOUT : 'Plus_mouseout',
-	MOUSEDOWN : 'Plus_mousedown'
+	MOUSEOVER : 'plus_mouseover',
+	MOUSEOUT : 'plus_mouseout',
+	MOUSEDOWN : 'plus_mousedown'
 };
 /**
  * 

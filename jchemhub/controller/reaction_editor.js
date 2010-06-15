@@ -393,13 +393,25 @@ jchemhub.controller.ReactionEditor.prototype.handleBondMouseDown_ = function(e) 
 			e);
 }
 jchemhub.controller.ReactionEditor.prototype.handleArrowMouseOver_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ARROW_MOUSEOVER, e);
+	this.invokeShortCircuitingOp_(
+			jchemhub.controller.Plugin.Op.ARROW_MOUSEOVER, e);
 };
 jchemhub.controller.ReactionEditor.prototype.handleArrowMouseOut_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ARROW_MOUSEOUT, e);
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ARROW_MOUSEOUT,
+			e);
 };
 jchemhub.controller.ReactionEditor.prototype.handleArrowMouseDown_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ARROW_MOUSEDOWN, e);
+	this.invokeShortCircuitingOp_(
+			jchemhub.controller.Plugin.Op.ARROW_MOUSEDOWN, e);
+};
+jchemhub.controller.ReactionEditor.prototype.handlePlusMouseOver_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEOVER, e);
+};
+jchemhub.controller.ReactionEditor.prototype.handlePlusMouseOut_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEOUT, e);
+};
+jchemhub.controller.ReactionEditor.prototype.handlePlusMouseDown_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEDOWN, e);
 };
 
 /**
@@ -1024,6 +1036,15 @@ jchemhub.controller.ReactionEditor.prototype.setupChangeListeners_ = function() 
 	this.addEventListener(
 			jchemhub.controller.ArrowController.EventType.MOUSEDOWN,
 			this.handleArrowMouseDown_);
+	this.addEventListener(
+			jchemhub.controller.PlusController.EventType.MOUSEOVER,
+			this.handlePlusMouseOver_);
+	this.addEventListener(
+			jchemhub.controller.PlusController.EventType.MOUSEOUT,
+			this.handlePlusMouseOut_);
+	this.addEventListener(
+			jchemhub.controller.PlusController.EventType.MOUSEDOWN,
+			this.handlePlusMouseDown_);
 };
 
 /**
