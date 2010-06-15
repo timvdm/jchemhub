@@ -1,5 +1,6 @@
 goog.provide("jchemhub.view.Renderer");
 goog.require("goog.structs.Map");
+goog.require("goog.debug.Logger");
 
 /**
  * Abstract Class to render a model object to a graphics object

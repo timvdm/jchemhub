@@ -1,6 +1,8 @@
 goog.provide('jchemhub.view.ReactionRenderer');
 goog.require('jchemhub.view.Renderer');
 goog.require('jchemhub.controller.MoleculeController');
+goog.require('jchemhub.controller.ArrowController');
+goog.require('jchemhub.controller.PlusController');
 goog.require('jchemhub.view.MoleculeRenderer');
 goog.require('jchemhub.view.ArrowRenderer');
 goog.require('jchemhub.view.PlusRenderer');
@@ -25,9 +27,11 @@ jchemhub.view.ReactionRenderer = function(controller, graphics, opt_config) {
 			controller);
 	this.moleculeRenderer = new jchemhub.view.MoleculeRenderer(
 			this.moleculeController, graphics, this.config);
-	this.arrowRenderer = new jchemhub.view.ArrowRenderer(controller, graphics,
+	this.arrowController = new jchemhub.controller.ArrowController(controller);
+	this.arrowRenderer = new jchemhub.view.ArrowRenderer(this.arrowController, graphics,
 			this.config);
-	this.plusRenderer = new jchemhub.view.PlusRenderer(controller, graphics,
+	this.plusController = new jchemhub.controller.PlusController(controller);
+	this.plusRenderer = new jchemhub.view.PlusRenderer(this.plusController, graphics,
 			this.config);
 }
 goog.inherits(jchemhub.view.ReactionRenderer, jchemhub.view.Renderer);
