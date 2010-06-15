@@ -15,6 +15,7 @@ goog.require('jchemhub.controller.plugins.BondSelect');
 goog.require('jchemhub.controller.plugins.Highlight');
 goog.require('jchemhub.controller.plugins.SymbolSelect');
 goog.require('jchemhub.controller.plugins.UndoRedo');
+goog.require('jchemhub.controller.plugins.ArrowPlusEdit');
 
 // goog.exportSymbol('jchemhub.controller.DefaultToolbar.makeToolbar',
 // jchemhub.controller.DefaultToolbar.makeToolbar);
@@ -29,202 +30,202 @@ jchemhub.controller.DefaultToolbar.MSG_FONT_NORMAL_SERIF = goog
 		.getMsg('Normal / serif');
 
 
-
-/**
- * Locale-specific font descriptors. The object is a map of locale strings to
- * arrays of font descriptors.
- * 
- * @type {!Object.<!Array.<{caption:string, value:string}>>}
- * @private
- */
-jchemhub.controller.DefaultToolbar.I18N_FONTS_ = {
-	'ja' : [ {
-		caption : '\uff2d\uff33 \uff30\u30b4\u30b7\u30c3\u30af',
-		value : 'ms pgothic,sans-serif'
-	}, {
-		caption : '\uff2d\uff33 \uff30\u660e\u671d',
-		value : 'ms pmincho,serif'
-	}, {
-		caption : '\uff2d\uff33 \u30b4\u30b7\u30c3\u30af',
-		value : 'ms gothic,monospace'
-	} ],
-	'ko' : [ {
-		caption : '\uad74\ub9bc',
-		value : 'gulim,sans-serif'
-	}, {
-		caption : '\ubc14\ud0d5',
-		value : 'batang,serif'
-	}, {
-		caption : '\uad74\ub9bc\uccb4',
-		value : 'gulimche,monospace'
-	} ],
-	'zh-tw' : [ {
-		caption : '\u65b0\u7d30\u660e\u9ad4',
-		value : 'pmingliu,serif'
-	}, {
-		caption : '\u7d30\u660e\u9ad4',
-		value : 'mingliu,serif'
-	} ],
-	'zh-cn' : [ {
-		caption : '\u5b8b\u4f53',
-		value : 'simsun,serif'
-	}, {
-		caption : '\u9ed1\u4f53',
-		value : 'simhei,sans-serif'
-	}, {
-		caption : 'MS Song',
-		value : 'ms song,monospace'
-	} ]
-};
-
-/**
- * Default locale for font names.
- * 
- * @type {string}
- * @private
- */
-jchemhub.controller.DefaultToolbar.locale_ = 'en-us';
-
-/**
- * Sets the locale for the font names. If not set, defaults to 'en-us'. Used
- * only for default creation of font names name. Must be set before font name
- * menu is created.
- * 
- * @param {string}
- *            locale Locale to use for the toolbar font names.
- */
-jchemhub.controller.DefaultToolbar.setLocale = function(locale) {
-	jchemhub.controller.DefaultToolbar.locale_ = locale;
-};
-
-/**
- * Initializes the given font menu button by adding default fonts to the menu.
- * If jchemhub.controller.DefaultToolbar.setLocale was called to specify a
- * locale for which locale-specific default fonts exist, those are added before
- * common fonts.
- * 
- * @param {!goog.ui.Select}
- *            button Font menu button.
- */
-jchemhub.controller.DefaultToolbar.addDefaultFonts = function(button) {
-	// Normalize locale to lowercase, with a hyphen (see bug 1036165).
-	var locale = jchemhub.controller.DefaultToolbar.locale_.replace(/_/, '-')
-			.toLowerCase();
-	// Add locale-specific default fonts, if any.
-	var fontlist = [];
-
-	if (locale in jchemhub.controller.DefaultToolbar.I18N_FONTS_) {
-		fontlist = jchemhub.controller.DefaultToolbar.I18N_FONTS_[locale];
-	}
-	if (fontlist.length) {
-		jchemhub.controller.ToolbarFactory.addFonts(button, fontlist);
-	}
-	// Add locale-independent default fonts.
-	jchemhub.controller.ToolbarFactory.addFonts(button,
-			jchemhub.controller.DefaultToolbar.FONTS_);
-};
-
-// Font size menu creation.
-
-/** @desc Font size menu item caption for the 'Small' size. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_SMALL = goog.getMsg('Small');
-
-/** @desc Font size menu item caption for the 'Normal' size. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_NORMAL = goog.getMsg('Normal');
-
-/** @desc Font size menu item caption for the 'Large' size. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_LARGE = goog.getMsg('Large');
-
-/** @desc Font size menu item caption for the 'Huge' size. */
-jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_HUGE = goog.getMsg('Huge');
-
-/**
- * Font size descriptors, each with the following attributes:
- * <ul>
- * <li>{@code caption} - Caption to show in the font size menu (e.g. 'Huge')
- * <li>{@code value} - Value for the corresponding HTML font size (e.g. 6)
- * </ul>
- * 
- * @type {!Array.<{caption:string, value:number}>}
- * @private
- */
-jchemhub.controller.DefaultToolbar.FONT_SIZES_ = [ {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_SMALL,
-	value : 1
-}, {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_NORMAL,
-	value : 2
-}, {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_LARGE,
-	value : 4
-}, {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_HUGE,
-	value : 6
-} ];
-
-/**
- * Initializes the given font size menu button by adding default font sizes to
- * it.
- * 
- * @param {!goog.ui.Select}
- *            button Font size menu button.
- */
-jchemhub.controller.DefaultToolbar.addDefaultFontSizes = function(button) {
-	jchemhub.controller.ToolbarFactory.addFontSizes(button,
-			jchemhub.controller.DefaultToolbar.FONT_SIZES_);
-};
-
-// Header format menu creation.
-
-/** @desc Caption for "Heading" block format option. */
-jchemhub.controller.DefaultToolbar.MSG_FORMAT_HEADING = goog.getMsg('Heading');
-
-/** @desc Caption for "Subheading" block format option. */
-jchemhub.controller.DefaultToolbar.MSG_FORMAT_SUBHEADING = goog
-		.getMsg('Subheading');
-
-/** @desc Caption for "Minor heading" block format option. */
-jchemhub.controller.DefaultToolbar.MSG_FORMAT_MINOR_HEADING = goog
-		.getMsg('Minor heading');
-
-/** @desc Caption for "Normal" block format option. */
-jchemhub.controller.DefaultToolbar.MSG_FORMAT_NORMAL = goog.getMsg('Normal');
-
-/**
- * Format option descriptors, each with the following attributes:
- * <ul>
- * <li>{@code caption} - Caption to show in the menu (e.g. 'Minor heading')
- * <li>{@code command} - Corresponding {@link goog.dom.TagName} (e.g. 'H4')
- * </ul>
- * 
- * @type {!Array.<{caption:string, command:string}>}
- * @private
- */
-jchemhub.controller.DefaultToolbar.FORMAT_OPTIONS_ = [ {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_HEADING,
-	command : goog.dom.TagName.H2
-}, {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_SUBHEADING,
-	command : goog.dom.TagName.H3
-}, {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_MINOR_HEADING,
-	command : goog.dom.TagName.H4
-}, {
-	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_NORMAL,
-	command : goog.dom.TagName.P
-} ];
-
-/**
- * Initializes the given "Format block" menu button by adding default format
- * options to the menu.
- * 
- * @param {!goog.ui.Select}
- *            button "Format block" menu button.
- */
-jchemhub.controller.DefaultToolbar.addDefaultFormatOptions = function(button) {
-	jchemhub.controller.ToolbarFactory.addFormatOptions(button,
-			jchemhub.controller.DefaultToolbar.FORMAT_OPTIONS_);
-};
+//
+///**
+// * Locale-specific font descriptors. The object is a map of locale strings to
+// * arrays of font descriptors.
+// * 
+// * @type {!Object.<!Array.<{caption:string, value:string}>>}
+// * @private
+// */
+//jchemhub.controller.DefaultToolbar.I18N_FONTS_ = {
+//	'ja' : [ {
+//		caption : '\uff2d\uff33 \uff30\u30b4\u30b7\u30c3\u30af',
+//		value : 'ms pgothic,sans-serif'
+//	}, {
+//		caption : '\uff2d\uff33 \uff30\u660e\u671d',
+//		value : 'ms pmincho,serif'
+//	}, {
+//		caption : '\uff2d\uff33 \u30b4\u30b7\u30c3\u30af',
+//		value : 'ms gothic,monospace'
+//	} ],
+//	'ko' : [ {
+//		caption : '\uad74\ub9bc',
+//		value : 'gulim,sans-serif'
+//	}, {
+//		caption : '\ubc14\ud0d5',
+//		value : 'batang,serif'
+//	}, {
+//		caption : '\uad74\ub9bc\uccb4',
+//		value : 'gulimche,monospace'
+//	} ],
+//	'zh-tw' : [ {
+//		caption : '\u65b0\u7d30\u660e\u9ad4',
+//		value : 'pmingliu,serif'
+//	}, {
+//		caption : '\u7d30\u660e\u9ad4',
+//		value : 'mingliu,serif'
+//	} ],
+//	'zh-cn' : [ {
+//		caption : '\u5b8b\u4f53',
+//		value : 'simsun,serif'
+//	}, {
+//		caption : '\u9ed1\u4f53',
+//		value : 'simhei,sans-serif'
+//	}, {
+//		caption : 'MS Song',
+//		value : 'ms song,monospace'
+//	} ]
+//};
+//
+///**
+// * Default locale for font names.
+// * 
+// * @type {string}
+// * @private
+// */
+//jchemhub.controller.DefaultToolbar.locale_ = 'en-us';
+//
+///**
+// * Sets the locale for the font names. If not set, defaults to 'en-us'. Used
+// * only for default creation of font names name. Must be set before font name
+// * menu is created.
+// * 
+// * @param {string}
+// *            locale Locale to use for the toolbar font names.
+// */
+//jchemhub.controller.DefaultToolbar.setLocale = function(locale) {
+//	jchemhub.controller.DefaultToolbar.locale_ = locale;
+//};
+//
+///**
+// * Initializes the given font menu button by adding default fonts to the menu.
+// * If jchemhub.controller.DefaultToolbar.setLocale was called to specify a
+// * locale for which locale-specific default fonts exist, those are added before
+// * common fonts.
+// * 
+// * @param {!goog.ui.Select}
+// *            button Font menu button.
+// */
+//jchemhub.controller.DefaultToolbar.addDefaultFonts = function(button) {
+//	// Normalize locale to lowercase, with a hyphen (see bug 1036165).
+//	var locale = jchemhub.controller.DefaultToolbar.locale_.replace(/_/, '-')
+//			.toLowerCase();
+//	// Add locale-specific default fonts, if any.
+//	var fontlist = [];
+//
+//	if (locale in jchemhub.controller.DefaultToolbar.I18N_FONTS_) {
+//		fontlist = jchemhub.controller.DefaultToolbar.I18N_FONTS_[locale];
+//	}
+//	if (fontlist.length) {
+//		jchemhub.controller.ToolbarFactory.addFonts(button, fontlist);
+//	}
+//	// Add locale-independent default fonts.
+//	jchemhub.controller.ToolbarFactory.addFonts(button,
+//			jchemhub.controller.DefaultToolbar.FONTS_);
+//};
+//
+//// Font size menu creation.
+//
+///** @desc Font size menu item caption for the 'Small' size. */
+//jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_SMALL = goog.getMsg('Small');
+//
+///** @desc Font size menu item caption for the 'Normal' size. */
+//jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_NORMAL = goog.getMsg('Normal');
+//
+///** @desc Font size menu item caption for the 'Large' size. */
+//jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_LARGE = goog.getMsg('Large');
+//
+///** @desc Font size menu item caption for the 'Huge' size. */
+//jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_HUGE = goog.getMsg('Huge');
+//
+///**
+// * Font size descriptors, each with the following attributes:
+// * <ul>
+// * <li>{@code caption} - Caption to show in the font size menu (e.g. 'Huge')
+// * <li>{@code value} - Value for the corresponding HTML font size (e.g. 6)
+// * </ul>
+// * 
+// * @type {!Array.<{caption:string, value:number}>}
+// * @private
+// */
+//jchemhub.controller.DefaultToolbar.FONT_SIZES_ = [ {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_SMALL,
+//	value : 1
+//}, {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_NORMAL,
+//	value : 2
+//}, {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_LARGE,
+//	value : 4
+//}, {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FONT_SIZE_HUGE,
+//	value : 6
+//} ];
+//
+///**
+// * Initializes the given font size menu button by adding default font sizes to
+// * it.
+// * 
+// * @param {!goog.ui.Select}
+// *            button Font size menu button.
+// */
+//jchemhub.controller.DefaultToolbar.addDefaultFontSizes = function(button) {
+//	jchemhub.controller.ToolbarFactory.addFontSizes(button,
+//			jchemhub.controller.DefaultToolbar.FONT_SIZES_);
+//};
+//
+//// Header format menu creation.
+//
+///** @desc Caption for "Heading" block format option. */
+//jchemhub.controller.DefaultToolbar.MSG_FORMAT_HEADING = goog.getMsg('Heading');
+//
+///** @desc Caption for "Subheading" block format option. */
+//jchemhub.controller.DefaultToolbar.MSG_FORMAT_SUBHEADING = goog
+//		.getMsg('Subheading');
+//
+///** @desc Caption for "Minor heading" block format option. */
+//jchemhub.controller.DefaultToolbar.MSG_FORMAT_MINOR_HEADING = goog
+//		.getMsg('Minor heading');
+//
+///** @desc Caption for "Normal" block format option. */
+//jchemhub.controller.DefaultToolbar.MSG_FORMAT_NORMAL = goog.getMsg('Normal');
+//
+///**
+// * Format option descriptors, each with the following attributes:
+// * <ul>
+// * <li>{@code caption} - Caption to show in the menu (e.g. 'Minor heading')
+// * <li>{@code command} - Corresponding {@link goog.dom.TagName} (e.g. 'H4')
+// * </ul>
+// * 
+// * @type {!Array.<{caption:string, command:string}>}
+// * @private
+// */
+//jchemhub.controller.DefaultToolbar.FORMAT_OPTIONS_ = [ {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_HEADING,
+//	command : goog.dom.TagName.H2
+//}, {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_SUBHEADING,
+//	command : goog.dom.TagName.H3
+//}, {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_MINOR_HEADING,
+//	command : goog.dom.TagName.H4
+//}, {
+//	caption : jchemhub.controller.DefaultToolbar.MSG_FORMAT_NORMAL,
+//	command : goog.dom.TagName.P
+//} ];
+//
+///**
+// * Initializes the given "Format block" menu button by adding default format
+// * options to the menu.
+// * 
+// * @param {!goog.ui.Select}
+// *            button "Format block" menu button.
+// */
+//jchemhub.controller.DefaultToolbar.addDefaultFormatOptions = function(button) {
+//	jchemhub.controller.ToolbarFactory.addFormatOptions(button,
+//			jchemhub.controller.DefaultToolbar.FORMAT_OPTIONS_);
+//};
 
 /**
  * Creates a {@link goog.ui.Toolbar} containing a default set of editor toolbar
