@@ -16,74 +16,104 @@ jchemhub.view.DoubleBondRenderer = function(controller, graphics, opt_config) {
 }
 goog.inherits(jchemhub.view.DoubleBondRenderer, jchemhub.view.BondRenderer);
 
-jchemhub.view.DoubleBondRenderer.prototype.render = function(bond, transform,
-		group) {
-	jchemhub.view.DoubleBondRenderer.superClass_.render.call(this, bond,
-			transform, group);
 
-	var strokeWidth = this.config.get("bond").stroke.width;
-	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config
-			.get("bond").stroke.color);
-	var bondFill = null;
+function triangleSign(a, b, c)
+{
+    return (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);
+}
+
+function isOnSameSide(bond, p1, p2) {
+    return (triangleSign(bond.source.coord, bond.target.coord, p1) * triangleSign(bond.source.coord, bond.target.coord, p2) > 0);
+}
+
+
+jchemhub.view.DoubleBondRenderer.prototype.render = function(bond, transform, bondPath) {
 
 	var ring = jchemhub.view.DoubleBondRenderer.getFirstRing(bond);
 
 	if (ring) {
+            // create the bondvector
+            var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(bond.target.coord, bond.source.coord));
+            var bondLength = bv.magnitude();
+            var bondWidth = bondLength / 6;
+            bv.scale(1 / bondLength * bondWidth);
+            // create a vector orthogonal to the bond vector
+            var orthogonal = new goog.math.Vec2(bv.y, -bv.x);
+            // check the side, invert orthogonal if needed
+            var side = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
+            var center = ring.ringCenter;
+            if (!isOnSameSide(bond, side, center)) {
+                orthogonal.invert();
+            }
 
-		var center = ring.ringCenter;
-		var source_offset = goog.math.Coordinate.difference(center,
-				bond.source.coord);
-		var inner_line_source = goog.math.Coordinate.sum(
-				new goog.math.Coordinate(source_offset.x / 5,
-						source_offset.y / 5), bond.source.coord);
-		var target_offset = goog.math.Coordinate.difference(center,
-				bond.target.coord);
-		var inner_line_target = goog.math.Coordinate.sum(
-				new goog.math.Coordinate(target_offset.x / 5,
-						target_offset.y / 5), bond.target.coord);
+            // the inner line coords
+            var coord1 = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
+            var coord2 = goog.math.Coordinate.sum(bond.target.coord, orthogonal);
+            var coord3 = bond.source.coord;
+            var coord4 = bond.target.coord;
 
-		var coords = transform.transformCoords( [
-				bond.source.coord, bond.target.coord,
-				inner_line_source, inner_line_target ]);
-		var bondPath = new goog.graphics.Path();
-		bondPath.moveTo(coords[0].x, coords[0].y);
-		bondPath.lineTo(coords[1].x, coords[1].y);
-		bondPath.moveTo(coords[2].x, coords[2].y);
-		bondPath.lineTo(coords[3].x, coords[3].y);
+            // adjust for symbols if needed
+            if (jchemhub.view.BondRenderer.hasSymbol(bond.source)) {
+                var space = bv.clone();
+                space.normalize();
+                space.scale(0.2);
+                coord1 = goog.math.Coordinate.sum(coord1, space);
+                coord3 = goog.math.Coordinate.sum(coord3, space)
+            } else {
+                coord1 = goog.math.Coordinate.sum(coord1, bv);
+            }
+            if (jchemhub.view.BondRenderer.hasSymbol(bond.target)) {
+                var space = bv.clone();
+                space.normalize();
+                space.scale(0.2);
+                coord2 = goog.math.Coordinate.difference(coord2, space);
+                coord4 = goog.math.Coordinate.difference(coord4, space)
+            } else {
+                coord2 = goog.math.Coordinate.difference(coord2, bv);
+            }
 
-		this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+            var coords = transform.transformCoords( [ coord1, coord2, coord3, coord4 ]);
+
+	    bondPath.moveTo(coords[0].x, coords[0].y);
+	    bondPath.lineTo(coords[1].x, coords[1].y);
+	    bondPath.moveTo(coords[2].x, coords[2].y);
+	    bondPath.lineTo(coords[3].x, coords[3].y);
 	} else {
-		var theta = jchemhub.view.BondRenderer.getTheta(bond);
+            // create the bondvector
+            var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(bond.target.coord, bond.source.coord));
+            var bondLength = bv.magnitude();
+            var bondWidth = bondLength / 12;
+            bv.scale(1 / bondLength * bondWidth);
+            // create a vector orthogonal to the bond vector
+            var orthogonal = new goog.math.Vec2(bv.y, -bv.x);
 
-		var angle_left = theta + (Math.PI / 2);
-		var angle_right = theta - (Math.PI / 2);
+            var coord1 = goog.math.Coordinate.sum(bond.source.coord, orthogonal);
+            var coord2 = goog.math.Coordinate.sum(bond.target.coord, orthogonal);
+            var coord3 = goog.math.Coordinate.difference(bond.source.coord, orthogonal);
+            var coord4 = goog.math.Coordinate.difference(bond.target.coord, orthogonal);
 
-		var bondWidth = goog.math.Coordinate.distance(bond.source.coord,
-				bond.target.coord) / 12;
-		var transleft = new jchemhub.graphics.AffineTransform(1, 0, 0, 1, Math
-				.cos(angle_left)
-				* bondWidth, Math.sin(angle_left) * bondWidth);
+            // adjust for symbols if needed
+            if (jchemhub.view.BondRenderer.hasSymbol(bond.source)) {
+                var space = bv.clone();
+                space.normalize();
+                space.scale(0.2);
+                coord1 = goog.math.Coordinate.sum(coord1, space);
+                coord3 = goog.math.Coordinate.sum(coord3, space)
+            } 
+            if (jchemhub.view.BondRenderer.hasSymbol(bond.target)) {
+                var space = bv.clone();
+                space.normalize();
+                space.scale(0.2);
+                coord2 = goog.math.Coordinate.difference(coord2, space);
+                coord4 = goog.math.Coordinate.difference(coord4, space)
+            } 
 
-		var transright = new jchemhub.graphics.AffineTransform(1, 0, 0, 1, Math
-				.cos(angle_right)
-				* bondWidth, Math.sin(angle_right) * bondWidth);
+            var coords = transform.transformCoords( [ coord1, coord2, coord3, coord4 ]);
 
-		var leftside = transleft.transformCoords( [ bond.source.coord,
-				bond.target.coord ]);
-		var rightside = transright.transformCoords( [ bond.source.coord,
-				bond.target.coord ]);
-
-		var coords = transform.transformCoords( [ leftside[0], leftside[1],
-				rightside[0], rightside[1] ]);
-
-		var bondPath = new goog.graphics.Path();
-		bondPath.moveTo(coords[0].x, coords[0].y);
-		bondPath.lineTo(coords[1].x, coords[1].y);
-
-		bondPath.moveTo(coords[2].x, coords[2].y);
-		bondPath.lineTo(coords[3].x, coords[3].y);
-
-		this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+	    bondPath.moveTo(coords[0].x, coords[0].y);
+	    bondPath.lineTo(coords[1].x, coords[1].y);
+	    bondPath.moveTo(coords[2].x, coords[2].y);
+	    bondPath.lineTo(coords[3].x, coords[3].y);
 	}
 
 };

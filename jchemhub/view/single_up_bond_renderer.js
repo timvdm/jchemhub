@@ -17,16 +17,16 @@ jchemhub.view.SingleUpBondRenderer = function(controller, graphics, opt_config) 
 goog.inherits(jchemhub.view.SingleUpBondRenderer, jchemhub.view.BondRenderer);
 
 jchemhub.view.SingleUpBondRenderer.prototype.render = function(bond, transform,
-		group) {
-	jchemhub.view.SingleUpBondRenderer.superClass_.render.call(this, bond,
-			transform, group);
+		/*group*/bondPath) {
+//	jchemhub.view.SingleUpBondRenderer.superClass_.render.call(this, bond,
+//			transform, group);
 
-	var bondPath = new goog.graphics.Path();
+//	var bondPath = new goog.graphics.Path();
 	var strokeWidth = this.config.get("bond").stroke.width / 10;
-	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config
-			.get("bond").stroke.color);
-	var bondFill = new goog.graphics.SolidFill(
-			this.config.get("bond").fill.color);
+//	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config
+//			.get("bond").stroke.color);
+//	var bondFill = new goog.graphics.SolidFill(
+//			this.config.get("bond").fill.color);
 
 	var theta = jchemhub.view.BondRenderer.getTheta(bond);
 	var angle_left = theta + (Math.PI / 2);
@@ -62,6 +62,6 @@ jchemhub.view.SingleUpBondRenderer.prototype.render = function(bond, transform,
 	bondPath.lineTo(coords[1].x, coords[1].y);
 	bondPath.lineTo(coords[2].x, coords[2].y);
 
-	this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+//	this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
 
 }

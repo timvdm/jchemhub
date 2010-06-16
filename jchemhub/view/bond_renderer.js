@@ -16,59 +16,13 @@ jchemhub.view.BondRenderer = function(controller, graphics, opt_config, defaultC
 }
 goog.inherits(jchemhub.view.BondRenderer, jchemhub.view.Renderer);
 /**
- * renders the box surrounding the bond to serve as a click target
+ * Currently does nothing.
  * 
  * @param {jchemhub.model.Bond} bond
  * @param {jchemhub.graphics.AffineTransform} transform
  * @return {goog.graphics.GroupElement}
  */
 jchemhub.view.BondRenderer.prototype.render = function(bond, transform, group) {
-	this.transform = transform;
-
-	var fill = new goog.graphics.SolidFill('red', 0.001); // 'transparent'
-	// fill
-	var stroke = null;
-	var radius = this.config.get("highlight").radius ;
-	var theta = jchemhub.view.BondRenderer.getTheta(bond);
-
-	var angle_left = theta + (Math.PI / 2);
-	var angle_right = theta - (Math.PI / 2);
-
-	var transleft = new jchemhub.graphics.AffineTransform(1, 0, 0, 1, Math
-			.cos(angle_left)
-			* radius, Math.sin(angle_left) * radius);
-
-	var transright = new jchemhub.graphics.AffineTransform(1, 0, 0, 1, Math
-			.cos(angle_right)
-			* radius, Math.sin(angle_right) * radius);
-
-	var leftside = transleft.transformCoords( [ bond.source.coord,
-			bond.target.coord ]);
-	var rightside = transright.transformCoords( [ bond.source.coord,
-			bond.target.coord ]);
-
-	var boxCoords = transform.transformCoords( [ leftside[0], leftside[1],
-			rightside[0], rightside[1] ]);
-
-	bondBoxPath = new goog.graphics.Path();
-	bondBoxPath.moveTo(boxCoords[0].x, boxCoords[0].y);
-	bondBoxPath.lineTo(boxCoords[2].x, boxCoords[2].y);
-	bondBoxPath.lineTo(boxCoords[3].x, boxCoords[3].y);
-	bondBoxPath.lineTo(boxCoords[1].x, boxCoords[1].y);
-	bondBoxPath.close();
-	if (!group){
-		var group = this.graphics.createGroup();
-	}
-	this.graphics.drawPath(bondBoxPath, stroke, fill, group);
-	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
-			this.controller.handleMouseOver, this.controller, bond));
-	group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
-			this.controller.handleMouseOut, this.controller, bond));
-	group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
-			this.controller.handleMouseDown, this.controller, bond));
-	
-	return group;
-
 };
 
 jchemhub.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
@@ -110,6 +64,13 @@ jchemhub.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
 jchemhub.view.BondRenderer.getTheta = function(bond) {
 	return new jchemhub.math.Line(bond.source.coord, bond.target.coord)
 			.getTheta();
+}
+
+/**
+ * @return True if the atom has a displayed symbol
+ */
+jchemhub.view.BondRenderer.hasSymbol = function(atom) {
+    return (atom.symbol != "C" || atom.countBonds() == 1);
 }
 
 /**

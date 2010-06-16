@@ -69,10 +69,23 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	this.graphics.drawEllipse(t_center.x, t_center.y, rx, ry, stroke, fill,
 			group);
 	// this.logger.info("molecule has " + molecule.bonds.length + " bonds");
+	
+        var bondStroke = new goog.graphics.Stroke(2, 'black');
+	var bondFill = null;
+	var bondFill = new goog.graphics.SolidFill('black');
+
+
+
+        var bondPath = new goog.graphics.Path();
 	goog.array.forEach(molecule.bonds, function(bond) {
-		this.bondRendererFactory.get(bond).render(bond, trans, undefined);
+		this.bondRendererFactory.get(bond).render(bond, trans, bondPath);
 	}, this);
-	// this.logger.info("molecule has " + molecule.atoms.length + " atoms");
+	this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+	
+        
+        
+        
+        // this.logger.info("molecule has " + molecule.atoms.length + " atoms");
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans, this.atomController);
 	}, this);
