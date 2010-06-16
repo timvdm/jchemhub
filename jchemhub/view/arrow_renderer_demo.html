@@ -24,7 +24,7 @@ function initPage(){
 	var graphics = goog.graphics.createGraphics(element.clientWidth,
 			element.clientHeight);
 	graphics.render(element);
-	var pr = new jchemhub.view.ArrowRenderer(graphics);
+	var pr = new jchemhub.view.ArrowRenderer(null, graphics);
 	var trans = new jchemhub.graphics.AffineTransform(13,0,0,-13,0,0);
 	pr.render(new goog.math.Coordinate(2,-2), trans);
 };

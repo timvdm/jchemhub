@@ -1,4 +1,5 @@
 goog.provide('jchemhub.model.NeighborList');
+goog.require('goog.math.Vec2');
 
 (function () {
  function debug(text, noNewLine) {
@@ -75,7 +76,7 @@ goog.provide('jchemhub.model.NeighborList');
                 }
                 for (i = 0, li = molecule.bonds.length; i < li; i++) {
                     var bond = molecule.bonds[i];
-                    var midPoint = goog.math.Vec2.fromCoordinate(goog.math.Coodinate.sum(bond.source.coord, bond.target.coord));
+                    var midPoint = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(bond.source.coord, bond.target.coord));
                     midPoint.scale(0.5);
                     bond.midPoint = midPoint;
                     var x = Math.floor((midPoint.x - this.xMin) / this.cellSize);

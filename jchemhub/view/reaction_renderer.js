@@ -1,6 +1,8 @@
 goog.provide('jchemhub.view.ReactionRenderer');
 goog.require('jchemhub.view.Renderer');
 goog.require('jchemhub.controller.MoleculeController');
+goog.require('jchemhub.controller.ArrowController');
+goog.require('jchemhub.controller.PlusController');
 goog.require('jchemhub.view.MoleculeRenderer');
 goog.require('jchemhub.view.ArrowRenderer');
 goog.require('jchemhub.view.PlusRenderer');
@@ -25,9 +27,11 @@ jchemhub.view.ReactionRenderer = function(controller, graphics, opt_config) {
 			controller);
 	this.moleculeRenderer = new jchemhub.view.MoleculeRenderer(
 			this.moleculeController, graphics, this.config);
-	this.arrowRenderer = new jchemhub.view.ArrowRenderer(controller, graphics,
+	this.arrowController = new jchemhub.controller.ArrowController(controller);
+	this.arrowRenderer = new jchemhub.view.ArrowRenderer(this.arrowController, graphics,
 			this.config);
-	this.plusRenderer = new jchemhub.view.PlusRenderer(controller, graphics,
+	this.plusController = new jchemhub.controller.PlusController(controller);
+	this.plusRenderer = new jchemhub.view.PlusRenderer(this.plusController, graphics,
 			this.config);
 }
 goog.inherits(jchemhub.view.ReactionRenderer, jchemhub.view.Renderer);
@@ -42,51 +46,33 @@ jchemhub.view.ReactionRenderer.prototype.render = function(reaction) {
 	var box = this.boundingBox(molecules);
 	var m = this.config.get("margin");
 	box.expand(m.top, m.right, m.bottom, m.left);
-//	this.logger.info("box t: " + box.top + " r: " + box.right
-//			+ " b: " + box.bottom + " l: " + box.left);
+// this.logger.info("box t: " + box.top + " r: " + box.right
+// + " b: " + box.bottom + " l: " + box.left);
 	var transform = this.getTransform(box);
-	var previousReactant;
-	var group = this.graphics.createGroup();
-	goog.array.forEach(reaction.reactants, function(reactant) {
-		if (previousReactant) {
-			var center = this.center( [ previousReactant, reactant ]);
-			this.plusRenderer.render(center, transform, group);
-		}
-		previousReactant = reactant;
-		this.moleculeRenderer.render(reactant, transform, group);
-	}, this);
+	
+	// var group = this.graphics.createGroup();
+	goog.array.forEach(molecules, function(mol) {
 
-	var reaction_center = this.center(goog.array.concat(reaction.reactants,
-			reaction.products));
-	this.arrowRenderer.render(reaction_center, transform, group);
-
-	var previousProduct = null;
-	goog.array.forEach(reaction.products, function(product) {
-		if (previousProduct) {
-			var center = this.center( [ previousProduct, product ]);
-			this.plusRenderer.render(center, transform, group);
-		}
-		previousProduct = product;
-		this.moleculeRenderer.render(product, transform, group);
+		this.moleculeRenderer.render(mol, transform);
 	}, this);
-	return group;
+	goog.array.forEach(reaction.pluses, function(plus){
+		this.plusRenderer.render(plus, transform);
+	},this)
+	goog.array.forEach(reaction.arrows, function(arrow){
+		this.arrowRenderer.render(arrow, transform);
+	},this)
+
+
+	// return group;
 }
 
-/**
- * finds center of an array of molecules
- * 
- * @return goog.math.Coordinate
- */
-jchemhub.view.ReactionRenderer.prototype.center = function(molecules) {
-	var bbox = this.boundingBox(molecules);
-	return new goog.math.Coordinate((bbox.left + bbox.right) / 2,
-			(bbox.top + bbox.bottom) / 2);
-}
+
 
 /**
  * finds bounding box of an array of molecules
  * 
- * @param molecules {Array.<jchemhub.model.Molecule>}
+ * @param molecules
+ *            {Array.<jchemhub.model.Molecule>}
  * @return {goog.math.Box}
  */
 
@@ -109,14 +95,6 @@ jchemhub.view.ReactionRenderer.prototype.boundingBox = function(molecules) {
 jchemhub.view.ReactionRenderer.prototype.logger = goog.debug.Logger
 		.getLogger('jchemhub.view.ReactionRenderer');
 
-///**
-// * 
-// * @param {Array.<jchemhub.model.Molecule>} molecules
-// * @return {goog.math.Rect}
-// */
-//jchemhub.view.ReactionRenderer.prototype.boundingRect = function(molecules) {
-//	return goog.math.Rect.createFromBox(this.boundingBox(molecules));
-//}
 
 
 /**

@@ -11,6 +11,7 @@
 	goog.require('jchemhub.model.Atom');
 	goog.require('jchemhub.model.SingleBond');
 	goog.require('jchemhub.model.NeighborList');
+	goog.require('goog.array');
 </script>
 <script>
  
@@ -88,6 +89,30 @@
         assertEquals(atom1, nearest[2].obj);
         assertEquals(3, nearest[2].distance);
     }
+    
+    function testMoleculeWithBonds(){
+    	var mol = new jchemhub.model.Molecule();
+    	var a1 = new jchemhub.model.Atom("C", -1, 1);
+    	var a2 = new jchemhub.model.Atom("C", 0, 0);
+    	var a3 = new jchemhub.model.Atom("C", 1, 1);
+    	var b1 = new jchemhub.model.SingleBond(a1, a2);
+    	var b2 = new jchemhub.model.SingleBond(a2, a3);
+    	mol.addAtom(a1);
+    	mol.addAtom(a2);
+    	mol.addAtom(a3);
+    	mol.addBond(b1);
+    	mol.addBond(b2);
+    	
+    	var nl = new jchemhub.model.NeighborList([mol]);
+    	
+    	var n = nl.getNearestList({x:0.51, y:0.51});
+    	
+    	assertEquals('nearest object is bond b2', b2, n[0].obj);
+    	var nearest_atoms = goog.array.filter(n, function(o){
+    		return o.obj instanceof jchemhub.model.Atom; 
+    	});
+    	assertEquals('nearest atom is atom a3', a3, nearest_atoms[0].obj);
+    	}
 	   
 	
 </script>

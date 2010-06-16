@@ -50,7 +50,6 @@ jchemhub.controller.ReactionEditor = function(element, opt_config) {
 		this.config.addAll(opt_config); // merge optional config into
 		// defaults
 	}
-	
 
 	this.graphics = goog.graphics.createGraphics(element.clientWidth,
 			element.clientHeight);
@@ -155,6 +154,13 @@ jchemhub.controller.ReactionEditor.prototype.render = function() {
 	goog.array.forEach(this.models, function(model) {
 
 		if (model instanceof jchemhub.model.Reaction) {
+			if(model.pluses.length==0) {
+				model.generatePlusCoords(model.reactants);
+				model.generatePlusCoords(model.products);
+			}
+			if( model.arrows.length==0){
+				model.generateArrowCoords(model.reactants, model.products);
+			}
 			this.reactionRenderer.render(model);
 		}
 		if (model instanceof jchemhub.model.Molecule) {
@@ -176,7 +182,7 @@ jchemhub.controller.ReactionEditor.prototype.getModels = function() {
  * This dispatches the beforechange event on the editable reaction editor
  */
 jchemhub.controller.ReactionEditor.prototype.dispatchBeforeChange = function() {
-//	this.logger.info('dispatchBeforeChange');
+	// this.logger.info('dispatchBeforeChange');
 	// if (this
 	// .isEventStopped(jchemhub.controller.ReactionEditor.EventType.BEFORECHANGE))
 	// {
@@ -393,6 +399,27 @@ jchemhub.controller.ReactionEditor.prototype.handleBondMouseDown_ = function(e) 
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEDOWN,
 			e);
 }
+jchemhub.controller.ReactionEditor.prototype.handleArrowMouseOver_ = function(e) {
+	this.invokeShortCircuitingOp_(
+			jchemhub.controller.Plugin.Op.ARROW_MOUSEOVER, e);
+};
+jchemhub.controller.ReactionEditor.prototype.handleArrowMouseOut_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ARROW_MOUSEOUT,
+			e);
+};
+jchemhub.controller.ReactionEditor.prototype.handleArrowMouseDown_ = function(e) {
+	this.invokeShortCircuitingOp_(
+			jchemhub.controller.Plugin.Op.ARROW_MOUSEDOWN, e);
+};
+jchemhub.controller.ReactionEditor.prototype.handlePlusMouseOver_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEOVER, e);
+};
+jchemhub.controller.ReactionEditor.prototype.handlePlusMouseOut_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEOUT, e);
+};
+jchemhub.controller.ReactionEditor.prototype.handlePlusMouseDown_ = function(e) {
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEDOWN, e);
+};
 
 /**
  * Gets the value of this command.
@@ -422,8 +449,8 @@ jchemhub.controller.ReactionEditor.prototype.queryCommandValueInternal_ = functi
 /**
  * Gets the value of command(s).
  * 
- * @param {string|Array.<string>}
- *         commands String name(s) of the command.
+ * @param {string|Array.
+ *            <string>} commands String name(s) of the command.
  * @return {*} Value of each command. Returns false (or array of falses) if
  *         designMode is off or the editor is otherwise uneditable, and there
  *         are no activeOnUneditable plugins for the command.
@@ -507,7 +534,8 @@ jchemhub.controller.ReactionEditor.prototype.dispatchSelectionChangeEvent = func
 /**
  * Dispatches a command value change event.
  * 
- * @param {Array.<string>=} opt_commands Commands whose state has changed.
+ * @param {Array.
+ *            <string>=} opt_commands Commands whose state has changed.
  */
 jchemhub.controller.ReactionEditor.prototype.dispatchCommandValueChange = function(
 		opt_commands) {
@@ -886,7 +914,7 @@ jchemhub.controller.ReactionEditor.prototype.handleEditorLoad = function() {
 jchemhub.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
 	this.installStyles();
 	// this.startChangeEvents();
-//	this.logger.info('Dispatching load ' + this.id);
+	// this.logger.info('Dispatching load ' + this.id);
 	this.dispatchEvent(jchemhub.controller.ReactionEditor.EventType.LOAD);
 };
 
@@ -895,8 +923,8 @@ jchemhub.controller.ReactionEditor.prototype.dispatchLoadEvent_ = function() {
  * Gecko since the fields are contained in an iFrame and there is no way to
  * auto-propagate key events up to the main window.
  * 
- * @param {string|Array.<string>}
- *            type Event type to listen for or array of event types,
+ * @param {string|Array.
+ *            <string>} type Event type to listen for or array of event types,
  *            for example goog.events.EventType.KEYDOWN.
  * @param {Function}
  *            listener Function to be used as the listener.
@@ -1006,7 +1034,24 @@ jchemhub.controller.ReactionEditor.prototype.setupChangeListeners_ = function() 
 	this.addEventListener(
 			jchemhub.controller.BondController.EventType.MOUSEDOWN,
 			this.handleBondMouseDown_);
-
+	this.addEventListener(
+			jchemhub.controller.ArrowController.EventType.MOUSEOVER,
+			this.handleArrowMouseOver_);
+	this.addEventListener(
+			jchemhub.controller.ArrowController.EventType.MOUSEOUT,
+			this.handleArrowMouseOut_);
+	this.addEventListener(
+			jchemhub.controller.ArrowController.EventType.MOUSEDOWN,
+			this.handleArrowMouseDown_);
+	this.addEventListener(
+			jchemhub.controller.PlusController.EventType.MOUSEOVER,
+			this.handlePlusMouseOver_);
+	this.addEventListener(
+			jchemhub.controller.PlusController.EventType.MOUSEOUT,
+			this.handlePlusMouseOut_);
+	this.addEventListener(
+			jchemhub.controller.PlusController.EventType.MOUSEDOWN,
+			this.handlePlusMouseDown_);
 };
 
 /**
