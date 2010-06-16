@@ -362,9 +362,16 @@ jchemhub.controller.ReactionEditor.prototype.handleKeyUp_ = function(e) {
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
-
+	this.logger.info("handleMouseDown_");
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEDOWN, e);
+}
 
+jchemhub.controller.ReactionEditor.prototype.handleMouseOver_ = function(e) {
+	this.logger.info("handleMouseOver_");
+}
+
+jchemhub.controller.ReactionEditor.prototype.handleMouseOut_ = function(e) {
+	this.logger.info("handleMouseOut_");
 }
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
@@ -1014,7 +1021,8 @@ jchemhub.controller.ReactionEditor.prototype.setupChangeListeners_ = function() 
 			jchemhub.controller.ReactionEditor.SELECTION_CHANGE_FREQUENCY_);
 
 	this.addListener(goog.events.EventType.MOUSEDOWN, this.handleMouseDown_);
-	this.addListener(goog.events.EventType.MOUSEUP, this.handleMouseUp_);
+	this.addListener(goog.events.EventType.MOUSEOVER, this.handleMouseOver_);
+	this.addListener(goog.events.EventType.MOUSEOUT, this.handleMouseOut_);
 
 	this.addEventListener(
 			jchemhub.controller.AtomController.EventType.MOUSEOUT,
