@@ -629,6 +629,7 @@ goog.addDependency("../../../../jchemhub/model/atom.js", ['jchemhub.model.Atom',
 goog.addDependency("../../../../jchemhub/model/bond.js", ['jchemhub.model.Bond'], ['jchemhub.model.Atom']);
 goog.addDependency("../../../../jchemhub/model/double_bond.js", ['jchemhub.model.DoubleBond'], ['jchemhub.model.Bond']);
 goog.addDependency("../../../../jchemhub/model/molecule.js", ['jchemhub.model.Molecule'], ['goog.array', 'jchemhub.ring.RingFinder']);
+goog.addDependency("../../../../jchemhub/model/neighborlist.js", ['jchemhub.model.NeighborList'], []);
 goog.addDependency("../../../../jchemhub/model/pseudo_atom.js", ['jchemhub.model.PseudoAtom'], ['jchemhub.model.Atom']);
 goog.addDependency("../../../../jchemhub/model/quadruple_bond.js", ['jchemhub.model.QuadrupleBond'], ['jchemhub.model.Bond']);
 goog.addDependency("../../../../jchemhub/model/reaction.js", ['jchemhub.model.Reaction'], []);
