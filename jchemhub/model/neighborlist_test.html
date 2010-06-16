@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<!--TODO: License and copyright-->
+<html>
+<head>
+<title>jchemhub unit neighborlist.js</title>
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+<script>
+	goog.require('goog.testing.jsunit');
+	goog.require('jchemhub.model.Molecule');
+	goog.require('jchemhub.model.Atom');
+	goog.require('jchemhub.model.SingleBond');
+	goog.require('jchemhub.model.NeighborList');
+</script>
+<script>
+ 
+    function testNeighborList1() {
+
+        var molecule = new jchemhub.model.Molecule();
+    
+    	var atom1=new jchemhub.model.Atom("C", -5, -5);
+	var atom2=new jchemhub.model.Atom("C", 40, 13);
+	var atom3=new jchemhub.model.Atom("C", -4, 9);
+	var atom4=new jchemhub.model.Atom("C", 10, -8);
+	var atom5=new jchemhub.model.Atom("C", -6, 0);
+	var atom6=new jchemhub.model.Atom("C", 4, 13);
+
+        molecule.addAtom(atom1);
+        molecule.addAtom(atom2);
+        molecule.addAtom(atom3);
+        molecule.addAtom(atom4);
+        molecule.addAtom(atom5);
+        molecule.addAtom(atom6);
+
+        var neighborList = new jchemhub.model.NeighborList([molecule]);
+
+        assertEquals(atom1, neighborList.getNearest({ x: -5, y: -5}));
+        assertEquals(atom2, neighborList.getNearest({ x: 40, y: 13}));
+        assertEquals(atom3, neighborList.getNearest({ x: -4, y: 9}));
+        assertEquals(atom4, neighborList.getNearest({ x: 10, y: -8}));
+        assertEquals(atom5, neighborList.getNearest({ x: -6, y: 0}));
+        assertEquals(atom6, neighborList.getNearest({ x: 4, y: 13}));
+    }
+	
+    function testNeighborList2() {
+
+        var molecule = new jchemhub.model.Molecule();
+
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 10; j++) {
+                var atom = new jchemhub.model.Atom("C", i, j);
+                molecule.addAtom(atom);
+            
+            }
+        }
+
+        var neighborList = new jchemhub.model.NeighborList([molecule]);
+
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 10; j++) {
+                assertEquals(molecule.atoms[i * 10 + j], neighborList.getNearest({ x: i, y: j}));
+            }
+        }
+
+    }
+
+     function testNeighborList3() {
+
+        var molecule = new jchemhub.model.Molecule();
+    
+    	var atom1=new jchemhub.model.Atom("C", 3, 0);
+	var atom2=new jchemhub.model.Atom("C", 2, 0);
+	var atom3=new jchemhub.model.Atom("C", 1, 0);
+
+        molecule.addAtom(atom1);
+        molecule.addAtom(atom2);
+        molecule.addAtom(atom3);
+
+        var neighborList = new jchemhub.model.NeighborList([molecule]);
+
+        var nearest = neighborList.getNearestList({ x: 0, y: 0 });
+
+        assertEquals(3, nearest.length);
+        assertEquals(atom3, nearest[0].obj);
+        assertEquals(1, nearest[0].distance);
+        assertEquals(atom2, nearest[1].obj);
+        assertEquals(2, nearest[1].distance);
+        assertEquals(atom1, nearest[2].obj);
+        assertEquals(3, nearest[2].distance);
+    }
+	   
+	
+</script>
+</head>
+<body>
+</body>
+</html>
