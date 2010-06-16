@@ -17,9 +17,9 @@ jchemhub.view.QuadrupleBondRenderer = function(controller, graphics, opt_config)
 goog.inherits(jchemhub.view.QuadrupleBondRenderer, jchemhub.view.BondRenderer);
 
 jchemhub.view.QuadrupleBondRenderer.prototype.render = function(bond,
-		transform, group) {
+		transform) {
 	jchemhub.view.QuadrupleBondRenderer.superClass_.render.call(this, bond,
-			transform, group);
+			transform);
 	var strokeWidth = this.config.get("bond").stroke.width;
 	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config
 			.get("bond").stroke.color);
@@ -74,5 +74,5 @@ jchemhub.view.QuadrupleBondRenderer.prototype.render = function(bond,
 	 bondPath.moveTo(coords[6].x, coords[6].y);
 	 bondPath.lineTo(coords[7].x, coords[7].y);
 
-	this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+	this.graphics.drawPath(bondPath, bondStroke, bondFill);
 }

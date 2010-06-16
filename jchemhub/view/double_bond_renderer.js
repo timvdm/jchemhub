@@ -19,7 +19,7 @@ goog.inherits(jchemhub.view.DoubleBondRenderer, jchemhub.view.BondRenderer);
 jchemhub.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 		group) {
 	jchemhub.view.DoubleBondRenderer.superClass_.render.call(this, bond,
-			transform, group);
+			transform);
 
 	var strokeWidth = this.config.get("bond").stroke.width;
 	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config
@@ -83,7 +83,7 @@ jchemhub.view.DoubleBondRenderer.prototype.render = function(bond, transform,
 		bondPath.moveTo(coords[2].x, coords[2].y);
 		bondPath.lineTo(coords[3].x, coords[3].y);
 
-		this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+		this.graphics.drawPath(bondPath, bondStroke, bondFill);
 	}
 
 };

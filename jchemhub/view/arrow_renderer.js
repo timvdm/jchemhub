@@ -17,10 +17,8 @@ jchemhub.view.ArrowRenderer = function(controller, graphics, opt_config) {
 }
 goog.inherits(jchemhub.view.ArrowRenderer, jchemhub.view.Renderer);
 
-jchemhub.view.ArrowRenderer.prototype.render = function(coord, transform, group) {
-	if (!group){
-		var group = this.graphics.createGroup();
-	}
+jchemhub.view.ArrowRenderer.prototype.render = function(coord, transform) {
+
 	var w = this.config.get('arrow').width;
 	var h = this.config.get('arrow').height;
 	
@@ -43,20 +41,8 @@ jchemhub.view.ArrowRenderer.prototype.render = function(coord, transform, group)
 	path.moveTo(coords[1].x, coords[1].y);
 	path.lineTo(coords[3].x, coords[3].y);
 
-	// invisible target area
-	this.graphics.drawRect(coords[0].x,coords[2].y,coords[1].x - coords[0].x,	coords[3].y - coords[2].y, null, fill, group);
-
 	// visible arrow
-	this.graphics.drawPath(path, stroke, fill, group);		
-	
-	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
-			this.controller.handleMouseOver, this.controller, coord));
-	group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
-			this.controller.handleMouseOut, this.controller, coord));
-	group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
-			this.controller.handleMouseDown, this.controller, coord));
-	return group;
-
+	this.graphics.drawPath(path, stroke, fill);		
 }
 
 /**

@@ -45,29 +45,26 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 	var graphics = this.graphics;
 	var w = symbol.text.length * 0.55 * font.size;
 	var h = font.size;
-	var group = graphics.createGroup();
 
 	if (symbol.text) {
 		graphics
 				.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
-						new goog.graphics.SolidFill(this.config.get("background").color), 
-//						new goog.graphics.SolidFill("orange", 0.3),
-								group);
+						new goog.graphics.SolidFill(this.config.get("background").color));
 
 		graphics.drawText(symbol.text, point.x - w / 2, point.y - h / 2, w, h,
-				symbol.justification, null, font, stroke, fill, group);
+				symbol.justification, null, font, stroke, fill);
 		if (symbol.justification == 'left') {
 			if (symbol.subscript || symbol.superscript) {
 				var subSize = this.config.get("subscriptSize");
 				if (symbol.subscript) {
 					graphics.drawText(symbol.subscript, point.x + w * 0.9,
 							point.y, subSize, subSize, 'center', null, font,
-							stroke, fill, group);
+							stroke, fill);
 				}
 				if (symbol.superscript) {
 					graphics.drawText(symbol.superscript, point.x + w, point.y
 							- h * 0.8, subSize, subSize, 'center', null, font,
-							stroke, fill, group);
+							stroke, fill);
 				}
 			}
 		} else if (symbol.justification == 'right') {
@@ -75,32 +72,23 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 				var subSize = this.config.get("subscriptSize");
 				if (symbol.subscript) {
 					graphics.drawText('H', point.x - w * 3, point.y - h / 2, w,
-							h, 'center', null, font, stroke, fill, group);
+							h, 'center', null, font, stroke, fill);
 					graphics.drawText(symbol.subscript, point.x - w * 1.8,
 							point.y, subSize, subSize, 'center', null, font,
-							stroke, fill, group);
+							stroke, fill);
 				}
 				if (symbol.superscript) {
 					graphics.drawText(symbol.superscript, point.x + w, point.y
 							- h * 0.8, subSize, subSize, 'center', null, font,
-							stroke, fill, group);
+							stroke, fill);
 				}
 			}
 		}
 	} else {
 		graphics.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
-				new goog.graphics.SolidFill(this.config.get("background").color, 0.001), 
-//				new goog.graphics.SolidFill("orange", 0.3),
-						group);
+				new goog.graphics.SolidFill(this.config.get("background").color, 0.001));
 	}
 
-	group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
-			this.controller.handleMouseOver, this.controller, atom));
-	group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
-			this.controller.handleMouseOut, this.controller, atom));
-	group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
-			this.controller.handleMouseDown, this.controller, atom));
-	return group;
 
 };
 

@@ -55,6 +55,5 @@ jchemhub.view.Renderer.prototype.getTransform = function(fromBox) {
 	var transform = new jchemhub.graphics.AffineTransform(scale, 0, 0, -scale,
 			-left * scale, top * scale);
 
-
 	return transform;
 };

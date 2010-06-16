@@ -40,24 +40,12 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		return a.coord;
 	});
 	var box = goog.math.Box.boundingBox.apply(null, atom_coords);
-	
-
-
-	var group = this.graphics.createGroup();
-	var stroke = null;
-	var fill = new goog.graphics.SolidFill("green", 0.001);// 'transparent'
-	// fill
 
 	if (!trans) {
 		// if not part of a reaction, we need to create a transform
 		var m = this.config.get("margin");
-//		this.logger.info("box t: " + box.top + " r: " + box.right + " b: "
-//				+ box.bottom + " l: " + box.left);
 		var ex_box = box.expand(m.top, m.right, m.bottom, m.left);
-		this.logger.info("ex_box t: " + ex_box.top + " r: " + ex_box.right
-				+ " b: " + ex_box.bottom + " l: " + ex_box.left);
 		trans = this.getTransform(ex_box);
-
 	}
 	this.transform = trans;
 	var center = new goog.math.Coordinate((box.left + box.right) / 2,
@@ -66,25 +54,14 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	var rx = Math.abs(this.transform.getScaleX() * (box.right - box.left) / 2);
 	var ry = Math.abs(this.transform.getScaleY() * (box.bottom - box.top) / 2);
 
-	this.graphics.drawEllipse(t_center.x, t_center.y, rx, ry, stroke, fill,
-			group);
-	// this.logger.info("molecule has " + molecule.bonds.length + " bonds");
 	goog.array.forEach(molecule.bonds, function(bond) {
-		this.bondRendererFactory.get(bond).render(bond, trans, undefined);
-	}, this);
-	// this.logger.info("molecule has " + molecule.atoms.length + " atoms");
-	goog.array.forEach(molecule.atoms, function(atom) {
-		this.atomRenderer.render(atom, trans, this.atomController);
+		this.bondRendererFactory.get(bond).render(bond, trans);
 	}, this);
 
-        if (this.controller) {        
-	    group.addEventListener(goog.events.EventType.MOUSEOVER, goog.bind(
-			this.controller.handleMouseOver, this.controller, molecule));
-	    group.addEventListener(goog.events.EventType.MOUSEOUT, goog.bind(
-			this.controller.handleMouseOut, this.controller, molecule));
-	    group.addEventListener(goog.events.EventType.MOUSEDOWN, goog.bind(
-			this.controller.handleMouseDown, this.controller, molecule));
-        }
+	goog.array.forEach(molecule.atoms, function(atom) {
+		this.atomRenderer.render(atom, trans);
+	}, this);
+
 }
 
 /**

@@ -16,10 +16,9 @@ jchemhub.view.SingleDownBondRenderer = function(controller, graphics, opt_config
 }
 goog.inherits(jchemhub.view.SingleDownBondRenderer, jchemhub.view.BondRenderer);
 
-jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform,
-		group) {
+jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform) {
 	jchemhub.view.SingleDownBondRenderer.superClass_.render.call(this, bond,
-			transform, group);
+			transform);
 
 	var path = new goog.graphics.Path();
 	var width = this.config.get("bond").stroke.width / 10;
@@ -67,6 +66,6 @@ jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform
 
 
 
-	this.graphics.drawPath(path, stroke, fill, group);
+	this.graphics.drawPath(path, stroke, fill);
 
 }

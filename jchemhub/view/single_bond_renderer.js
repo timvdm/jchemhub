@@ -16,10 +16,9 @@ jchemhub.view.SingleBondRenderer = function(parentEventTarget, graphics, opt_con
 
 goog.inherits(jchemhub.view.SingleBondRenderer, jchemhub.view.BondRenderer);
 
-jchemhub.view.SingleBondRenderer.prototype.render = function(bond, transform,
-		group) {
+jchemhub.view.SingleBondRenderer.prototype.render = function(bond, transform) {
 	jchemhub.view.SingleBondRenderer.superClass_.render.call(this, bond,
-			transform, group);
+			transform);
 
 	var bondPath = new goog.graphics.Path();
 	var bondStroke = new goog.graphics.Stroke(
@@ -33,6 +32,6 @@ jchemhub.view.SingleBondRenderer.prototype.render = function(bond, transform,
 	bondPath.moveTo(coords[0].x, coords[0].y);
 	bondPath.lineTo(coords[1].x, coords[1].y);
 
-	this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+	this.graphics.drawPath(bondPath, bondStroke, bondFill);
 
 }
