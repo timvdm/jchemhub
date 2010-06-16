@@ -22,21 +22,26 @@ goog.inherits(jchemhub.controller.ArrowController, goog.events.EventTarget);
 jchemhub.controller.ArrowController.prototype.logger = goog.debug.Logger
 		.getLogger('jchemhub.controller.ArrowController');
 
-jchemhub.controller.ArrowController.prototype.handleMouseOver = function(coord, e) {
+jchemhub.controller.ArrowController.prototype.handleMouseOver = function(coord,
+		e) {
 	this.dispatchEvent(new jchemhub.controller.ArrowController.ArrowEvent(this,
-			coord, jchemhub.controller.ArrowController.EventType.MOUSEOVER));
+			coord, e.currentTarget,
+			jchemhub.controller.ArrowController.EventType.MOUSEOVER));
 };
 
-jchemhub.controller.ArrowController.prototype.handleMouseOut = function(coord, e) {
+jchemhub.controller.ArrowController.prototype.handleMouseOut = function(coord,
+		e) {
 	this.dispatchEvent(new jchemhub.controller.ArrowController.ArrowEvent(this,
-			coord, jchemhub.controller.ArrowController.EventType.MOUSEOUT));
+			coord, e.currentTarget,
+			jchemhub.controller.ArrowController.EventType.MOUSEOUT));
 };
 
-jchemhub.controller.ArrowController.prototype.handleMouseDown = function(coord, e) {
-	this.logger.info("handleMouseDown");
-	e.stopPropagation();
+jchemhub.controller.ArrowController.prototype.handleMouseDown = function(coord,
+		e) {
+	// this.logger.info("handleMouseDown");
+	// e.stopPropagation();
 	this.dispatchEvent(new jchemhub.controller.ArrowController.ArrowEvent(this,
-			coord, jchemhub.controller.ArrowController.EventType.MOUSEDOWN));
+			coord, e, jchemhub.controller.ArrowController.EventType.MOUSEDOWN));
 };
 /** @enum {string} */
 jchemhub.controller.ArrowController.EventType = {
@@ -48,15 +53,19 @@ jchemhub.controller.ArrowController.EventType = {
  * 
  * @param {jchemhub.controller.ArrowController}
  *            controller
- * @param {goog.math.Coordiante}
+ * @param {goog.math.Coordinate}
  *            coord
  * @param {jchemhub.controller.ArrowController.EventType}
  *            type
  * @constructor
  * @extends {goog.events.Event}
  */
-jchemhub.controller.ArrowController.ArrowEvent = function(controller, coord, type) {
+jchemhub.controller.ArrowController.ArrowEvent = function(controller, coord,
+		group, type) {
 	goog.events.Event.call(this, type, controller);
 	this.coord = coord;
+	this.group = group;
 };
-goog.inherits(jchemhub.controller.ArrowController.ArrowEvent, goog.events.Event);
+goog
+		.inherits(jchemhub.controller.ArrowController.ArrowEvent,
+				goog.events.Event);

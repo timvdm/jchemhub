@@ -78,8 +78,7 @@ jchemhub.controller.plugins.Erase.prototype.handleAtomMouseDown = function(e) {
 jchemhub.controller.plugins.Erase.prototype.handleArrowMouseDown = function(e) {
 	if (this.isActive){
 		this.editorObject.dispatchBeforeChange();
-		var coord = e.coord;
-		this.logger.info("erase Arrow at " + coord.x +", " + coord.y);
+		this.eraseArrow(e.coord);
 		this.editorObject.dispatchChange();
 	}
 }
@@ -87,8 +86,7 @@ jchemhub.controller.plugins.Erase.prototype.handleArrowMouseDown = function(e) {
 jchemhub.controller.plugins.Erase.prototype.handlePlusMouseDown = function(e) {
 	if (this.isActive){
 		this.editorObject.dispatchBeforeChange();
-		var coord = e.coord;
-		this.logger.info("erase Plus at " + coord.x +", " + coord.y);
+		this.erasePlus(e.coord);
 		this.editorObject.dispatchChange();
 	}
 }
@@ -98,4 +96,16 @@ jchemhub.controller.plugins.Erase.prototype.eraseBond=function(bond){
 	molecule.removeBond(bond);
 	this.editorObject.setModels(this.editorObject.getModels());
 
+};
+
+jchemhub.controller.plugins.Erase.prototype.erasePlus = function(coord){
+	var reaction = coord.reaction;
+	reaction.removePlus(coord);
+	this.editorObject.setModels(this.editorObject.getModels());
+};
+
+jchemhub.controller.plugins.Erase.prototype.eraseArrow = function(coord){
+	var reaction = coord.reaction;
+	reaction.removeArrow(coord);
+	this.editorObject.setModels(this.editorObject.getModels());
 };

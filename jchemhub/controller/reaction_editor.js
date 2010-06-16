@@ -154,6 +154,13 @@ jchemhub.controller.ReactionEditor.prototype.render = function() {
 	goog.array.forEach(this.models, function(model) {
 
 		if (model instanceof jchemhub.model.Reaction) {
+			if(model.pluses.length==0) {
+				model.generatePlusCoords(model.reactants);
+				model.generatePlusCoords(model.products);
+			}
+			if( model.arrows.length==0){
+				model.generateArrowCoords(model.reactants, model.products);
+			}
 			this.reactionRenderer.render(model);
 		}
 		if (model instanceof jchemhub.model.Molecule) {
