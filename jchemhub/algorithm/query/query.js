@@ -424,7 +424,7 @@ goog.provide('jchemhub.query.Query');
         if (!this.orders.length) {
             return true; // match any bond order
         }
-        if (goog.array.indexOf(this.orders, bond.constructor.ORDER) !== -1) {
+        if (goog.array.indexOf(this.orders, bond.order) !== -1) {
             return true;
         }
         return false;

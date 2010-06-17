@@ -13,15 +13,9 @@ goog.require('jchemhub.model.Bond');
  */
 jchemhub.model.SingleBond = function(source, target, opt_molecule) {
 	jchemhub.model.Bond.call(this, source, target, opt_molecule);
+        this.order = 1;
 }
 goog.inherits(jchemhub.model.SingleBond, jchemhub.model.Bond);
-
-/**
- * static value for order of this type of bond
- * 
- * @type{number}
- */
-jchemhub.model.SingleBond.ORDER = 1;
 
 /**
  * 

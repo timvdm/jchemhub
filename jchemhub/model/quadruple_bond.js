@@ -10,14 +10,9 @@ goog.require('jchemhub.model.Bond');
  */
 jchemhub.model.QuadrupleBond = function(source, target, opt_molecule){
 	jchemhub.model.Bond.call(this, source, target, opt_molecule);
+        this.order = 4;
 }
 goog.inherits(jchemhub.model.QuadrupleBond, jchemhub.model.Bond);
-
-/**
- * static value for order of this type of bond
- * @type{number}
- */
-jchemhub.model.QuadrupleBond.ORDER = 4;
 
 jchemhub.model.QuadrupleBond.clone = function(bond){
 	return new jchemhub.model.QuadrupleBond(this.source, this.target, this.molecule);

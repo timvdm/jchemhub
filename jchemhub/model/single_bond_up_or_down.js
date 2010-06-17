@@ -10,13 +10,9 @@ goog.require('jchemhub.model.SingleBond');
  */
 jchemhub.model.SingleBondUpOrDown = function(source, target, opt_molecule){
 	jchemhub.model.SingleBond.call(this, source, target, opt_molecule);
+        this.order = 1;
 }
 goog.inherits(jchemhub.model.SingleBondUpOrDown, jchemhub.model.SingleBond);	
-/**
- * static value for order of this type of bond
- * @type{number}
- */
-jchemhub.model.SingleBondUpOrDown.ORDER = 1;
 
 jchemhub.model.SingleBondUpOrDown.clone = function(){
 	return new jchemhun.model.SingleBondUpOrDown(this.source, this.target, this.molecule);

@@ -13,15 +13,9 @@ goog.require('jchemhub.model.Bond');
  */
 jchemhub.model.TripleBond = function(source, target, opt_molecule) {
 	jchemhub.model.Bond.call(this, source, target, opt_molecule);
+        this.order = 3;
 }
 goog.inherits(jchemhub.model.TripleBond, jchemhub.model.Bond);
-
-/**
- * static value for order of this type of bond
- * 
- * @type{number}
- */
-jchemhub.model.TripleBond.ORDER = 3;
 
 jchemhub.model.TripleBond.prototype.clone = function() {
 	return new jchemhub.model.TripleBond(this.source, this.target,

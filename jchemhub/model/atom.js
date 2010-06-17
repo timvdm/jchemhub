@@ -68,8 +68,8 @@ jchemhub.model.Atom.prototype.countBonds = function() {
 jchemhub.model.Atom.prototype.hydrogenCount = function() {
 	var cov = jchemhub.resource.Covalence[this.symbol];
 	var totalBondOrder = goog.array.reduce(this.bonds.getValues(), function(r, v) {
-		return r + v.constructor.ORDER;
-		}, 0);
+		return r + v.order;
+                }, 0);
 	var hydrogenCount = 0;
 	if (cov) {
 		hydrogenCount = cov - totalBondOrder + this.charge;

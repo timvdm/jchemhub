@@ -27,6 +27,12 @@ jchemhub.model.Bond = function(source, target, opt_molecule) {
 	if (opt_molecule) {
 		this.molecule = opt_molecule;
 	}
+
+        /**
+         * The bond order.
+         * @type {number}
+         */
+        this.order = 0;
 };
 
 /**
@@ -44,6 +50,4 @@ jchemhub.model.Bond.prototype.otherAtom = function(atom) {
 	}
 	return null;
 };
-
-
 
