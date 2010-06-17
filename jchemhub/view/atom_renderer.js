@@ -261,7 +261,7 @@ jchemhub.view.AtomRenderer.prototype.logger = goog.debug.Logger
  * A default configuration for renderer
  */
 jchemhub.view.AtomRenderer.defaultConfig = {
-	atom : {
+	'atom' : {
 		color : '#FF9999',
 		diameter : .05,
 		highlight : {
@@ -272,55 +272,55 @@ jchemhub.view.AtomRenderer.defaultConfig = {
 		},
 		fontName : "Arial"
 	},
-	background : {
+	'background' : {
 		color : '#F0FFF0'
 	},
-	margin : 20,
-	subscriptSize : 5,
-	N : {
+	'margin' : 20,
+	'subscriptSize' : 5,
+	'N' : {
 		color : 'blue'
 	},
-	O : {
+	'O' : {
 
 		color : 'red'
 
 	},
-	S : {
+	'S' : {
 
 		color : 'yellow'
 
 	},
-	P : {
+	'P' : {
 
 		color : 'orange'
 
 	},
-	Cl : {
+	'Cl' : {
 
 		color : 'green'
 
 	},
-	F : {
+	'F' : {
 
 		color : 'green'
 
 	},
-	Br : {
+	'Br' : {
 
 		color : 'DarkRed'
 
 	},
-	I : {
+	'I' : {
 
 		color : 'purple'
 
 	},
-	C : {
+	'C' : {
 
 		color : 'black'
 
 	},
-	H : {
+	'H' : {
 
 		color : 'white'
 	}
