@@ -77,7 +77,7 @@ jchemhub.view.BondRenderer.hasSymbol = function(atom) {
  * A default configuration for renderer
  */
 jchemhub.view.BondRenderer.defaultConfig = {
-	bond : {
+	'bond' : {
 		stroke : {
 			width : 2,
 			color : 'black'
@@ -86,7 +86,7 @@ jchemhub.view.BondRenderer.defaultConfig = {
 			color : 'black'
 		}
 	},
-	highlight : {
+	'highlight' : {
 		radius : .3,
 		color : 'blue'
 	}
