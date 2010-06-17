@@ -77,7 +77,7 @@
         molecule.addAtom(atom2);
         molecule.addAtom(atom3);
 
-        var neighborList = new jchemhub.model.NeighborList([molecule]);
+        var neighborList = new jchemhub.model.NeighborList([molecule], 5, 5);
 
         var nearest = neighborList.getNearestList({ x: 0, y: 0 });
 
@@ -90,7 +90,7 @@
         assertEquals(3, nearest[2].distance);
     }
     
-    function testMoleculeWithBonds(){
+    function testMoleculeWithBonds1() {
     	var mol = new jchemhub.model.Molecule();
     	var a1 = new jchemhub.model.Atom("C", -1, 1);
     	var a2 = new jchemhub.model.Atom("C", 0, 0);
@@ -103,17 +103,31 @@
     	mol.addBond(b1);
     	mol.addBond(b2);
     	
-    	var nl = new jchemhub.model.NeighborList([mol]);
+    	var nl = new jchemhub.model.NeighborList([mol], 2, 0.2);
     	
     	var n = nl.getNearestList({x:0.51, y:0.51});
-    	
+    	assertEquals('# nearest objects', 1, n.length);
     	assertEquals('nearest object is bond b2', b2, n[0].obj);
-    	var nearest_atoms = goog.array.filter(n, function(o){
-    		return o.obj instanceof jchemhub.model.Atom; 
-    	});
-    	assertEquals('nearest atom is atom a3', a3, nearest_atoms[0].obj);
-    	}
-	   
+
+    	n = nl.getNearestList({x:0.89, y:0.85});
+    	assertEquals('# nearest objects', 2, n.length);
+    	assertEquals('nearest object is atom a3', a3, n[0].obj);
+    	assertEquals('2nd nearest object is bond b2', b2, n[1].obj);
+
+    	n = nl.getNearestList({x:0.04, y:0.11});
+    	assertEquals('# nearest objects', 3, n.length);
+    	assertEquals('nearest object is atom a2', a2, n[0].obj);
+    	assertEquals('2nd nearest object is bond b1', b1, n[1].obj);
+    	assertEquals('3th nearest object is bond b2', b2, n[2].obj);
+
+    	n = nl.getNearestList({x:1, y:0});
+    	assertEquals('# nearest objects', 0, n.length);
+    	n = nl.getNearestList({x:-1, y:0});
+    	assertEquals('# nearest objects', 0, n.length);
+
+
+
+    }
 	
 </script>
 </head>
