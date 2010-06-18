@@ -1,22 +1,22 @@
-goog.require('jchemhub.graphics.AffineTransform');
-goog.require('jchemhub.controller.ReactionEditor');
-goog.require('jchemhub.io.mdl');
+goog.require('kemia.graphics.AffineTransform');
+goog.require('kemia.controller.ReactionEditor');
+goog.require('kemia.io.mdl');
 
-goog.require('jchemhub.exports')
+goog.require('kemia.exports')
 
 
 
-jchemhub.exportClass('jchemhub.controller.ReactionEditor', jchemhub.controller.ReactionEditor)
-        .add('setModels', jchemhub.controller.ReactionEditor.prototype.setModels)
+kemia.exportClass('kemia.controller.ReactionEditor', kemia.controller.ReactionEditor)
+        .add('setModels', kemia.controller.ReactionEditor.prototype.setModels)
         ;
 
-jchemhub.exportSymbol('jchemhub.io.mdl.readMolfile', jchemhub.io.mdl.readMolfile);
+kemia.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 
 /*
-goog.exportSymbol('jchemhub.controller.ReactionEditor', jchemhub.controller.ReactionEditor);
-goog.exportSymbol('jchemhub.controller.ReactionEditor.prototype.setModels', jchemhub.controller.ReactionEditor.prototype.setModels);
-goog.exportSymbol('jchemhub.io.mdl', jchemhub.io.mdl);
-goog.exportSymbol('jchemhub.io.mdl.readMolfile', jchemhub.io.mdl.readMolfile);
+goog.exportSymbol('kemia.controller.ReactionEditor', kemia.controller.ReactionEditor);
+goog.exportSymbol('kemia.controller.ReactionEditor.prototype.setModels', kemia.controller.ReactionEditor.prototype.setModels);
+goog.exportSymbol('kemia.io.mdl', kemia.io.mdl);
+goog.exportSymbol('kemia.io.mdl.readMolfile', kemia.io.mdl.readMolfile);
 */
 
 

@@ -1,0 +1,24 @@
+
+<html>
+<head>
+<title>kemia.math.Line test</title>
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+<script>
+	goog.require('goog.testing.jsunit');
+	goog.require('kemia.graphics.AffineTransform');
+</script>
+<script>
+
+	function testCreateInverse(){
+		var t = new kemia.graphics.AffineTransform(28.507215396883762,0,0,-28.507215396883762,102.57113357145245,156.78968468286087);
+		var input = new goog.math.Coordinate(0, 1.5);
+		var result = t.transformCoords([input]);
+		var i = t.createInverse();
+		console.log(i);
+		assertEquals(input, i.transformCoords(result)[0]);
+	}
+</script>
+</head>
+<body></body>
+</html>

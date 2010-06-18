@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-var _allTests = [ "jchemhub/algorithm/symmetry/symmetry_test.html",
-                  "jchemhub/algorithm/query/query_test.html",
-                  "jchemhub/io/smiles/smiles_parser_test.html",
-                  "jchemhub/io/qsmiles/smiles_test.html",
-		  "jchemhub/math/line_test.html", 
-		  "jchemhub/io/json_test.html",
-		  "jchemhub/io/mdl_test.html", 
-		  "jchemhub/model/model_test.html", 
-		  "jchemhub/ring/hanser_test.html",
-		  "jchemhub/ring/sssr_test.html",
-		  "jchemhub/controller/plugin_test.html",  
-		  "jchemhub/controller/reaction_editor_test.html"];
+var _allTests = [ "kemia/algorithm/symmetry/symmetry_test.html",
+                  "kemia/algorithm/query/query_test.html",
+                  "kemia/io/smiles/smiles_parser_test.html",
+                  "kemia/io/qsmiles/smiles_test.html",
+		  "kemia/math/line_test.html", 
+		  "kemia/io/json_test.html",
+		  "kemia/io/mdl_test.html", 
+		  "kemia/model/model_test.html", 
+		  "kemia/ring/hanser_test.html",
+		  "kemia/ring/sssr_test.html",
+		  "kemia/controller/plugin_test.html",  
+		  "kemia/controller/reaction_editor_test.html"];
