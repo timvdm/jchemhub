@@ -96,5 +96,5 @@ jchemhub.view.ReactionRenderer.prototype.logger = goog.debug.Logger
  * A default configuration for renderer
  */
 jchemhub.view.ReactionRenderer.defaultConfig = {
-	margin : 2
+	'margin' : 2
 };

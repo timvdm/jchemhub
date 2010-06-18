@@ -28,15 +28,15 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 	this.transform = transform;
 
 	var atom_config = this.config.get("atom");
-	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol).color
-			: atom_config.color;
+	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol)['color']
+			: atom_config['color'];
 
 	var scale = transform.getScaleX();
 
 
 	var fontSize=(scale/1.8)>12 ? 15: (scale/1.8);
-	var font = new goog.graphics.Font(fontSize, atom_config.fontName);
-	var stroke = new goog.graphics.Stroke(atom_config.stroke.width, "black");
+	var font = new goog.graphics.Font(fontSize, atom_config['fontName']);
+	var stroke = new goog.graphics.Stroke(atom_config['stroke']['width'], "black");
 
 	var fill = new goog.graphics.SolidFill(color);
 
@@ -47,10 +47,6 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 	var h = font.size;
 
 	if (symbol.text) {
-//		graphics
-//				.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
-//						new goog.graphics.SolidFill(this.config.get("background").color));
-
 		graphics.drawText(symbol.text, point.x - w / 2, point.y - h / 2, w, h,
 				symbol.justification, null, font, stroke, fill);
 		if (symbol.justification == 'left') {
@@ -84,22 +80,17 @@ jchemhub.view.AtomRenderer.prototype.render = function(atom, transform) {
 				}
 			}
 		}
-	} else {
-//		graphics.drawEllipse(point.x, point.y, h * 0.7, h * 0.7, null,
-//				new goog.graphics.SolidFill(this.config.get("background").color, 0.001));
-	}
-
-
+	} 
 };
 
 jchemhub.view.AtomRenderer.prototype.highlightOn = function(atom, opt_group) {
 	var atom_config = this.config.get("atom");
-	var strokeWidth = atom_config.stroke.width * 4;
-	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol).color
-			: atom_config.color;
+	var strokeWidth = atom_config['stroke']['width'] * 4;
+	var color = this.config.get(atom.symbol) ? this.config.get(atom.symbol)['color']
+			: atom_config['color'];
 	var stroke = new goog.graphics.Stroke(strokeWidth, color);
 	var fill = null;
-	var radius = atom_config.highlight.radius * this.transform.getScaleX();
+	var radius = atom_config['highlight']['radius'] * this.transform.getScaleX();
 	var coords = this.transform.transformCoords( [ atom.coord ])[0];
 
 	if (!opt_group) {
@@ -247,66 +238,63 @@ jchemhub.view.AtomRenderer.prototype.logger = goog.debug.Logger
  */
 jchemhub.view.AtomRenderer.defaultConfig = {
 	'atom' : {
-		color : '#FF9999',
-		diameter : .05,
-		highlight : {
-			radius : .3
+		'color' : '#FF9999',
+		'diameter' : .05,
+		'highlight' : {
+			'radius' : .3
 		},
-		stroke : {
-			width : .15
+		'stroke' : {
+			'width' : .15
 		},
-		fontName : "Arial"
-	},
-	'background' : {
-		color : '#F0FFF0'
+		'fontName' : "Arial"
 	},
 	'margin' : 20,
 	'subscriptSize' : 5,
 	'N' : {
-		color : 'blue'
+		'color' : 'blue'
 	},
 	'O' : {
 
-		color : 'red'
+		'color' : 'red'
 
 	},
 	'S' : {
 
-		color : 'yellow'
+		'color' : 'yellow'
 
 	},
 	'P' : {
 
-		color : 'orange'
+		'color' : 'orange'
 
 	},
 	'Cl' : {
 
-		color : 'green'
+		'color' : 'green'
 
 	},
 	'F' : {
 
-		color : 'green'
+		'color' : 'green'
 
 	},
 	'Br' : {
 
-		color : 'DarkRed'
+		'color' : 'DarkRed'
 
 	},
 	'I' : {
 
-		color : 'purple'
+		'color' : 'purple'
 
 	},
 	'C' : {
 
-		color : 'black'
+		'color' : 'black'
 
 	},
 	'H' : {
 
-		color : 'white'
+		'color' : 'white'
 	}
 };

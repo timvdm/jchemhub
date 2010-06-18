@@ -44,7 +44,7 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	if (!trans) {
 		// if not part of a reaction, we need to create a transform
 		var m = this.config.get("margin");
-		var ex_box = box.expand(m.top, m.right, m.bottom, m.left);
+		var ex_box = box.expand(m, m, m, m);
 		trans = this.getTransform(ex_box);
 	}
 	this.transform = trans;
@@ -55,10 +55,10 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	var ry = Math.abs(this.transform.getScaleY() * (box.bottom - box.top) / 2);
 
 	var bondStroke = new goog.graphics.Stroke(
-			this.config.get("bond").stroke.width,
-			this.config.get("bond").stroke.color);
+			this.config.get("bond")['stroke']['width'],
+			this.config.get("bond")['stroke']['color']);
 	var bondFill = new goog.graphics.SolidFill(
-			this.config.get("bond").fill.color);
+			this.config.get("bond")['fill']['color']);
 
 	var bondPath = new goog.graphics.Path();
 	goog.array.forEach(molecule.bonds, function(bond) {
@@ -77,14 +77,14 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
  * A default configuration for renderer
  */
 jchemhub.view.MoleculeRenderer.defaultConfig = {
-	bond : {
-		stroke : {
-			width : 2,
-			color : 'black'
+	'bond' : {
+		'stroke' : {
+			'width' : 2,
+			'color' : 'black'
 		},
-		fill : {
-			color : 'black'
+		'fill' : {
+			'color' : 'black'
 		}
 	},
-	margin : 4
+	'margin' : 4
 };

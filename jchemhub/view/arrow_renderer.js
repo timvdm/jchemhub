@@ -19,8 +19,8 @@ goog.inherits(jchemhub.view.ArrowRenderer, jchemhub.view.Renderer);
 
 jchemhub.view.ArrowRenderer.prototype.render = function(coord, transform) {
 
-	var w = this.config.get('arrow').width;
-	var h = this.config.get('arrow').height;
+	var w = this.config.get('arrow')['width'];
+	var h = this.config.get('arrow')['height'];
 	
 	var nock = new goog.math.Coordinate(coord.x - w/2, coord.y);
 	var tip = new goog.math.Coordinate(nock.x + w, nock.y);
@@ -29,8 +29,8 @@ jchemhub.view.ArrowRenderer.prototype.render = function(coord, transform) {
 			
 	var path = new goog.graphics.Path();
 	var stroke = new goog.graphics.Stroke(
-			this.config.get("arrow").stroke.width, 
-			this.config.get("arrow").stroke.color);
+			this.config.get("arrow")['stroke']['width'], 
+			this.config.get("arrow")['stroke']['color']);
 	var fill = new goog.graphics.SolidFill("yellow", .001);
 	var coords = transform.transformCoords( [ nock,
 			tip, head1, head2 ]);
@@ -49,12 +49,12 @@ jchemhub.view.ArrowRenderer.prototype.render = function(coord, transform) {
  * A default configuration for renderer
  */
 jchemhub.view.ArrowRenderer.defaultConfig = {
-	arrow : {
-	width: 2,
-	height: .5,
-		stroke : {
-			width : 2,
-			color : "black"
+	'arrow' : {
+	        'width': 2,
+        	'height': .5,
+		'stroke' : {
+			'width' : 2,
+			'color' : "black"
 		}
 	}
 }
