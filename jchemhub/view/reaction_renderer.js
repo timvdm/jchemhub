@@ -47,7 +47,7 @@ jchemhub.view.ReactionRenderer.prototype.render = function(reaction) {
 	var m = this.config.get("margin");
 	box.expand(m.top, m.right, m.bottom, m.left);
 	var transform = this.getTransform(box);
-	
+	this.transform = transform;
 	goog.array.forEach(molecules, function(mol) {
 
 		this.moleculeRenderer.render(mol, transform);

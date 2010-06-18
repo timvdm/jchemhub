@@ -4,22 +4,22 @@ goog.require('jchemhub.controller.Plugin');
 goog.require('goog.functions');
 goog.require('goog.debug.Logger');
 
-
 /**
  * simple Plugin for highlighting bonds and atoms
- *
+ * 
  * @constructor
  * @extends {jchemhub.controller.Plugin}
  */
 jchemhub.controller.plugins.Highlight = function() {
-  jchemhub.controller.Plugin.call(this);
+	jchemhub.controller.Plugin.call(this);
 };
-goog.inherits(jchemhub.controller.plugins.Highlight, jchemhub.controller.Plugin);
-
+goog
+		.inherits(jchemhub.controller.plugins.Highlight,
+				jchemhub.controller.Plugin);
 
 /** @inheritDoc */
-jchemhub.controller.plugins.Highlight.prototype.getTrogClassId =
-    goog.functions.constant('jchemhub.controller.plugins.Highlight');
+jchemhub.controller.plugins.Highlight.prototype.getTrogClassId = goog.functions
+		.constant('jchemhub.controller.plugins.Highlight');
 
 /**
  * Logging object.
@@ -30,12 +30,41 @@ jchemhub.controller.plugins.Highlight.prototype.getTrogClassId =
 jchemhub.controller.plugins.Highlight.prototype.logger = goog.debug.Logger
 		.getLogger('jchemhub.controller.plugins.Highlight');
 
+jchemhub.controller.plugins.Highlight.prototype.handleMouseMove = function(e) {
 
-jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOver = function(e) {
+	var target = this.editorObject.findTarget(e);
+	if (e.currentTarget.highlightGroup) {
+		e.currentTarget.highlightGroup.clear();
+	}
+
+	if (target instanceof jchemhub.model.Atom) {
+
+		if (!e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup = this.highlightAtom(target);
+		} else {
+			e.currentTarget.highlightGroup = this.highlightAtom(target,
+					e.currentTarget.atomHighlightGroup);
+		}
+	} else if (target instanceof jchemhub.model.Bond) {
+		if (!e.currentTarget.highlightGroup) {
+			e.currentTarget.highlightGroup = this.highlightBond(target);
+		} else {
+			e.currentTarget.highlightGroup = this.highlightBond(target,
+					e.currentTarget.bondHighlightGroup);
+		}
+
+	} else {
+		e.currentTarget.highlightGroup = undefined;
+	}
+}
+
+jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOver = function(
+		e) {
 	if (!e.currentTarget.atomHighlightGroup) {
 		e.currentTarget.atomHighlightGroup = this.highlightAtom(e.atom);
 	} else {
-		e.currentTarget.atomHighlightGroup = this.highlightAtom(e.atom, e.currentTarget.atomHighlightGroup);
+		e.currentTarget.atomHighlightGroup = this.highlightAtom(e.atom,
+				e.currentTarget.atomHighlightGroup);
 	}
 
 };
@@ -49,12 +78,14 @@ jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOut = function(e)
 
 };
 
-jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(e) {
-//	this.logger.info("handleBondMouseOver");
+jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(
+		e) {
+	// this.logger.info("handleBondMouseOver");
 	if (!e.currentTarget.bondHighlightGroup) {
 		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond);
 	} else {
-		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond, e.currentTarget.bondHighlightGroup);
+		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond,
+				e.currentTarget.bondHighlightGroup);
 	}
 
 };
@@ -67,10 +98,14 @@ jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOut = function(e)
 
 };
 
-jchemhub.controller.plugins.Highlight.prototype.highlightBond = function(bond, opt_group){
-	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory.get(bond).highlightOn(bond, opt_group);
+jchemhub.controller.plugins.Highlight.prototype.highlightBond = function(bond,
+		opt_group) {
+	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory
+			.get(bond).highlightOn(bond, opt_group);
 };
 
-jchemhub.controller.plugins.Highlight.prototype.highlightAtom = function(atom, opt_group){
-	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer.highlightOn(atom, opt_group);
+jchemhub.controller.plugins.Highlight.prototype.highlightAtom = function(atom,
+		opt_group) {
+	return this.editorObject.reactionRenderer.moleculeRenderer.atomRenderer
+			.highlightOn(atom, opt_group);
 };
