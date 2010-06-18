@@ -10,14 +10,6 @@ goog.require('goog.i18n.DateTimeFormat');
 goog.require('goog.string');
 goog.require('jchemhub.model.Reaction');
 goog.require('jchemhub.model.Molecule');
-goog.require('jchemhub.model.SingleBond');
-goog.require('jchemhub.model.SingleBondUp');
-goog.require('jchemhub.model.SingleBondDown');
-goog.require('jchemhub.model.SingleBondUpOrDown');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.TripleBond');
-goog.require('jchemhub.model.AromaticBond');
-goog.require('jchemhub.model.QuadrupleBond');
 goog.require('jchemhub.model.Bond');
 goog.require('jchemhub.model.Atom');
 
@@ -42,20 +34,19 @@ goog.require('jchemhub.model.Atom');
  * @return{number}
  */
 jchemhub.io.mdl.getTypeCode = function(bond){
-	if (bond instanceof jchemhub.model.SingleBond){
-		return jchemhub.io.mdl.SINGLE_BOND;
-	}
-	if (bond instanceof jchemhub.model.DoubleBond){
-		return jchemhub.io.mdl.DOUBLE_BOND;
-	}
-	if (bond instanceof jchemhub.model.TripleBond){
-		return jchemhub.io.mdl.TRIPLE_BOND;
-	}
-	if (bond instanceof jchemhub.model.AromaticBond){
+	if (bond.aromatic){
 		return jchemhub.io.mdl.AROMATIC_BOND;
 	}
-	throw new Error("Invalid bond type [" + bond + "]");
-	
+	if (bond.order == 1){
+		return jchemhub.io.mdl.SINGLE_BOND;
+	}
+	if (bond.order == 2){
+		return jchemhub.io.mdl.DOUBLE_BOND;
+	}
+	if (bond.order == 3){
+		return jchemhub.io.mdl.TRIPLE_BOND;
+	}
+        throw new Error("Invalid bond type [" + bond + "]");
 };
 
 /**
@@ -64,18 +55,16 @@ jchemhub.io.mdl.getTypeCode = function(bond){
  * @return{number}
  */
 jchemhub.io.mdl.getStereoCode = function(bond){
-	if (bond instanceof jchemhub.model.SingleBondUp){
+	if (bond.stereo == 'up'){
 		return jchemhub.io.mdl.SINGLE_BOND_UP;
 	}
-	if (bond instanceof jchemhub.model.SingleBondDown){
+	if (bond.stereo == 'down'){
 		return jchemhub.io.mdl.SINGLE_BOND_DOWN;
 	}
-	if (bond instanceof jchemhub.model.SingleBondUpOrDown){
+	if (bond.stereo == 'up_or_down'){
 		return jchemhub.io.mdl.SINGLE_BOND_UP_OR_DOWN;
 	}
 	return jchemhub.io.mdl.NOT_STEREO;
-	
-	
 }
 
 /**
@@ -93,23 +82,31 @@ jchemhub.io.mdl.createBond = function(type, stereo, source, target) {
 	case jchemhub.io.mdl.SINGLE_BOND:
 		switch (stereo) {
 		case jchemhub.io.mdl.NOT_STEREO:
-			return new jchemhub.model.SingleBond(source, target);
+			return new jchemhub.model.Bond(source, target);
 		case jchemhub.io.mdl.SINGLE_BOND_UP:
-			return new jchemhub.model.SingleBondUp(source, target);
+			var bond = new jchemhub.model.Bond(source, target);
+                        bond.stereo = 'up';
+                        return bond;
 		case jchemhub.io.mdl.SINGLE_BOND_UP_OR_DOWN:
-			return new jchemhub.model.SingleBondUpOrDown(source, target);
+			var bond = new jchemhub.model.Bond(source, target);
+                        bond.stereo = 'up_or_down';
+                        return bond;
 		case jchemhub.io.mdl.SINGLE_BOND_DOWN:
-			return new jchemhub.model.SingleBondDown(source, target);
+			var bond = new jchemhub.model.Bond(source, target);
+                        bond.stereo = 'down';
+                        return bond;
 		default:
 			throw new Error("invalid bond type/stereo [" + type + "]/["
 					+ stereo + "]");
 		};
 	case jchemhub.io.mdl.DOUBLE_BOND:
-		return new jchemhub.model.DoubleBond(source, target);
+		return new jchemhub.model.Bond(source, target, 2);
 	case jchemhub.io.mdl.TRIPLE_BOND:
-		return new jchemhub.model.TripleBond(source, target);
+		return new jchemhub.model.Bond(source, target, 3);
 	case jchemhub.io.mdl.AROMATIC_BOND:
-		return new jchemhub.model.AromaticBond(source, target);
+		var bond = new jchemhub.model.Bond(source, target);
+                bond.aromatic = true;
+                return bond;
 	case jchemhub.io.mdl.SINGLE_OR_DOUBLE:
 		throw new Error("type not implemented [" + type + "]");
 	case jchemhub.io.mdl.SINGLE_OR_AROMATIC:

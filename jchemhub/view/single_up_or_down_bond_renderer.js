@@ -23,7 +23,7 @@ jchemhub.view.SingleUpOrDownBondRenderer.prototype.render = function(bond,
 			bond, transform);
 
 	var path = new goog.graphics.Path();
-	var width = this.config.get("bond").stroke.width / 10;
+	var width = this.config.get("bond")['stroke']['width'] / 10;
 	var theta = jchemhub.view.BondRenderer.getTheta(bond);
 
 	var angle_left = theta + (Math.PI / 2);
@@ -44,8 +44,7 @@ jchemhub.view.SingleUpOrDownBondRenderer.prototype.render = function(bond,
 			leftside[1], rightside[0], rightside[1] ]);
 
 	var stroke = new goog.graphics.Stroke(
-			this.config.get("bond").stroke.width, this.config.get(
-					"bond").stroke.color);
+			this.config.get("bond")['stroke']['width'], this.config.get("bond")['stroke']['color']);
 	var fill = null;
 
 	path.moveTo(coords[0].x, coords[0].y);

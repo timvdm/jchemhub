@@ -7,17 +7,8 @@ goog.provide('jchemhub.io.json');
 
 goog.require('jchemhub.model.Reaction');
 goog.require('jchemhub.model.Molecule');
-goog.require('jchemhub.model.SingleBond');
-goog.require('jchemhub.model.SingleBondUp');
-goog.require('jchemhub.model.SingleBondDown');
-goog.require('jchemhub.model.SingleBondUpOrDown');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.TripleBond');
-goog.require('jchemhub.model.AromaticBond');
-goog.require('jchemhub.model.QuadrupleBond');
 goog.require('jchemhub.model.Bond');
 goog.require('jchemhub.model.Atom');
-goog.require('jchemhub.model.DoubleBond');
 goog.require('goog.json');
 goog.require('goog.array');
 
@@ -70,13 +61,13 @@ jchemhub.io.json.StereoType = {
  * @return{jchembun.io.json.BondType}
  */
 jchemhub.io.json.getTypeCode = function(bond){
-	if (bond instanceof jchemhub.model.SingleBond){
+	if (bond.order == 1){
 		return jchemhub.io.json.BondType.SINGLE_BOND;
 	}
-	if (bond instanceof jchemhub.model.DoubleBond){
+	if (bond.order == 2){
 		return jchemhub.io.json.BondType.DOUBLE_BOND;
 	}
-	if (bond instanceof jchemhub.model.TripleBond){
+	if (bond.order == 3){
 		return jchemhub.io.json.BondType.TRIPLE_BOND;
 	}
 	throw new Error("Invalid bond type [" + bond + "]");
@@ -90,13 +81,13 @@ jchemhub.io.json.getTypeCode = function(bond){
  * @return{jchemhub.io.json.StereoType}
  */
 jchemhub.io.json.getStereoCode = function(bond){
-	if (bond instanceof jchemhub.model.SingleBondUp){
+	if (bond.stereo == 'up'){
 		return jchemhub.io.json.StereoType.SINGLE_BOND_UP;
 	}
-	if (bond instanceof jchemhub.model.SingleBondDown){
+	if (bond.stereo == 'down'){
 		return jchemhub.io.json.StereoType.SINGLE_BOND_DOWN;
 	}
-	if (bond instanceof jchemhub.model.SingleBondUpOrDown){
+	if (bond.stereo == 'up_or_down'){
 		return jchemhub.io.json.StereoType.SINGLE_BOND_UP_OR_DOWN;
 	}
 	return jchemhub.io.json.StereoType.NOT_STEREO;
@@ -119,23 +110,31 @@ jchemhub.io.json.createBond = function(type, stereo, source, target) {
 	case jchemhub.io.json.BondType.SINGLE_BOND:
 		switch (stereo) {
 		case jchemhub.io.json.StereoType.NOT_STEREO:
-			return new jchemhub.model.SingleBond(source, target);
+			return new jchemhub.model.Bond(source, target);
 		case jchemhub.io.json.StereoType.SINGLE_BOND_UP:
-			return new jchemhub.model.SingleBondUp(source, target);
+			var bond = new jchemhub.model.Bond(source, target);
+                        bond.stereo = 'up';
+                        return bond;
 		case jchemhub.io.json.StereoType.SINGLE_BOND_UP_OR_DOWN:
-			return new jchemhub.model.SingleBondUpOrDown(source, target);
+			var bond = new jchemhub.model.Bond(source, target);
+                        bond.stereo = 'up_or_down';
+                        return bond;
 		case jchemhub.io.json.StereoType.SINGLE_BOND_DOWN:
-			return new jchemhub.model.SingleBondDown(source, target);
+			var bond = new jchemhub.model.Bond(source, target);
+                        bond.stereo = 'down';
+                        return bond;
 		default:
 			throw new Error("invalid bond type/stereo [" + type + "]/["
 					+ stereo + "]");
 		};
 	case jchemhub.io.json.BondType.DOUBLE_BOND:
-		return new jchemhub.model.DoubleBond(source, target);
+		return new jchemhub.model.Bond(source, target, 2);
 	case jchemhub.io.json.BondType.TRIPLE_BOND:
-		return new jchemhub.model.TripleBond(source, target);
+		return new jchemhub.model.Bond(source, target, 3);
 	case jchemhub.io.json.BondType.AROMATIC:
-		return new jchemhub.model.AromaticBond(source, target);
+		var bond = new jchemhub.model.Bond(source, target);
+                bond.aromatic = true;
+                return bond;
 	case jchemhub.io.json.BondType.SINGLE_OR_DOUBLE:
 	case jchemhub.io.json.BondType.SINGLE_OR_AROMATIC:
 	case jchemhub.io.json.BondType.DOUBLE_OR_AROMATIC: 

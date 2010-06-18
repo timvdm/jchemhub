@@ -3,15 +3,6 @@ goog.require('jchemhub.model.Molecule');
 goog.require('jchemhub.model.Atom');
 goog.require('jchemhub.model.Bond');
 goog.require('jchemhub.model.Reaction');
-goog.require('jchemhub.model.SingleBond');
-goog.require('jchemhub.model.SingleBondUp');
-goog.require('jchemhub.model.SingleBondDown');
-goog.require('jchemhub.model.SingleBondUpOrDown');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.TripleBond');
-goog.require('jchemhub.model.QuadrupleBond');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.AromaticBond');
 
 /**
  * enum for bond types
@@ -244,21 +235,23 @@ jchemhub.io.smiles.createBond = function(type, stereo, source, target) {
         case jchemhub.io.smiles.BondType.SINGLE_BOND:
                 switch (stereo) {
                 case jchemhub.io.smiles.BondStereo.CLOCKWISE:
-                        return new jchemhub.model.SingleBondUp(source, target);
+                        return new jchemhub.model.Bond(source, target);
                 case jchemhub.io.smiles.BondStereo.COUNTER_CLOCKWISE:
-                        return new jchemhub.model.SingleBondDown(source, target);
+                        return new jchemhub.model.Bond(source, target);
                 case jchemhub.io.smiles.BondStereo.NONE:
-                        return new jchemhub.model.SingleBond(source, target);
+                        return new jchemhub.model.Bond(source, target);
                 default:
                         throw new Error("invalid bond type/stereo [" + type + "]/["
                                         + stereo + "]");
                 };
         case jchemhub.io.smiles.BondType.DOUBLE_BOND:
-                return new jchemhub.model.DoubleBond(source, target);
+                return new jchemhub.model.Bond(source, target, 2);
         case jchemhub.io.smiles.BondType.TRIPLE_BOND:
-                return new jchemhub.model.TripleBond(source, target);
+                return new jchemhub.model.Bond(source, target, 3);
         case jchemhub.io.smiles.BondType.AROMATIC_BOND:
-                return new jchemhub.model.AromaticBond(source, target);
+                var bond = new jchemhub.model.Bond(source, target);
+                bond.aromatic = true;
+                return bond;
         case jchemhub.io.smiles.BondType.ANY:
         default:
                 throw new Error("invalid bond type/stereo [" + type + "]/[" + stereo

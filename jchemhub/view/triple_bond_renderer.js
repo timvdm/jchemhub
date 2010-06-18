@@ -19,9 +19,8 @@ goog.inherits(jchemhub.view.TripleBondRenderer, jchemhub.view.BondRenderer);
 jchemhub.view.TripleBondRenderer.prototype.render = function(bond, transform) {
 	group = jchemhub.view.TripleBondRenderer.superClass_.render.call(this, bond,
 			transform);
-	var strokeWidth = this.config.get("bond").stroke.width;
-	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config
-			.get("bond").stroke.color);
+	var strokeWidth = this.config.get("bond")['stroke']['width'];
+	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config.get("bond")['stroke']['color']);
 	var bondFill = null;
 
 	var theta = jchemhub.view.BondRenderer.getTheta(bond);

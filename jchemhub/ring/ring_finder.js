@@ -142,7 +142,7 @@ goog.require('jchemhub.ring.Ring');
             var targetIndex = bond.target.index;
             var sourceCopy = moleculeCopy.getAtom(sourceIndex);
             var targetCopy = moleculeCopy.getAtom(targetIndex);
-            var bondCopy = new jchemhub.model.SingleBond(sourceCopy, targetCopy);
+            var bondCopy = new jchemhub.model.Bond(sourceCopy, targetCopy);
             bondCopy.index = i;
             moleculeCopy.addBond(bondCopy);
         }

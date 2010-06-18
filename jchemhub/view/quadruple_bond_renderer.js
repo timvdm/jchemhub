@@ -20,9 +20,8 @@ jchemhub.view.QuadrupleBondRenderer.prototype.render = function(bond,
 		transform) {
 	jchemhub.view.QuadrupleBondRenderer.superClass_.render.call(this, bond,
 			transform);
-	var strokeWidth = this.config.get("bond").stroke.width;
-	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config
-			.get("bond").stroke.color);
+	var strokeWidth = this.config.get("bond")['stroke']['width'];
+	var bondStroke = new goog.graphics.Stroke(strokeWidth, this.config.get("bond")['stroke']['color']);
 	var bondFill = null;
 
 	var theta = jchemhub.view.BondRenderer.getTheta(bond);

@@ -9,12 +9,9 @@
 	goog.require('goog.testing.jsunit');
 	goog.require('jchemhub.model.Molecule');
 	goog.require('jchemhub.model.Atom');
-    goog.require('jchemhub.model.Atom.Hybridizations');
-	goog.require('jchemhub.model.SingleBond');
-	goog.require('jchemhub.model.SingleBondUp');
-	goog.require('jchemhub.model.AromaticBond');
-	goog.require('jchemhub.model.DoubleBond');
-    goog.require('jchemhub.model.PseudoAtom');
+        goog.require('jchemhub.model.Atom.Hybridizations');
+	goog.require('jchemhub.model.Bond');
+        goog.require('jchemhub.model.PseudoAtom');
 </script>
 <script>
 	var mol;
@@ -144,12 +141,19 @@
 		var atom5=new jchemhub.model.Atom("C");
 		var atom6=new jchemhub.model.Atom("C");
 		
-		mol.addBond(new jchemhub.model.AromaticBond(atom1,atom2));
-		mol.addBond(new jchemhub.model.AromaticBond(atom2,atom3));
-		mol.addBond(new jchemhub.model.AromaticBond(atom3,atom4));
-		mol.addBond(new jchemhub.model.AromaticBond(atom4,atom5));
-		mol.addBond(new jchemhub.model.AromaticBond(atom5,atom6));
-		mol.addBond(new jchemhub.model.AromaticBond(atom6,atom1));
+		mol.addBond(new jchemhub.model.Bond(atom1,atom2));
+		mol.addBond(new jchemhub.model.Bond(atom2,atom3));
+		mol.addBond(new jchemhub.model.Bond(atom3,atom4));
+		mol.addBond(new jchemhub.model.Bond(atom4,atom5));
+		mol.addBond(new jchemhub.model.Bond(atom5,atom6));
+		mol.addBond(new jchemhub.model.Bond(atom6,atom1));
+
+                mol.bonds[0].aromatic = true;
+                mol.bonds[1].aromatic = true;
+                mol.bonds[2].aromatic = true;
+                mol.bonds[3].aromatic = true;
+                mol.bonds[4].aromatic = true;
+                mol.bonds[5].aromatic = true;
 		
 		assertEquals(1, atom1.hydrogenCount());
 		assertEquals(1, atom2.hydrogenCount());
@@ -163,9 +167,10 @@
 		var atom3=new jchemhub.model.Atom("C");
 		var atom4=new jchemhub.model.Atom("C");
 		
-		mol.addBond(new jchemhub.model.SingleBond(atom1,atom2));
-		mol.addBond(new jchemhub.model.SingleBondUp(atom2,atom3));
-		mol.addBond(new jchemhub.model.DoubleBond(atom3,atom4));
+		mol.addBond(new jchemhub.model.Bond(atom1,atom2));
+		mol.addBond(new jchemhub.model.Bond(atom2,atom3));
+                mol.bonds[mol.bonds.length-1].stereo = 'up';
+		mol.addBond(new jchemhub.model.Bond(atom3,atom4, 2));
 		
 		assertEquals(3, atom1.hydrogenCount());
 		assertEquals(2, atom2.hydrogenCount());

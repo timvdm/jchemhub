@@ -17,15 +17,15 @@ goog.inherits(jchemhub.view.PlusRenderer, jchemhub.view.Renderer);
 
 jchemhub.view.PlusRenderer.prototype.render = function(coord, transform) {
 
-	var w = this.config.get('plus').size;
+	var w = this.config.get('plus')['size'];
 	h0 = new goog.math.Coordinate(coord.x, coord.y - w);
 	h1 = new goog.math.Coordinate(coord.x, coord.y + w);
 	v0 = new goog.math.Coordinate(coord.x - w, coord.y);
 	v1 = new goog.math.Coordinate(coord.x + w, coord.y);
 
 	var path = new goog.graphics.Path();
-	var stroke = new goog.graphics.Stroke(this.config.get("plus").stroke.width,
-			this.config.get("plus").stroke.color);
+	var stroke = new goog.graphics.Stroke(this.config.get("plus")['stroke']['width'],
+			this.config.get("plus")['stroke']['color']);
 
 	var coords = transform.transformCoords( [ h0, h1, v0, v1 ]);
 
@@ -43,11 +43,11 @@ jchemhub.view.PlusRenderer.prototype.render = function(coord, transform) {
  * A default configuration for renderer
  */
 jchemhub.view.PlusRenderer.defaultConfig = {
-	plus : {
-		size : .25,
-		stroke : {
-			width : 2,
-			color : "black"
+	'plus' : {
+		'size' : .25,
+		'stroke' : {
+			'width' : 2,
+			'color' : "black"
 		}
 	}
 }

@@ -20,7 +20,7 @@ jchemhub.view.SingleUpBondRenderer.prototype.render = function(bond, transform, 
 	jchemhub.view.SingleUpBondRenderer.superClass_.render.call(this, bond,
 			transform);
 
-	var strokeWidth = this.config.get("bond").stroke.width / 10;
+	var strokeWidth = this.config.get("bond")['stroke']['width'] / 10;
 
 	var theta = jchemhub.view.BondRenderer.getTheta(bond);
 	var angle_left = theta + (Math.PI / 2);

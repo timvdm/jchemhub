@@ -13,9 +13,7 @@
 	goog.require('jchemhub.view.AtomRenderer');
 	goog.require('jchemhub.model.Atom');
 	goog.require('jchemhub.model.Molecule');
-	goog.require('jchemhub.model.SingleBond');
-	goog.require('jchemhub.model.DoubleBond');
-	goog.require('jchemhub.model.TripleBond');
+	goog.require('jchemhub.model.Bond');
 	goog.require('goog.events.EventType');
 	goog.require('goog.dom');
 	goog.require('goog.graphics');
@@ -41,14 +39,14 @@ function initPage(){
 	var mol1 = new jchemhub.model.Molecule();
 	var c1 = new jchemhub.model.Atom("C", 2, -2);
 	var o1 = new jchemhub.model.Atom("O", 3, -3);
-	mol1.addBond(new jchemhub.model.SingleBond(c1, o1));
+	mol1.addBond(new jchemhub.model.Bond(c1, o1));
 	r.render(c1, trans, group);
 	r.render(o1, trans, group);
 	
 	var mol2 = new jchemhub.model.Molecule();
 	var c2 = new jchemhub.model.Atom("C", 5, -2);
 	var o2 = new jchemhub.model.Atom("O", 6, -2);
-	mol2.addBond(new jchemhub.model.DoubleBond(c2, o2));
+	mol2.addBond(new jchemhub.model.Bond(c2, o2, 2));
 	trans = new jchemhub.graphics.AffineTransform(30,0,0,-30,0,0);
 	r.render(c2, trans, group);
 	r.render(o2, trans, group);
@@ -56,7 +54,7 @@ function initPage(){
 	var mol3 = new jchemhub.model.Molecule();
 	var c3 = new jchemhub.model.Atom("C", 7, -2);
 	var c4 = new jchemhub.model.Atom("C", 8, -2);
-	mol3.addBond(new jchemhub.model.TripleBond(c3, c4));
+	mol3.addBond(new jchemhub.model.Bond(c3, c4, 3));
 	trans = new jchemhub.graphics.AffineTransform(40,0,0,-40,0,0);
 	r.render(c3, trans, group);
 	r.render(c4, trans, group);
@@ -70,10 +68,10 @@ function initPage(){
 	var br = new jchemhub.model.Atom("Br", 6, -5);
 	var i = new jchemhub.model.Atom("I", 8, -4);
 	var h = new jchemhub.model.Atom("H", 8, -5);
-	mol4.addBond(new jchemhub.model.SingleBond(n,s));
-	mol4.addBond(new jchemhub.model.SingleBond(p, cl));
-	mol4.addBond(new jchemhub.model.SingleBond(f, br));
-	mol4.addBond(new jchemhub.model.SingleBond(i,h));
+	mol4.addBond(new jchemhub.model.Bond(n,s));
+	mol4.addBond(new jchemhub.model.Bond(p, cl));
+	mol4.addBond(new jchemhub.model.Bond(f, br));
+	mol4.addBond(new jchemhub.model.Bond(i,h));
 	
 	trans = new jchemhub.graphics.AffineTransform(30,0,0,-30,0,0);
 	r.render(n, trans, group);

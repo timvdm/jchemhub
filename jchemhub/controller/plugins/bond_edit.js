@@ -1,13 +1,7 @@
 goog.provide('jchemhub.controller.plugins.BondEdit');
 goog.require('jchemhub.controller.Plugin');
 goog.require('goog.debug.Logger');
-goog.require('jchemhub.model.SingleBond');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.TripleBond');
-goog.require('jchemhub.model.QuadrupleBond');
-goog.require('jchemhub.model.SingleBondUp');
-goog.require('jchemhub.model.SingleBondDown');
-goog.require('jchemhub.model.SingleBondUpOrDown');
+goog.require('jchemhub.model.Bond');
 
 /**
  * @constructor
@@ -52,25 +46,25 @@ jchemhub.controller.plugins.BondEdit.prototype.execCommandInternal = function(
  */
 jchemhub.controller.plugins.BondEdit.BOND_TYPES = [ {
 	caption : "Single",
-	klass : jchemhub.model.SingleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Double",
-	klass : jchemhub.model.DoubleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Triple",
-	klass : jchemhub.model.TripleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Quadruple",
-	klass : jchemhub.model.QuadrupleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Single Up",
-	klass : jchemhub.model.SingleBondUp
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Single Down",
-	klass : jchemhub.model.SingleBondDown
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Single Up or Down",
-	klass : jchemhub.model.SingleBondUpOrDown
+	klass : jchemhub.model.Bond
 } ]
 
 /**
@@ -90,19 +84,20 @@ jchemhub.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
 		this.addBondToAtom(target);
 	}
 	if (target instanceof jchemhub.model.Bond) {
-		this.addBondToBond(target);
+		this.replaceBond(target);
 	}
 	this.editorObject.dispatchChange();
 	// }
 
 };
 
-jchemhub.controller.plugins.BondEdit.prototype.addBondToBond = function(bond) {
+jchemhub.controller.plugins.BondEdit.prototype.replaceBond = function(bond) {
 
 	if (this.bond_klass) {
 		this.editorObject.dispatchBeforeChange();
-		if ((bond instanceof jchemhub.model.SingleBondUp && this.bond_klass == jchemhub.model.SingleBondUp)
-				|| (bond instanceof jchemhub.model.SingleBondDown && this.bond_klass == jchemhub.model.SingleBondDown)) {
+		if (bond.stereo) {
+		//if ((e.bond instanceof jchemhub.model.SingleBondUp && this.bond_klass == jchemhub.model.SingleBondUp)
+		//		|| (e.bond instanceof jchemhub.model.SingleBondDown && this.bond_klass == jchemhub.model.SingleBondDown)) {
 			var new_bond = new this.bond_klass(bond.target, bond.source);
 		} else {
 			var new_bond = new this.bond_klass(bond.source, bond.target);
@@ -113,14 +108,6 @@ jchemhub.controller.plugins.BondEdit.prototype.addBondToBond = function(bond) {
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
 	}
-
-};
-
-jchemhub.controller.plugins.BondEdit.prototype.handleAtomMouseDown = function(e) {
-
-	this.editorObject.dispatchBeforeChange();
-	this.addBondToAtom(e.atom);
-	this.editorObject.dispatchChange();
 
 };
 

@@ -28,11 +28,11 @@ jchemhub.view.BondRenderer.prototype.render = function(bond, transform) {
 
 jchemhub.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
 
-	var strokeWidth = this.config.get("bond").stroke.width * 2;
-	var color = this.config.get("highlight").color;
+	var strokeWidth = this.config.get("bond")['stroke']['width'] * 2;
+	var color = this.config.get("highlight")['color'];
 	var stroke = new goog.graphics.Stroke(strokeWidth, color);
 	var fill = null;
-	var radius = this.config.get("highlight").radius
+	var radius = this.config.get("highlight")['radius']
 			* this.transform.getScaleX();
 	var theta = -jchemhub.view.BondRenderer.getTheta(bond) * 180 / Math.PI;
 	var angle = theta + 90;
@@ -76,10 +76,18 @@ jchemhub.view.BondRenderer.hasSymbol = function(atom) {
  * A default configuration for renderer
  */
 jchemhub.view.BondRenderer.defaultConfig = {
-
-	highlight : {
-		radius : .3,
-		color : 'blue'
+	'bond' : {
+		'stroke' : {
+			'width' : 2,
+			'color' : 'black'
+		},
+		'fill' : {
+			'color' : 'black'
+		}
+	},
+	'highlight' : {
+		'radius' : .3,
+		'color' : 'blue'
 	}
 };
 

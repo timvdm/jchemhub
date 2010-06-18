@@ -47,7 +47,7 @@ goog.require('jchemhub.query.Query');
             var source = query.getAtom(molecule.indexOfAtom(bond.source));
             var target = query.getAtom(molecule.indexOfAtom(bond.target));
             var qbond = new jchemhub.query.QueryBond(source, target);
-            qbond.orders.push(bond.constructor.ORDER);
+            qbond.orders.push(bond.order);
             query.addBond(qbond);
         }
 
