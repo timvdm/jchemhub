@@ -51,60 +51,45 @@ jchemhub.controller.plugins.Erase.prototype.execCommandInternal = function(
 
 };
 
-jchemhub.controller.plugins.Erase.prototype.handleBondMouseDown = function(e) {
+jchemhub.controller.plugins.Erase.prototype.handleMouseDown = function(e) {
 
 	if (this.isActive) {
 		this.editorObject.dispatchBeforeChange();
-		this.eraseBond(e.bond);
+		var target = this.editorObject.findTarget(e);
+		if (target instanceof jchemhub.model.Atom) {
+			this.eraseAtom(target);
+		}
+		if (target instanceof jchemhub.model.Bond) {
+			this.eraseBond(target);
+		}
 		this.editorObject.dispatchChange();
 	}
 
 };
 
-jchemhub.controller.plugins.Erase.prototype.handleAtomMouseDown = function(e) {
-	if (this.isActive) {
-		this.editorObject.dispatchBeforeChange();
-		var atom = e.atom;
-		var molecule = atom.molecule;
-		goog.array.forEach(atom.bonds.getValues(), function(bond){
-			molecule.removeBond(bond);
-		});
-		molecule.removeAtom(atom);
-		this.editorObject.setModels(this.editorObject.getModels());
-		this.editorObject.dispatchChange();
-	}
+jchemhub.controller.plugins.Erase.prototype.eraseAtom = function(atom) {
+	var molecule = atom.molecule;
+	goog.array.forEach(atom.bonds.getValues(), function(bond) {
+		molecule.removeBond(bond);
+	});
+	molecule.removeAtom(atom);
+	this.editorObject.setModels(this.editorObject.getModels());
 };
 
-jchemhub.controller.plugins.Erase.prototype.handleArrowMouseDown = function(e) {
-	if (this.isActive){
-		this.editorObject.dispatchBeforeChange();
-		this.eraseArrow(e.coord);
-		this.editorObject.dispatchChange();
-	}
-}
-
-jchemhub.controller.plugins.Erase.prototype.handlePlusMouseDown = function(e) {
-	if (this.isActive){
-		this.editorObject.dispatchBeforeChange();
-		this.erasePlus(e.coord);
-		this.editorObject.dispatchChange();
-	}
-}
-
-jchemhub.controller.plugins.Erase.prototype.eraseBond=function(bond){
+jchemhub.controller.plugins.Erase.prototype.eraseBond = function(bond) {
 	var molecule = bond.molecule;
 	molecule.removeBond(bond);
 	this.editorObject.setModels(this.editorObject.getModels());
 
 };
 
-jchemhub.controller.plugins.Erase.prototype.erasePlus = function(coord){
+jchemhub.controller.plugins.Erase.prototype.erasePlus = function(coord) {
 	var reaction = coord.reaction;
 	reaction.removePlus(coord);
 	this.editorObject.setModels(this.editorObject.getModels());
 };
 
-jchemhub.controller.plugins.Erase.prototype.eraseArrow = function(coord){
+jchemhub.controller.plugins.Erase.prototype.eraseArrow = function(coord) {
 	var reaction = coord.reaction;
 	reaction.removeArrow(coord);
 	this.editorObject.setModels(this.editorObject.getModels());

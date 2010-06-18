@@ -388,17 +388,15 @@ jchemhub.controller.ReactionEditor.prototype.findTarget = function(e) {
 }
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseOver_ = function(e) {
-	// this.logger.info("handleMouseOver_");
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEOVER, e);
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseOut_ = function(e) {
-	// this.logger.info("handleMouseOut_");
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEOUT, e);
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseMove_ = function(e) {
-
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEMOVE, e);
-
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
@@ -1003,42 +1001,6 @@ jchemhub.controller.ReactionEditor.prototype.setupChangeListeners_ = function() 
 	this.addListener(goog.events.EventType.MOUSEOUT, this.handleMouseOut_);
 	this.addListener(goog.events.EventType.MOUSEMOVE, this.handleMouseMove_);
 
-	this.addEventListener(
-			jchemhub.controller.AtomController.EventType.MOUSEOUT,
-			this.handleAtomMouseOut_);
-	this.addEventListener(
-			jchemhub.controller.AtomController.EventType.MOUSEOVER,
-			this.handleAtomMouseOver_);
-	this.addEventListener(
-			jchemhub.controller.AtomController.EventType.MOUSEDOWN,
-			this.handleAtomMouseDown_);
-	this.addEventListener(
-			jchemhub.controller.BondController.EventType.MOUSEOUT,
-			this.handleBondMouseOut_);
-	this.addEventListener(
-			jchemhub.controller.BondController.EventType.MOUSEOVER,
-			this.handleBondMouseOver_);
-	this.addEventListener(
-			jchemhub.controller.BondController.EventType.MOUSEDOWN,
-			this.handleBondMouseDown_);
-	this.addEventListener(
-			jchemhub.controller.ArrowController.EventType.MOUSEOVER,
-			this.handleArrowMouseOver_);
-	this.addEventListener(
-			jchemhub.controller.ArrowController.EventType.MOUSEOUT,
-			this.handleArrowMouseOut_);
-	this.addEventListener(
-			jchemhub.controller.ArrowController.EventType.MOUSEDOWN,
-			this.handleArrowMouseDown_);
-	this.addEventListener(
-			jchemhub.controller.PlusController.EventType.MOUSEOVER,
-			this.handlePlusMouseOver_);
-	this.addEventListener(
-			jchemhub.controller.PlusController.EventType.MOUSEOUT,
-			this.handlePlusMouseOut_);
-	this.addEventListener(
-			jchemhub.controller.PlusController.EventType.MOUSEDOWN,
-			this.handlePlusMouseDown_);
 };
 
 /**
