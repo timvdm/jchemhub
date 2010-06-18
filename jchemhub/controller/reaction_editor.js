@@ -384,10 +384,7 @@ jchemhub.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
 jchemhub.controller.ReactionEditor.prototype.findTarget = function(e){
 	var trans = this.reactionRenderer.transform.createInverse();
 	var target = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)])[0];
-	var nearest = this.neighborList.getNearestList({x:target.x, y:target.y})[0];
-	if (nearest){
-		return nearest.obj;
-	}
+	return this.neighborList.getNearest({x:target.x, y:target.y});
 }
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseOver_ = function(e) {
