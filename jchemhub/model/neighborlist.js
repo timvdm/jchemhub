@@ -2,25 +2,40 @@ goog.provide('jchemhub.model.NeighborList');
 goog.require('goog.math.Vec2');
 
 (function () {
- function debug(text, noNewLine) {
-    var logDiv = document.getElementById("logDiv");
-    if (!logDiv) {
-        var body = document.getElementsByTagName("body")[0];
-        logDiv = document.createElement("div");
-        logDiv.id = "logDiv";
-        body.appendChild(logDiv);
-    }
-    if (noNewLine) {
-        logDiv.innerHTML += text;
-    } else {
-        logDiv.innerHTML += text + "<br>";
-    }
-};
 
-    jchemhub.model.NeighborList = function(objects) {
+    function debug(text, noNewLine) {
+        var logDiv = document.getElementById("logDiv");
+        if (!logDiv) {
+        var body = document.getElementsByTagName("body")[0];
+            logDiv = document.createElement("div");
+            logDiv.id = "logDiv";
+            body.appendChild(logDiv);
+        }
+        if (noNewLine) {
+            logDiv.innerHTML += text;
+        } else {
+        logDiv.innerHTML += text + "<br>";
+        }
+    };
+
+    /**
+     * Class for computing the object for a specified coordinate.
+     *
+     * <pre class="code">
+     * var neighborList = new jchemhub.model.NeighborList(molecule);
+     * neighborList.getNearest({ x: 4, y: 5 });
+     * </pre>
+     *
+     * @class Class for computing objects for a specfied coordinate.
+     * @param {Array.<Object>} objects The objects to initialize the grid.
+     * @param {Number} opt_cellSize The cell size, default is 2. This is in atomic units.
+     * @param {Number} opt_tolerance The tolerance to consider an atom close enough
+     *        to the specified coordinate. The default is 0.3. This is in atomic units.
+     */
+    jchemhub.model.NeighborList = function(objects, opt_cellSize, opt_tolerance) {
         this.cells = [];
-        this.cellSize = 5;
-        this.tolerance = 5;
+        this.cellSize = opt_cellSize ? opt_cellSize : 2;
+        this.tolerance = opt_tolerance ? opt_tolerance : 0.3;
         this.xMin = 100000;
         this.yMin = 100000;
         this.xMax = -100000;
@@ -108,7 +123,44 @@ goog.require('goog.math.Vec2');
         return cells;    
     }
 
-       
+    function triangleSign(a, b, c)
+    {
+        return (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);
+    }
+
+    function isCoordInBondBoundingBox(coord, bond, tolerance) {
+        var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(bond.source.coord, bond.target.coord));
+        var bondLength = bv.magnitude();
+        bv.scale(1 / bondLength);
+        var orthogonal = new goog.math.Vec2(bv.y, -bv.x);
+        orthogonal.scale(tolerance);
+        var corners = [ goog.math.Coordinate.sum(bond.source.coord, orthogonal),
+                        goog.math.Coordinate.sum(bond.target.coord, orthogonal),
+                        goog.math.Coordinate.difference(bond.target.coord, orthogonal),
+                        goog.math.Coordinate.difference(bond.source.coord, orthogonal) ];
+        var sign1 = triangleSign(corners[0], corners[1], coord);
+        var sign2 = triangleSign(corners[1], corners[2], coord);
+        var sign3 = triangleSign(corners[2], corners[3], coord);
+        var sign4 = triangleSign(corners[3], corners[0], coord);
+        if (sign1 * sign2 > 0 && sign3 * sign4 > 0 && sign2 * sign3 > 0) {
+            return true;
+        }
+        return false;
+    }
+
+ 
+
+    /**
+     * Get the nearest object for the specified coordinate. Atoms have higher priority
+     * than bonds since bonds will overlap with atoms. For atoms, the distance from the
+     * specified coordinate to the atom coordinate is checked. If this is within the 
+     * used tolerance, the atom is a candidate. The search goes on untill all near atoms
+     * in the neighboring cells are checked and the nearest atom is returned. For bonds,
+     * a bounding box with a 2 * tolerance width and length of the bond is used to check
+     * is within the (rotated) box. Any bond matching the coordinate are assigned the
+     * tolerance as distance resulting in atoms having a higher priority (The atom will
+     * be closer than tolerance...).
+     */       
     jchemhub.model.NeighborList.prototype.getNearest = function(coord) {
         var cells = cellsAroundCoord(this, coord);
         var rMin = this.tolerance, nearest = null;
@@ -124,9 +176,8 @@ goog.require('goog.math.Vec2');
                     }
                 } else
                 if (obj instanceof jchemhub.model.Bond) {
-                    var r = goog.math.Coordinate.distance(obj.midPoint, coord);
-                    if (r < rMin) {
-                        rMin = r;
+                    if (!nearest && isCoordInBondBoundingBox(coord, obj, this.tolerance)) {
+                        rMin = this.tolerance;
                         nearest = obj;
                     }
                 }
@@ -135,7 +186,10 @@ goog.require('goog.math.Vec2');
 
         return nearest;
     };
-    
+   
+    /**
+     * Get a list of all objects for the specified coordinate. See getNearest for details.
+     */
     jchemhub.model.NeighborList.prototype.getNearestList = function(coord) {
         var nearest = [];
         var cells = cellsAroundCoord(this, coord);
@@ -151,9 +205,8 @@ goog.require('goog.math.Vec2');
                     }
                 } else
                 if (obj instanceof jchemhub.model.Bond) {
-                    var r = goog.math.Coordinate.distance(obj.midPoint, coord);
-                    if (r < this.tolerance) {
-                        nearest.push({ obj: obj, distance: r });
+                    if (isCoordInBondBoundingBox(coord, obj, this.tolerance)) {
+                        nearest.push({ obj: obj, distance: this.tolerance });
                     }
                 }
             }

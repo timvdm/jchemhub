@@ -16,14 +16,19 @@ jchemhub.view.BondRenderer = function(controller, graphics, opt_config, defaultC
 }
 goog.inherits(jchemhub.view.BondRenderer, jchemhub.view.Renderer);
 /**
+ * Currently does nothing.
  * 
  * @param {jchemhub.model.Bond} bond
  * @param {jchemhub.graphics.AffineTransform} transform
  * @return {goog.graphics.GroupElement}
  */
+<<<<<<< HEAD:jchemhub/view/bond_renderer.js
 jchemhub.view.BondRenderer.prototype.render = function(bond, transform) {
 	this.transform = transform;
 
+=======
+jchemhub.view.BondRenderer.prototype.render = function(bond, transform, group) {
+>>>>>>> 1178db1798b4502392f2132049bdf03018f39b3f:jchemhub/view/bond_renderer.js
 };
 
 jchemhub.view.BondRenderer.prototype.highlightOn = function(bond, opt_group) {
@@ -67,7 +72,9 @@ jchemhub.view.BondRenderer.getTheta = function(bond) {
 			.getTheta();
 }
 
-
+/**
+ * @return True if the atom has a displayed symbol
+ */
 jchemhub.view.BondRenderer.hasSymbol = function(atom) {
     return (atom.symbol != "C" || atom.countBonds() == 1);
 }
@@ -76,12 +83,18 @@ jchemhub.view.BondRenderer.hasSymbol = function(atom) {
  * A default configuration for renderer
  */
 jchemhub.view.BondRenderer.defaultConfig = {
-
+	bond : {
+		stroke : {
+			width : 2,
+			color : 'black'
+		},
+		fill : {
+			color : 'black'
+		}
+	},
 	highlight : {
 		radius : .3,
 		color : 'blue'
 	}
 };
-
-
 

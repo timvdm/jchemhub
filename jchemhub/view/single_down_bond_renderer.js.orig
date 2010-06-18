@@ -16,10 +16,18 @@ jchemhub.view.SingleDownBondRenderer = function(controller, graphics, opt_config
 }
 goog.inherits(jchemhub.view.SingleDownBondRenderer, jchemhub.view.BondRenderer);
 
-jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform, path) {
+<<<<<<< HEAD:jchemhub/view/single_down_bond_renderer.js
+jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform) {
 	jchemhub.view.SingleDownBondRenderer.superClass_.render.call(this, bond,
 			transform);
+=======
+jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform,
+		/*group*/ path) {
+//	jchemhub.view.SingleDownBondRenderer.superClass_.render.call(this, bond,
+//			transform, group);
+>>>>>>> 1178db1798b4502392f2132049bdf03018f39b3f:jchemhub/view/single_down_bond_renderer.js
 
+//	var path = new goog.graphics.Path();
 	var width = this.config.get("bond").stroke.width / 10;
 	var theta = jchemhub.view.BondRenderer.getTheta(bond);
 
@@ -65,6 +73,10 @@ jchemhub.view.SingleDownBondRenderer.prototype.render = function(bond, transform
 
 
 
+<<<<<<< HEAD:jchemhub/view/single_down_bond_renderer.js
+	this.graphics.drawPath(path, stroke, fill);
+=======
 //	this.graphics.drawPath(path, stroke, fill, group);
+>>>>>>> 1178db1798b4502392f2132049bdf03018f39b3f:jchemhub/view/single_down_bond_renderer.js
 
 }
