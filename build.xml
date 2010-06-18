@@ -61,6 +61,7 @@
 	</target>
 
 	<macrodef name="calcdeps">
+                <attribute name="inputfiles" default="${jsfiles}" />
 		<attribute name="outputfile" />
 		<attribute name="compilerjarfile" default="${closure-compiler.jar}" />
 		<attribute name="compilationlevel" default="ADVANCED_OPTIMIZATIONS" />
@@ -70,7 +71,7 @@
 			<mkdir dir="${build.dir}" />
 			<exec executable="python" failonerror="true" logError="true" output="${build.dir}/@{outputfile}">
 				<arg value="${base.dir}/scripts/calcdeps.py" />
-				<arg line='-i ${jsfiles}' />
+				<arg line='-i @{inputfiles}' />
 				<arg line='-p ${closure-library.dir}' />
 				<arg line='-p ${js-src.dir}' />
 				<arg line="-o @{outputmode}" />
@@ -148,6 +149,12 @@
 	<target name="compile-whitespace-only" description="compile with WHITESPACE_ONLY setting">
 		<calcdeps outputfile="jchemhub-whitespace-only.js" compilationlevel="WHITESPACE_ONLY" />
 	</target>
+
+        <!-- Custom targets with advanced optimizations -->
+        <target name="compile-depict" description="compile with advanced optimizations and export the depcition symbols">
+		<calcdeps outputfile="jchemhub-depict.min.js" compilationlevel="ADVANCED_OPTIMIZATIONS" 
+                          inputfiles="${base.dir}/exports/depict.js" />
+        </target>
 
         <!-- Add namespaces to enable use in NodeJs -->
 
