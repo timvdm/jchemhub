@@ -13,7 +13,7 @@ goog.require('jchemhub.controller.plugins.ClearEditor');
 goog.require('jchemhub.controller.plugins.Zoom');
 goog.require('jchemhub.controller.plugins.BondEdit');
 goog.require('jchemhub.controller.plugins.Highlight');
-goog.require('jchemhub.controller.plugins.SymbolSelect');
+goog.require('jchemhub.controller.plugins.AtomEdit');
 goog.require('jchemhub.controller.plugins.UndoRedo');
 goog.require('jchemhub.controller.plugins.ArrowPlusEdit');
 
@@ -251,7 +251,7 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
     buttons.push(jchemhub.controller.ToolbarFactory.makeButton(jchemhub.controller.plugins.UndoRedo.COMMAND.REDO, 'redo', 'redo'));
     buttons.push(jchemhub.controller.ToolbarFactory.makeToggleButton(jchemhub.controller.plugins.Erase.COMMAND, 'erase', 'erase'));
   
-    var atom_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.SymbolSelect.COMMAND, 'select Symbol', 'Symbol');
+    var atom_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.AtomEdit.COMMAND, 'select Symbol', 'Symbol');
     var atom_menu = new goog.ui.Menu();
     atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:black"},'C')));
     atom_menu.addItem(new goog.ui.Option(goog.dom.createDom(goog.dom.TagName.DIV,{style:"color:blue"},'N')));
