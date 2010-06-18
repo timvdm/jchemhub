@@ -17,7 +17,6 @@
 <link rel="stylesheet"	href="../../css/demo.css" />
 
 <script>
-
 	goog.require('goog.events.EventType');
 	goog.require('goog.dom');
 	goog.require('jchemhub.io.json');
@@ -28,7 +27,7 @@
 	goog.require('jchemhub.controller.plugins.UndoRedo');
 	goog.require('jchemhub.controller.plugins.Highlight');
 	goog.require('jchemhub.controller.plugins.SymbolSelect');
-	goog.require('jchemhub.controller.plugins.BondSelect');
+	goog.require('jchemhub.controller.plugins.BondEdit');
 	goog.require('jchemhub.controller.plugins.ArrowPlusEdit');
 	goog.require('jchemhub.controller.plugins.Erase');
     goog.require('jchemhub.io.mdl');
@@ -52,7 +51,7 @@ function initPage(){
 	editor.registerPlugin(new jchemhub.controller.plugins.UndoRedo());
 	editor.registerPlugin(new jchemhub.controller.plugins.Highlight());
 	editor.registerPlugin(new jchemhub.controller.plugins.SymbolSelect());
-	editor.registerPlugin(new jchemhub.controller.plugins.BondSelect());
+	editor.registerPlugin(new jchemhub.controller.plugins.BondEdit());
 	editor.registerPlugin(new jchemhub.controller.plugins.Erase());
 	editor.registerPlugin(new jchemhub.controller.plugins.ArrowPlusEdit());
 	
@@ -74,7 +73,7 @@ function initPage(){
     select1.addItem(new goog.ui.MenuItem('8', 8));
     select1.addItem(new goog.ui.MenuItem('9', 9));
     select1.addItem(new goog.ui.MenuItem('10', 10));
-    select1.addItem(new goog.ui.MenuItem('11 (not too large any more)', 11));
+    select1.addItem(new goog.ui.MenuItem('11 (not too large any more!)', 11));
     select1.addItem(new goog.ui.MenuItem('12', 12));
     
     select1.setSelectedIndex(0);

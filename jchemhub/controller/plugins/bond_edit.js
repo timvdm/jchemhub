@@ -1,4 +1,4 @@
-goog.provide('jchemhub.controller.plugins.BondSelect');
+goog.provide('jchemhub.controller.plugins.BondEdit');
 goog.require('jchemhub.controller.Plugin');
 goog.require('goog.debug.Logger');
 goog.require('jchemhub.model.SingleBond');
@@ -11,29 +11,28 @@ goog.require('jchemhub.model.SingleBondUpOrDown');
 
 /**
  * @constructor
- * @extends{jchemhubn.controller.Plugin}s
+ * @extends{jchemhub.controller.Plugin}s
  */
-jchemhub.controller.plugins.BondSelect = function() {
+jchemhub.controller.plugins.BondEdit = function() {
 	jchemhub.controller.Plugin.call(this);
 
 }
-goog.inherits(jchemhub.controller.plugins.BondSelect,
-		jchemhub.controller.Plugin);
+goog.inherits(jchemhub.controller.plugins.BondEdit, jchemhub.controller.Plugin);
 
 /**
  * Command implemented by this plugin.
  */
-jchemhub.controller.plugins.BondSelect.COMMAND = 'selectBond';
+jchemhub.controller.plugins.BondEdit.COMMAND = 'selectBond';
 
 /** @inheritDoc */
-jchemhub.controller.plugins.BondSelect.prototype.isSupportedCommand = function(
+jchemhub.controller.plugins.BondEdit.prototype.isSupportedCommand = function(
 		command) {
-	return command == jchemhub.controller.plugins.BondSelect.COMMAND;
+	return command == jchemhub.controller.plugins.BondEdit.COMMAND;
 };
 
 /** @inheritDoc */
-jchemhub.controller.plugins.BondSelect.prototype.getTrogClassId = goog.functions
-		.constant(jchemhub.controller.plugins.BondSelect.COMMAND);
+jchemhub.controller.plugins.BondEdit.prototype.getTrogClassId = goog.functions
+		.constant(jchemhub.controller.plugins.BondEdit.COMMAND);
 
 /**
  * sets atom symbol.
@@ -42,7 +41,7 @@ jchemhub.controller.plugins.BondSelect.prototype.getTrogClassId = goog.functions
  *            command Command to execute.
  * @return {Object|undefined} The result of the command.
  */
-jchemhub.controller.plugins.BondSelect.prototype.execCommandInternal = function(
+jchemhub.controller.plugins.BondEdit.prototype.execCommandInternal = function(
 		command, var_args) {
 
 	this.bond_klass = arguments[1];
@@ -51,7 +50,7 @@ jchemhub.controller.plugins.BondSelect.prototype.execCommandInternal = function(
 /**
  * @enum {Object}
  */
-jchemhub.controller.plugins.BondSelect.BOND_TYPES = [ {
+jchemhub.controller.plugins.BondEdit.BOND_TYPES = [ {
 	caption : "Single",
 	klass : jchemhub.model.SingleBond
 }, {
@@ -80,22 +79,36 @@ jchemhub.controller.plugins.BondSelect.BOND_TYPES = [ {
  * @type {goog.debug.Logger}
  * @protected
  */
-jchemhub.controller.plugins.BondSelect.prototype.logger = goog.debug.Logger
-		.getLogger('jchemhub.controller.plugins.BondSelect');
+jchemhub.controller.plugins.BondEdit.prototype.logger = goog.debug.Logger
+		.getLogger('jchemhub.controller.plugins.BondEdit');
 
-jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
-		e) {
+jchemhub.controller.plugins.BondEdit.prototype.handleMouseDown = function(e) {
+	// if (this.isActive) {
+	this.editorObject.dispatchBeforeChange();
+	var target = this.editorObject.findTarget(e);
+	if (target instanceof jchemhub.model.Atom) {
+		this.addBondToAtom(target);
+	}
+	if (target instanceof jchemhub.model.Bond) {
+		this.addBondToBond(target);
+	}
+	this.editorObject.dispatchChange();
+	// }
+
+};
+
+jchemhub.controller.plugins.BondEdit.prototype.addBondToBond = function(bond) {
 
 	if (this.bond_klass) {
 		this.editorObject.dispatchBeforeChange();
-		if ((e.bond instanceof jchemhub.model.SingleBondUp && this.bond_klass == jchemhub.model.SingleBondUp)
-				|| (e.bond instanceof jchemhub.model.SingleBondDown && this.bond_klass == jchemhub.model.SingleBondDown)) {
-			var new_bond = new this.bond_klass(e.bond.target, e.bond.source);
+		if ((bond instanceof jchemhub.model.SingleBondUp && this.bond_klass == jchemhub.model.SingleBondUp)
+				|| (bond instanceof jchemhub.model.SingleBondDown && this.bond_klass == jchemhub.model.SingleBondDown)) {
+			var new_bond = new this.bond_klass(bond.target, bond.source);
 		} else {
-			var new_bond = new this.bond_klass(e.bond.source, e.bond.target);
+			var new_bond = new this.bond_klass(bond.source, bond.target);
 		}
-		var molecule = e.bond.molecule;
-		molecule.removeBond(e.bond);
+		var molecule = bond.molecule;
+		molecule.removeBond(bond);
 		molecule.addBond(new_bond);
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
@@ -103,8 +116,7 @@ jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 
 };
 
-jchemhub.controller.plugins.BondSelect.prototype.handleAtomMouseDown = function(
-		e) {
+jchemhub.controller.plugins.BondEdit.prototype.handleAtomMouseDown = function(e) {
 
 	this.editorObject.dispatchBeforeChange();
 	this.addBondToAtom(e.atom);
@@ -112,7 +124,7 @@ jchemhub.controller.plugins.BondSelect.prototype.handleAtomMouseDown = function(
 
 };
 
-jchemhub.controller.plugins.BondSelect.prototype.addBondToAtom = function(atom) {
+jchemhub.controller.plugins.BondEdit.prototype.addBondToAtom = function(atom) {
 	if (this.bond_klass) {
 		var angles = goog.array.map(atom.bonds.getValues(), function(bond) {
 			return new jchemhub.math.Line(atom.coord,

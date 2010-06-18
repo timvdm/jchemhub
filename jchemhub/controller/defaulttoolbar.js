@@ -11,7 +11,7 @@ goog.require('jchemhub.controller.Command');
 goog.require('jchemhub.controller.plugins.Erase');
 goog.require('jchemhub.controller.plugins.ClearEditor');
 goog.require('jchemhub.controller.plugins.Zoom');
-goog.require('jchemhub.controller.plugins.BondSelect');
+goog.require('jchemhub.controller.plugins.BondEdit');
 goog.require('jchemhub.controller.plugins.Highlight');
 goog.require('jchemhub.controller.plugins.SymbolSelect');
 goog.require('jchemhub.controller.plugins.UndoRedo');
@@ -267,10 +267,10 @@ jchemhub.controller.DefaultToolbar.makeDefaultToolbar = function(elem) {
     buttons.push(atom_select);
     
     
-    var bond_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.BondSelect.COMMAND, 'select Bond Type', 'Bond');
+    var bond_select = jchemhub.controller.ToolbarFactory.makeSelectButton(jchemhub.controller.plugins.BondEdit.COMMAND, 'select Bond Type', 'Bond');
     var bond_menu = new goog.ui.Menu();
     
-    goog.array.forEach(jchemhub.controller.plugins.BondSelect.BOND_TYPES, function(entry){
+    goog.array.forEach(jchemhub.controller.plugins.BondEdit.BOND_TYPES, function(entry){
     	bond_menu.addItem(new goog.ui.Option(entry.caption, entry.klass));
     });
 
