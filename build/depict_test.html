@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>jchemhub.view.MoleculeRenderer</title>
+
+<script src="../third-party/closure/closure/goog/base.js"></script>
+<script src="jchemhub-depict.min.js"></script>
+<script src="../jchemhub/io/io_test_molsample2.js"></script>
+
+<link rel="stylesheet"
+	href="../third-party/closure/closure/goog/demos/css/demo.css">
+	<link rel="stylesheet"
+	href="../third-party/closure/closure/goog/css/menus.css" />
+<link rel="stylesheet"
+	href="../third-party/closure/closure/goog/css/menubutton.css">
+
+<script>
+    goog.require('jchemhub.controller.ReactionEditor');
+    goog.require('jchemhub.io.mdl');
+    goog.require('goog.events.EventType');
+    goog.require('goog.dom');
+    goog.require('goog.debug.Console');
+    goog.require('goog.ui.Select');
+    goog.require('goog.graphics');
+</script>
+
+
+<script>
+
+    function draw(){
+        var sdfs = sdf.split("$$$$\n");
+        var element = goog.dom.getElement('container');
+	var r = new jchemhub.controller.ReactionEditor(element);
+        var timer = goog.now();
+        var molfile = sdfs[1];
+        var mol=jchemhub.io.mdl.readMolfile(molfile);
+        r.setModels([mol]);
+        goog.dom.setTextContent(goog.dom.getElement('perf'), (goog.now() - timer) + 'ms');
+    }
+	
+
+</script>
+</head>
+
+<body onload="draw()">
+
+<h1>Molecule Rendering</h1>
+<fieldset>
+<legend>Demo:</legend> 
+<br>
+<label id="selectMolecule">Select a molecule to render below: </label>
+<br>
+
+<br>
+<div id="container" style="width: 600px; height: 600px"></div>
+<br>
+</fieldset>
+<br> 
+<div id="perf"></div> 
+
+</body>
+</html>
