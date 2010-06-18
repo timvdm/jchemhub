@@ -90,6 +90,36 @@
         assertEquals(3, nearest[2].distance);
     }
     
+    function testTwoMolecules(){
+    	var m1 = new jchemhub.model.Molecule();
+    	var a1 = new jchemhub.model.Atom("C", -1, 1);
+    	var a2 = new jchemhub.model.Atom("C", 0, 0);
+    	var a3 = new jchemhub.model.Atom("C", 1, 1);
+    	var b1 = new jchemhub.model.SingleBond(a1, a2);
+    	var b2 = new jchemhub.model.SingleBond(a2, a3);
+    	m1.addAtom(a1);
+    	m1.addAtom(a2);
+    	m1.addAtom(a3);
+    	m1.addBond(b1);
+    	m1.addBond(b2);
+    	
+    	var m2 = new jchemhub.model.Molecule();
+    	var aa1 = new jchemhub.model.Atom("C", 10, -1);
+    	var aa2 = new jchemhub.model.Atom("C", 11, 0);
+    	var aa3 = new jchemhub.model.Atom("C", 10, 1);
+    	var bb1 = new jchemhub.model.SingleBond(aa1, aa2);
+    	var bb2 = new jchemhub.model.SingleBond(aa2, aa3);
+    	m2.addAtom(aa1);
+    	m2.addAtom(aa2);
+    	m2.addAtom(aa3);
+    	m2.addBond(bb1);
+    	m2.addBond(bb2);
+    	
+    	var nl = new jchemhub.model.NeighborList([m1,m2], 1, .5);
+    	var n = nl.getNearestList({x:11.4, y:0});
+    	assertEquals(aa2, n[0].obj);
+    };
+    
     function testMoleculeWithBonds1() {
     	var mol = new jchemhub.model.Molecule();
     	var a1 = new jchemhub.model.Atom("C", -1, 1);
@@ -103,7 +133,7 @@
     	mol.addBond(b1);
     	mol.addBond(b2);
     	
-    	var nl = new jchemhub.model.NeighborList([mol], 2, 0.2);
+    	var nl = new jchemhub.model.NeighborList([mol], 2, .25);
     	
     	var n = nl.getNearestList({x:0.51, y:0.51});
     	assertEquals('# nearest objects', 1, n.length);

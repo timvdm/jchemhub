@@ -16,6 +16,13 @@ jchemhub.view.DoubleBondRenderer = function(controller, graphics, opt_config) {
 }
 goog.inherits(jchemhub.view.DoubleBondRenderer, jchemhub.view.BondRenderer);
 
+<<<<<<< HEAD:jchemhub/view/double_bond_renderer.js
+jchemhub.view.DoubleBondRenderer.prototype.render = function(bond, transform,
+		group) {
+	jchemhub.view.DoubleBondRenderer.superClass_.render.call(this, bond,
+			transform);
+=======
+>>>>>>> 1178db1798b4502392f2132049bdf03018f39b3f:jchemhub/view/double_bond_renderer.js
 
 function triangleSign(a, b, c)
 {
@@ -28,10 +35,12 @@ function isOnSameSide(bond, p1, p2) {
 
 
 jchemhub.view.DoubleBondRenderer.prototype.render = function(bond, transform, bondPath) {
-	jchemhub.view.DoubleBondRenderer.superClass_.render.call(this, bond,
-			transform);
+
 	var ring = jchemhub.view.DoubleBondRenderer.getFirstRing(bond);
 
+<<<<<<< HEAD:jchemhub/view/double_bond_renderer.js
+		this.graphics.drawPath(bondPath, bondStroke, bondFill);
+=======
 	if (ring) {
             // create the bondvector
             var bv = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.difference(bond.target.coord, bond.source.coord));
@@ -115,6 +124,7 @@ jchemhub.view.DoubleBondRenderer.prototype.render = function(bond, transform, bo
 	    bondPath.lineTo(coords[1].x, coords[1].y);
 	    bondPath.moveTo(coords[2].x, coords[2].y);
 	    bondPath.lineTo(coords[3].x, coords[3].y);
+>>>>>>> 1178db1798b4502392f2132049bdf03018f39b3f:jchemhub/view/double_bond_renderer.js
 	}
 
 };

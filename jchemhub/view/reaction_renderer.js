@@ -46,11 +46,8 @@ jchemhub.view.ReactionRenderer.prototype.render = function(reaction) {
 	var box = this.boundingBox(molecules);
 	var m = this.config.get("margin");
 	box.expand(m.top, m.right, m.bottom, m.left);
-// this.logger.info("box t: " + box.top + " r: " + box.right
-// + " b: " + box.bottom + " l: " + box.left);
 	var transform = this.getTransform(box);
-	
-	// var group = this.graphics.createGroup();
+	this.transform = transform;
 	goog.array.forEach(molecules, function(mol) {
 
 		this.moleculeRenderer.render(mol, transform);
@@ -62,8 +59,6 @@ jchemhub.view.ReactionRenderer.prototype.render = function(reaction) {
 		this.arrowRenderer.render(arrow, transform);
 	},this)
 
-
-	// return group;
 }
 
 

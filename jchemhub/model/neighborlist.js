@@ -1,5 +1,6 @@
 goog.provide('jchemhub.model.NeighborList');
 goog.require('goog.math.Vec2');
+goog.require('goog.array');
 
 (function () {
 
@@ -78,28 +79,25 @@ goog.require('goog.math.Vec2');
             this.cells.push([]);
         }
 
-        // add the objects to the grid      
-        for (var i = 0, li = objects.length; i < li; i++) {
-            var obj = objects[i];
-            if (obj instanceof jchemhub.model.Molecule) {
-                var molecule = obj;
-                for (var i = 0, li = molecule.atoms.length; i < li; i++) {
-                    var atom = molecule.atoms[i]
-                    var x = Math.floor((atom.coord.x - this.xMin) / this.cellSize);
-                    var y = Math.floor((atom.coord.y - this.yMin) / this.cellSize);
-                    this.cells[y * this.xDim + x].push(atom);
-                }
-                for (i = 0, li = molecule.bonds.length; i < li; i++) {
-                    var bond = molecule.bonds[i];
-                    var midPoint = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(bond.source.coord, bond.target.coord));
-                    midPoint.scale(0.5);
-                    bond.midPoint = midPoint;
-                    var x = Math.floor((midPoint.x - this.xMin) / this.cellSize);
-                    var y = Math.floor((midPoint.y - this.yMin) / this.cellSize);
-                    this.cells[y * this.xDim + x].push(bond);
-                }
-            }
-        }
+        // add the objects to the grid    
+        goog.array.forEach(objects, function(obj){
+        	if (obj instanceof jchemhub.model.Molecule) {
+        		 var molecule = obj;
+        		 goog.array.forEach(molecule.atoms, function(atom){
+                     var x = Math.floor((atom.coord.x - this.xMin) / this.cellSize);
+                     var y = Math.floor((atom.coord.y - this.yMin) / this.cellSize);
+                     this.cells[y * this.xDim + x].push(atom);
+        		 },this);
+        		 goog.array.forEach(molecule.bonds, function(bond){
+                     var midPoint = goog.math.Vec2.fromCoordinate(goog.math.Coordinate.sum(bond.source.coord, bond.target.coord));
+                     midPoint.scale(0.5);
+                     bond.midPoint = midPoint;
+                     var x = Math.floor((midPoint.x - this.xMin) / this.cellSize);
+                     var y = Math.floor((midPoint.y - this.yMin) / this.cellSize);
+                     this.cells[y * this.xDim + x].push(bond);
+        		 }, this);
+        	}
+        }, this);
     };
 
 

@@ -19,10 +19,10 @@ jchemhub.view.MoleculeRenderer = function(controller, graphics, opt_config) {
 	this.scale_factor = 1;
 	this.bondController = new jchemhub.controller.BondController(controller);
 	this.bondRendererFactory = new jchemhub.view.BondRendererFactory(
-			this.bondController, graphics, this.config);
+			this.bondController, graphics);
 	this.atomController = new jchemhub.controller.AtomController(controller);
 	this.atomRenderer = new jchemhub.view.AtomRenderer(this.atomController,
-			graphics, this.config);
+			graphics, opt_config);
 }
 goog.inherits(jchemhub.view.MoleculeRenderer, jchemhub.view.Renderer);
 
@@ -54,19 +54,33 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 	var rx = Math.abs(this.transform.getScaleX() * (box.right - box.left) / 2);
 	var ry = Math.abs(this.transform.getScaleY() * (box.bottom - box.top) / 2);
 
-	var bondStroke = new goog.graphics.Stroke(
-			this.config.get("bond").stroke.width,
-			this.config.get("bond").stroke.color);
-	var bondFill = new goog.graphics.SolidFill(
-			this.config.get("bond").fill.color);
+<<<<<<< HEAD:jchemhub/view/molecule_renderer.js
+	goog.array.forEach(molecule.bonds, function(bond) {
+		this.bondRendererFactory.get(bond).render(bond, trans);
+	}, this);
 
-	var bondPath = new goog.graphics.Path();
+=======
+	this.graphics.drawEllipse(t_center.x, t_center.y, rx, ry, stroke, fill,
+			group);
+	// this.logger.info("molecule has " + molecule.bonds.length + " bonds");
+	
+        var bondStroke = new goog.graphics.Stroke(2, 'black');
+	var bondFill = null;
+	var bondFill = new goog.graphics.SolidFill('black');
+
+
+
+        var bondPath = new goog.graphics.Path();
 	goog.array.forEach(molecule.bonds, function(bond) {
 		this.bondRendererFactory.get(bond).render(bond, trans, bondPath);
 	}, this);
-	this.graphics.drawPath(bondPath, bondStroke, bondFill);
-
-	// this.logger.info("molecule has " + molecule.atoms.length + " atoms");
+	this.graphics.drawPath(bondPath, bondStroke, bondFill, group);
+	
+        
+        
+        
+        // this.logger.info("molecule has " + molecule.atoms.length + " atoms");
+>>>>>>> 1178db1798b4502392f2132049bdf03018f39b3f:jchemhub/view/molecule_renderer.js
 	goog.array.forEach(molecule.atoms, function(atom) {
 		this.atomRenderer.render(atom, trans);
 	}, this);
@@ -77,14 +91,5 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
  * A default configuration for renderer
  */
 jchemhub.view.MoleculeRenderer.defaultConfig = {
-	bond : {
-		stroke : {
-			width : 2,
-			color : 'black'
-		},
-		fill : {
-			color : 'black'
-		}
-	},
 	margin : 4
 };

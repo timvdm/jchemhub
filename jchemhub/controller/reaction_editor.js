@@ -10,6 +10,7 @@ goog.require('goog.fx.Dragger.EventType');
 goog.require('goog.editor.BrowserFeature');
 goog.require('goog.async.Delay');
 goog.require('jchemhub.controller.Plugin');
+goog.require('jchemhub.model.NeighborList');
 
 /**
  * A graphical editor for reactions
@@ -147,6 +148,15 @@ jchemhub.controller.ReactionEditor.prototype.setScaleFactor = function(scale) {
 jchemhub.controller.ReactionEditor.prototype.setModels = function(models) {
 	this.clear();
 	this.models = models;
+	var mols = goog.array.flatten(goog.array.map(models,function(model){
+		if (model instanceof jchemhub.model.Reaction){
+			return goog.array.concat(model.reactants, model.products);
+		} else {
+			return [model];
+		}
+	}));
+	this.logger.info('mols.length: ' + mols.length);
+	this.neighborList = new jchemhub.model.NeighborList(mols);
 	this.render();
 }
 
@@ -362,10 +372,34 @@ jchemhub.controller.ReactionEditor.prototype.handleKeyUp_ = function(e) {
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
-
+	this.logger.info("handleMouseDown_");
+	// give the plugins a chance to handle as generic event
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEDOWN, e);
+	// this.dispatchTargetEvent(goog.events.EventType.MOUSEDOWN, e);
+	var target = this.findTarget(e);
+	
 
+};
+
+jchemhub.controller.ReactionEditor.prototype.findTarget = function(e){
+	var trans = this.reactionRenderer.transform.createInverse();
+	var target = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)])[0];
+	return this.neighborList.getNearest({x:target.x, y:target.y});
 }
+
+jchemhub.controller.ReactionEditor.prototype.handleMouseOver_ = function(e) {
+	// this.logger.info("handleMouseOver_");
+};
+
+jchemhub.controller.ReactionEditor.prototype.handleMouseOut_ = function(e) {
+	// this.logger.info("handleMouseOut_");
+};
+
+jchemhub.controller.ReactionEditor.prototype.handleMouseMove_ = function(e) {
+
+	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEMOVE, e);
+	
+};
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEUP, e);
@@ -1014,7 +1048,9 @@ jchemhub.controller.ReactionEditor.prototype.setupChangeListeners_ = function() 
 			jchemhub.controller.ReactionEditor.SELECTION_CHANGE_FREQUENCY_);
 
 	this.addListener(goog.events.EventType.MOUSEDOWN, this.handleMouseDown_);
-	this.addListener(goog.events.EventType.MOUSEUP, this.handleMouseUp_);
+	this.addListener(goog.events.EventType.MOUSEOVER, this.handleMouseOver_);
+	this.addListener(goog.events.EventType.MOUSEOUT, this.handleMouseOut_);
+	this.addListener(goog.events.EventType.MOUSEMOVE, this.handleMouseMove_);
 
 	this.addEventListener(
 			jchemhub.controller.AtomController.EventType.MOUSEOUT,
