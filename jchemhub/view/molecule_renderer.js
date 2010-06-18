@@ -45,9 +45,11 @@ jchemhub.view.MoleculeRenderer.prototype.render = function(molecule, trans) {
 		// if not part of a reaction, we need to create a transform
 		var m = this.config.get("margin");
 		var ex_box = box.expand(m.top, m.right, m.bottom, m.left);
-		trans = this.getTransform(ex_box);
+		this.transform = this.buildTransform(ex_box);
+	} else {
+		this.transform = trans;
 	}
-	this.transform = trans;
+
 	var center = new goog.math.Coordinate((box.left + box.right) / 2,
 			(box.top + box.bottom) / 2);
 	var t_center = this.transform.transformCoords( [ center ])[0];

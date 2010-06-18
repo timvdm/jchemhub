@@ -58,46 +58,6 @@ jchemhub.controller.plugins.Highlight.prototype.handleMouseMove = function(e) {
 	}
 }
 
-jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOver = function(
-		e) {
-	if (!e.currentTarget.atomHighlightGroup) {
-		e.currentTarget.atomHighlightGroup = this.highlightAtom(e.atom);
-	} else {
-		e.currentTarget.atomHighlightGroup = this.highlightAtom(e.atom,
-				e.currentTarget.atomHighlightGroup);
-	}
-
-};
-
-jchemhub.controller.plugins.Highlight.prototype.handleAtomMouseOut = function(e) {
-
-	if (e.currentTarget.atomHighlightGroup) {
-		e.currentTarget.atomHighlightGroup.clear();
-		e.currentTarget.atomHighlightGroup = undefined;
-	}
-
-};
-
-jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOver = function(
-		e) {
-	// this.logger.info("handleBondMouseOver");
-	if (!e.currentTarget.bondHighlightGroup) {
-		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond);
-	} else {
-		e.currentTarget.bondHighlightGroup = this.highlightBond(e.bond,
-				e.currentTarget.bondHighlightGroup);
-	}
-
-};
-jchemhub.controller.plugins.Highlight.prototype.handleBondMouseOut = function(e) {
-
-	if (e.currentTarget.bondHighlightGroup) {
-		e.currentTarget.bondHighlightGroup.clear();
-		e.currentTarget.bondHighlightGroup = undefined;
-	}
-
-};
-
 jchemhub.controller.plugins.Highlight.prototype.highlightBond = function(bond,
 		opt_group) {
 	return this.editorObject.reactionRenderer.moleculeRenderer.bondRendererFactory

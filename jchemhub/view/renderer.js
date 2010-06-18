@@ -43,7 +43,7 @@ jchemhub.view.Renderer.prototype.logger = goog.debug.Logger
  *            fromRect
  * @return {jchemhub.graphics.AffineTransform}
  */
-jchemhub.view.Renderer.prototype.getTransform = function(fromBox) {
+jchemhub.view.Renderer.prototype.buildTransform = function(fromBox) {
 
 	var size = goog.math.Rect.createFromBox(fromBox).getSize();
 	var fromWidth = size.width;

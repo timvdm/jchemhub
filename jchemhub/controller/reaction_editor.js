@@ -148,11 +148,11 @@ jchemhub.controller.ReactionEditor.prototype.setScaleFactor = function(scale) {
 jchemhub.controller.ReactionEditor.prototype.setModels = function(models) {
 	this.clear();
 	this.models = models;
-	var mols = goog.array.flatten(goog.array.map(models,function(model){
-		if (model instanceof jchemhub.model.Reaction){
+	var mols = goog.array.flatten(goog.array.map(models, function(model) {
+		if (model instanceof jchemhub.model.Reaction) {
 			return goog.array.concat(model.reactants, model.products);
 		} else {
-			return [model];
+			return [ model ];
 		}
 	}));
 	this.logger.info('mols.length: ' + mols.length);
@@ -164,11 +164,11 @@ jchemhub.controller.ReactionEditor.prototype.render = function() {
 	goog.array.forEach(this.models, function(model) {
 
 		if (model instanceof jchemhub.model.Reaction) {
-			if(model.pluses.length==0) {
+			if (model.pluses.length == 0) {
 				model.generatePlusCoords(model.reactants);
 				model.generatePlusCoords(model.products);
 			}
-			if( model.arrows.length==0){
+			if (model.arrows.length == 0) {
 				model.generateArrowCoords(model.reactants, model.products);
 			}
 			this.reactionRenderer.render(model);
@@ -372,25 +372,18 @@ jchemhub.controller.ReactionEditor.prototype.handleKeyUp_ = function(e) {
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
-	this.logger.info("handleMouseDown_ " + e.clientX + ", " + e.clientY);
-	// give the plugins a chance to handle as generic event
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEDOWN, e);
-	// this.dispatchTargetEvent(goog.events.EventType.MOUSEDOWN, e);
-	var target = this.findTarget(e);
-	
-
 };
 
-jchemhub.controller.ReactionEditor.prototype.findTarget = function(e){
-	var trans = this.reactionRenderer.transform.createInverse();
-	var target = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)])[0];
-	var nearest  = this.neighborList.getNearest({x:target.x, y:target.y});
-	if(nearest instanceof jchemhub.model.Atom){
-		this.logger.info('transform: ' + this.reactionRenderer.transform);
-		this.logger.info('inverse: ' + trans);
-		this.logger.info("target: " + target.x + ", " + target.y);
-		console.log(nearest);
-	}
+jchemhub.controller.ReactionEditor.prototype.findTarget = function(e) {
+	var trans = this.reactionRenderer.moleculeRenderer.transform.createInverse();
+	var target = trans.transformCoords( [ new goog.math.Coordinate(e.offsetX,
+			e.offsetY) ])[0];
+	var nearest = this.neighborList.getNearest( {
+		x : target.x,
+		y : target.y
+	});
+
 	return nearest;
 }
 
@@ -405,62 +398,13 @@ jchemhub.controller.ReactionEditor.prototype.handleMouseOut_ = function(e) {
 jchemhub.controller.ReactionEditor.prototype.handleMouseMove_ = function(e) {
 
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEMOVE, e);
-	
+
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseUp_ = function(e) {
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEUP, e);
 }
 
-jchemhub.controller.ReactionEditor.prototype.handleAtomMouseDown_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEDOWN,
-			e);
-}
-
-jchemhub.controller.ReactionEditor.prototype.handleAtomMouseOver_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEOVER,
-			e);
-}
-
-jchemhub.controller.ReactionEditor.prototype.handleAtomMouseOut_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ATOM_MOUSEOUT,
-			e);
-}
-jchemhub.controller.ReactionEditor.prototype.handleBondMouseOver_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEOVER,
-			e);
-}
-
-jchemhub.controller.ReactionEditor.prototype.handleBondMouseOut_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEOUT,
-			e);
-}
-
-jchemhub.controller.ReactionEditor.prototype.handleBondMouseDown_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.BOND_MOUSEDOWN,
-			e);
-}
-jchemhub.controller.ReactionEditor.prototype.handleArrowMouseOver_ = function(e) {
-	this.invokeShortCircuitingOp_(
-			jchemhub.controller.Plugin.Op.ARROW_MOUSEOVER, e);
-};
-jchemhub.controller.ReactionEditor.prototype.handleArrowMouseOut_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.ARROW_MOUSEOUT,
-			e);
-};
-jchemhub.controller.ReactionEditor.prototype.handleArrowMouseDown_ = function(e) {
-	this.invokeShortCircuitingOp_(
-			jchemhub.controller.Plugin.Op.ARROW_MOUSEDOWN, e);
-};
-jchemhub.controller.ReactionEditor.prototype.handlePlusMouseOver_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEOVER, e);
-};
-jchemhub.controller.ReactionEditor.prototype.handlePlusMouseOut_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEOUT, e);
-};
-jchemhub.controller.ReactionEditor.prototype.handlePlusMouseDown_ = function(e) {
-	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.PLUS_MOUSEDOWN, e);
-};
 
 /**
  * Gets the value of this command.
