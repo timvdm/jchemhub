@@ -156,7 +156,7 @@ jchemhub.controller.ReactionEditor.prototype.setModels = function(models) {
 		}
 	}));
 	this.logger.info('mols.length: ' + mols.length);
-	this.neighborList = new jchemhub.model.NeighborList(mols);
+	this.neighborList = new jchemhub.model.NeighborList(mols, 1, .5);
 	this.render();
 }
 
@@ -372,7 +372,7 @@ jchemhub.controller.ReactionEditor.prototype.handleKeyUp_ = function(e) {
 };
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
-	this.logger.info("handleMouseDown_");
+	this.logger.info("handleMouseDown_ " + e.clientX + ", " + e.clientY);
 	// give the plugins a chance to handle as generic event
 	this.invokeShortCircuitingOp_(jchemhub.controller.Plugin.Op.MOUSEDOWN, e);
 	// this.dispatchTargetEvent(goog.events.EventType.MOUSEDOWN, e);
@@ -384,7 +384,14 @@ jchemhub.controller.ReactionEditor.prototype.handleMouseDown_ = function(e) {
 jchemhub.controller.ReactionEditor.prototype.findTarget = function(e){
 	var trans = this.reactionRenderer.transform.createInverse();
 	var target = trans.transformCoords([new goog.math.Coordinate(e.clientX, e.clientY)])[0];
-	return this.neighborList.getNearest({x:target.x, y:target.y});
+	var nearest  = this.neighborList.getNearest({x:target.x, y:target.y});
+	if(nearest instanceof jchemhub.model.Atom){
+		this.logger.info('transform: ' + this.reactionRenderer.transform);
+		this.logger.info('inverse: ' + trans);
+		this.logger.info("target: " + target.x + ", " + target.y);
+		console.log(nearest);
+	}
+	return nearest;
 }
 
 jchemhub.controller.ReactionEditor.prototype.handleMouseOver_ = function(e) {
