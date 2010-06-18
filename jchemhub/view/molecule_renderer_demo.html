@@ -20,13 +20,7 @@
 	goog.require('jchemhub.view.QuadrupleBondRenderer');
 	goog.require('jchemhub.model.Atom');
 	goog.require('jchemhub.model.Molecule');
-	goog.require('jchemhub.model.SingleBond');
-	goog.require('jchemhub.model.SingleBondUp');
-	goog.require('jchemhub.model.SingleBondDown');
-	goog.require('jchemhub.model.SingleBondUpOrDown');	
-	goog.require('jchemhub.model.DoubleBond');
-	goog.require('jchemhub.model.TripleBond');
-	goog.require('jchemhub.model.QuadrupleBond');
+	goog.require('jchemhub.model.Bond');
 	goog.require('goog.events.EventType');
 	goog.require('goog.dom');
 	goog.require('goog.graphics');
@@ -52,7 +46,7 @@ function initPage(){
 	var o1 = new jchemhub.model.Atom("O", 3, -3);
 	mol1.addAtom(c1);
 	mol1.addAtom(o1);
-	var b = new jchemhub.model.SingleBond(c1, o1);
+	var b = new jchemhub.model.Bond(c1, o1);
 	mol1.addBond(b);
 	r.render(mol1, trans, group);
 	
@@ -61,7 +55,7 @@ function initPage(){
 	var o2 = new jchemhub.model.Atom("O", 7, -2);
 	mol2.addAtom(c2);
 	mol2.addAtom(o2);
-	var b2 = new jchemhub.model.DoubleBond(c2, o2)
+	var b2 = new jchemhub.model.Bond(c2, o2, 2)
 	mol2.addBond(b2);
 
 	r.render(mol2, trans, group);
@@ -71,7 +65,7 @@ function initPage(){
 	var c4 = new jchemhub.model.Atom("C", 10, -2);
 	mol3.addAtom(c3);
 	mol3.addAtom(c4);
-	var b3 = new jchemhub.model.TripleBond(c3, c4);
+	var b3 = new jchemhub.model.Bond(c3, c4, 3);
 	mol3.addBond(b3);
 
 
@@ -80,7 +74,7 @@ function initPage(){
 	var s = new jchemhub.model.Atom("S", 2, -6);
 	mol3.addAtom(n);
 	mol3.addAtom(s);
-	var b4 = new jchemhub.model.QuadrupleBond(n,s);
+	var b4 = new jchemhub.model.Bond(n,s, 4);
 	mol3.addBond(b4);
 	
 	r.render(mol3, trans, group);
@@ -90,14 +84,16 @@ function initPage(){
 	var cl = new jchemhub.model.Atom("Cl", 4, -6); 
 	mol4.addAtom(p);
 	mol4.addAtom(cl);
-	var b5 = new jchemhub.model.SingleBondUp(p,cl);
+	var b5 = new jchemhub.model.Bond(p,cl);
+        b5.stereo = 'up';
 	mol4.addBond(b5);
 
 	var f = new jchemhub.model.Atom("F", 6, -4);
 	var br = new jchemhub.model.Atom("Br", 6, -6);
 	mol4.addAtom(f);
 	mol4.addAtom(br);
-	var b6 = new jchemhub.model.SingleBondDown(f,br);
+	var b6 = new jchemhub.model.Bond(f,br);
+        b6.stereo = 'down';
 	mol4.addBond(b6);
 	r.render(mol4, trans, group);
 	
@@ -106,7 +102,8 @@ function initPage(){
 	var h = new jchemhub.model.Atom("H", 8, -6);
 	mol5.addAtom(i);
 	mol5.addAtom(h);
-	var b7 = new jchemhub.model.SingleBondUpOrDown(i,h);
+	var b7 = new jchemhub.model.Bond(i,h);
+        b7.stereo = 'up_or_down';
 	mol5.addBond(b7);
 	r.render(mol5, trans, group);
 

@@ -9,7 +9,7 @@
 	goog.require('goog.testing.jsunit');
 	goog.require('jchemhub.model.Molecule');
 	goog.require('jchemhub.model.Atom');
-	goog.require('jchemhub.model.SingleBond');
+	goog.require('jchemhub.model.Bond');
 	goog.require('jchemhub.model.NeighborList');
 	goog.require('goog.array');
 </script>
@@ -95,8 +95,8 @@
     	var a1 = new jchemhub.model.Atom("C", -1, 1);
     	var a2 = new jchemhub.model.Atom("C", 0, 0);
     	var a3 = new jchemhub.model.Atom("C", 1, 1);
-    	var b1 = new jchemhub.model.SingleBond(a1, a2);
-    	var b2 = new jchemhub.model.SingleBond(a2, a3);
+    	var b1 = new jchemhub.model.Bond(a1, a2);
+    	var b2 = new jchemhub.model.Bond(a2, a3);
     	mol.addAtom(a1);
     	mol.addAtom(a2);
     	mol.addAtom(a3);

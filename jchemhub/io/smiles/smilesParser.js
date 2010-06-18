@@ -16,10 +16,6 @@ goog.require('jchemhub.model.Atom.Hybridizations');
 goog.require('jchemhub.model.PseudoAtom');
 goog.require('jchemhub.model.Molecule');
 goog.require('jchemhub.model.Bond');
-goog.require('jchemhub.model.SingleBond');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.TripleBond');
-goog.require('jchemhub.model.QuadrupleBond');
 goog.require('jchemhub.util.BondUtil');
 goog.require('jchemhub.util.BondUtil.Orders');
 

@@ -15,10 +15,6 @@ goog.provide('jchemhub.util.BondUtil.Orders');
 goog.require('jchemhub.model.Atom');
 goog.require('jchemhub.model.PseudoAtom');
 goog.require('jchemhub.model.Bond');
-goog.require('jchemhub.model.SingleBond');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.TripleBond');
-goog.require('jchemhub.model.QuadrupleBond');
 
 
 jchemhub.util.BondUtil = function(){
@@ -32,16 +28,16 @@ jchemhub.util.BondUtil.getBond = function(atom1, atom2, bondOrder){
     bond=null;
     switch (bondOrder) {
         case jchemhub.util.BondUtil.Orders.SINGLE:
-            bond = new jchemhub.model.SingleBond(atom1,atom2);
+            bond = new jchemhub.model.Bond(atom1, atom2);
             break;
         case jchemhub.util.BondUtil.Orders.DOUBLE:
-            bond = new jchemhub.model.DoubleBond(atom1,atom2);
+            bond = new jchemhub.model.Bond(atom1, atom2, 2);
             break;
         case jchemhub.util.BondUtil.Orders.TRIPLE:
-            bond = new jchemhub.model.TripleBond(atom1,atom2);
+            bond = new jchemhub.model.Bond(atom1, atom2, 3);
             break;
         case jchemhub.util.BondUtil.Orders.QUADRUPLE:
-            bond = new jchemhub.model.QuadrupleBond(atom1,atom2);
+            bond = new jchemhub.model.Bond(atom1, atom2, 4);
             break;
     }
     return bond;

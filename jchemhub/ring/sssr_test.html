@@ -13,7 +13,7 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
             goog.require('jchemhub.io.mdl');
             goog.require('jchemhub.model.Molecule');
             goog.require('jchemhub.model.Atom');
-            goog.require('jchemhub.model.SingleBond');
+            goog.require('jchemhub.model.Bond');
             goog.require('jchemhub.ring.SSSR');
         </script>
 <script>
@@ -27,14 +27,14 @@ Copyright (c) 2010 Mark Rijnbeek (markr@ebi.ac.uk)
                 var atom5 = new jchemhub.model.Atom("C", 0, 0);
                 var atom6 = new jchemhub.model.Atom("C", 0, 0);
                 var atom7 = new jchemhub.model.Atom("C", 0, 0);
-                var bond1 = new jchemhub.model.SingleBond(atom1, atom2);
-                var bond2 = new jchemhub.model.SingleBond(atom2, atom3);
-                var bond3 = new jchemhub.model.SingleBond(atom3, atom4);
-                var bond4 = new jchemhub.model.SingleBond(atom4, atom5);
-                var bond5 = new jchemhub.model.SingleBond(atom5, atom6);
-                var bond6 = new jchemhub.model.SingleBond(atom6, atom7);
-                var bond7 = new jchemhub.model.SingleBond(atom7, atom1);
-                var bond8 = new jchemhub.model.SingleBond(atom6, atom2);
+                var bond1 = new jchemhub.model.Bond(atom1, atom2);
+                var bond2 = new jchemhub.model.Bond(atom2, atom3);
+                var bond3 = new jchemhub.model.Bond(atom3, atom4);
+                var bond4 = new jchemhub.model.Bond(atom4, atom5);
+                var bond5 = new jchemhub.model.Bond(atom5, atom6);
+                var bond6 = new jchemhub.model.Bond(atom6, atom7);
+                var bond7 = new jchemhub.model.Bond(atom7, atom1);
+                var bond8 = new jchemhub.model.Bond(atom6, atom2);
 
                 var molecule = new jchemhub.model.Molecule();
                 molecule.addAtom(atom1);

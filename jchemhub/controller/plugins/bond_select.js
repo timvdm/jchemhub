@@ -1,13 +1,7 @@
 goog.provide('jchemhub.controller.plugins.BondSelect');
 goog.require('jchemhub.controller.Plugin');
 goog.require('goog.debug.Logger');
-goog.require('jchemhub.model.SingleBond');
-goog.require('jchemhub.model.DoubleBond');
-goog.require('jchemhub.model.TripleBond');
-goog.require('jchemhub.model.QuadrupleBond');
-goog.require('jchemhub.model.SingleBondUp');
-goog.require('jchemhub.model.SingleBondDown');
-goog.require('jchemhub.model.SingleBondUpOrDown');
+goog.require('jchemhub.model.Bond');
 
 /**
  * @constructor
@@ -53,25 +47,25 @@ jchemhub.controller.plugins.BondSelect.prototype.execCommandInternal = function(
  */
 jchemhub.controller.plugins.BondSelect.BOND_TYPES = [ {
 	caption : "Single",
-	klass : jchemhub.model.SingleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Double",
-	klass : jchemhub.model.DoubleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Triple",
-	klass : jchemhub.model.TripleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Quadruple",
-	klass : jchemhub.model.QuadrupleBond
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Single Up",
-	klass : jchemhub.model.SingleBondUp
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Single Down",
-	klass : jchemhub.model.SingleBondDown
+	klass : jchemhub.model.Bond
 }, {
 	caption : "Single Up or Down",
-	klass : jchemhub.model.SingleBondUpOrDown
+	klass : jchemhub.model.Bond
 } ]
 
 /**
@@ -88,8 +82,9 @@ jchemhub.controller.plugins.BondSelect.prototype.handleBondMouseDown = function(
 
 	if (this.bond_klass) {
 		this.editorObject.dispatchBeforeChange();
-		if ((e.bond instanceof jchemhub.model.SingleBondUp && this.bond_klass == jchemhub.model.SingleBondUp)
-				|| (e.bond instanceof jchemhub.model.SingleBondDown && this.bond_klass == jchemhub.model.SingleBondDown)) {
+		if (e.bond.stereo) {
+		//if ((e.bond instanceof jchemhub.model.SingleBondUp && this.bond_klass == jchemhub.model.SingleBondUp)
+		//		|| (e.bond instanceof jchemhub.model.SingleBondDown && this.bond_klass == jchemhub.model.SingleBondDown)) {
 			var new_bond = new this.bond_klass(e.bond.target, e.bond.source);
 		} else {
 			var new_bond = new this.bond_klass(e.bond.source, e.bond.target);
