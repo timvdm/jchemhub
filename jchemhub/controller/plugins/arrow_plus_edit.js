@@ -82,7 +82,7 @@ jchemhub.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(
 		var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
 				.createInverse();
 		var coords = trans.transformCoords( [ new goog.math.Coordinate(
-				e.clientX, e.clientY) ]);
+				e.offsetX, e.offsetY) ]);
 		this.editorObject.getModels()[0].addArrow(coords[0]);
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
@@ -91,7 +91,7 @@ jchemhub.controller.plugins.ArrowPlusEdit.prototype.handleMouseDown = function(
 		var trans = this.editorObject.reactionRenderer.moleculeRenderer.transform
 				.createInverse();
 		var coords = trans.transformCoords( [ new goog.math.Coordinate(
-				e.clientX, e.clientY) ]);
+				e.offsetX, e.offsetY) ]);
 		this.editorObject.getModels()[0].addPlus(coords[0]);
 		this.editorObject.setModels(this.editorObject.getModels());
 		this.editorObject.dispatchChange();
