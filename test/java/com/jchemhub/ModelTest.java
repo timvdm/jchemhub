@@ -1,7 +1,7 @@
-package com.jchemhub; 
+package com.kemia; 
 import com.thoughtworks.selenium.SeleneseTestCase; 
 public class ModelTest extends SeleneseTestCase { 
-    private final String DIRECTORY_PREFIX = "file:////Users/paulnovak/wingu/workspace/jchemhub/";
+    private final String DIRECTORY_PREFIX = "file:////Users/paulnovak/wingu/workspace/kemia/";
   
   public void setUp() throws Exception { 
     final String url = DIRECTORY_PREFIX; 
@@ -9,7 +9,7 @@ public class ModelTest extends SeleneseTestCase {
     setUp(url, browserString); 
   } 
   public void testModel() throws Exception { 
-    selenium.open(DIRECTORY_PREFIX + "jchemhub/model/model_test.html"); 
+    selenium.open(DIRECTORY_PREFIX + "kemia/model/model_test.html"); 
     selenium.waitForCondition( 
         "window.G_testRunner && window.G_testRunner.isFinished()", 
         "5000"); 

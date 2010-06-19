@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<!--TODO: License and copyright-->
+<html>
+<head>
+<title>kemia unit neighborlist.js</title>
+<script src="../../third-party/closure/closure/goog/base.js"></script>
+<script src="../deps.js"></script>
+<script>
+	goog.require('goog.testing.jsunit');
+	goog.require('kemia.model.Molecule');
+	goog.require('kemia.model.Atom');
+	goog.require('kemia.model.Bond');
+	goog.require('kemia.model.NeighborList');
+	goog.require('goog.array');
+</script>
+<script>
+ 
+    function testNeighborList1() {
+
+        var molecule = new kemia.model.Molecule();
+    
+    	var atom1=new kemia.model.Atom("C", -5, -5);
+	var atom2=new kemia.model.Atom("C", 40, 13);
+	var atom3=new kemia.model.Atom("C", -4, 9);
+	var atom4=new kemia.model.Atom("C", 10, -8);
+	var atom5=new kemia.model.Atom("C", -6, 0);
+	var atom6=new kemia.model.Atom("C", 4, 13);
+
+        molecule.addAtom(atom1);
+        molecule.addAtom(atom2);
+        molecule.addAtom(atom3);
+        molecule.addAtom(atom4);
+        molecule.addAtom(atom5);
+        molecule.addAtom(atom6);
+
+        var neighborList = new kemia.model.NeighborList([molecule]);
+
+        assertEquals(atom1, neighborList.getNearest({ x: -5, y: -5}));
+        assertEquals(atom2, neighborList.getNearest({ x: 40, y: 13}));
+        assertEquals(atom3, neighborList.getNearest({ x: -4, y: 9}));
+        assertEquals(atom4, neighborList.getNearest({ x: 10, y: -8}));
+        assertEquals(atom5, neighborList.getNearest({ x: -6, y: 0}));
+        assertEquals(atom6, neighborList.getNearest({ x: 4, y: 13}));
+    }
+	
+    function testNeighborList2() {
+
+        var molecule = new kemia.model.Molecule();
+
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 10; j++) {
+                var atom = new kemia.model.Atom("C", i, j);
+                molecule.addAtom(atom);
+            
+            }
+        }
+
+        var neighborList = new kemia.model.NeighborList([molecule]);
+
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 10; j++) {
+                assertEquals(molecule.atoms[i * 10 + j], neighborList.getNearest({ x: i, y: j}));
+            }
+        }
+
+    }
+
+     function testNeighborList3() {
+
+        var molecule = new kemia.model.Molecule();
+    
+    	var atom1=new kemia.model.Atom("C", 3, 0);
+	var atom2=new kemia.model.Atom("C", 2, 0);
+	var atom3=new kemia.model.Atom("C", 1, 0);
+
+        molecule.addAtom(atom1);
+        molecule.addAtom(atom2);
+        molecule.addAtom(atom3);
+
+        var neighborList = new kemia.model.NeighborList([molecule], 5, 5);
+
+        var nearest = neighborList.getNearestList({ x: 0, y: 0 });
+
+        assertEquals(3, nearest.length);
+        assertEquals(atom3, nearest[0].obj);
+        assertEquals(1, nearest[0].distance);
+        assertEquals(atom2, nearest[1].obj);
+        assertEquals(2, nearest[1].distance);
+        assertEquals(atom1, nearest[2].obj);
+        assertEquals(3, nearest[2].distance);
+    }
+    
+    function testTwoMolecules(){
+    	var m1 = new kemia.model.Molecule();
+    	var a1 = new kemia.model.Atom("C", -1, 1);
+    	var a2 = new kemia.model.Atom("C", 0, 0);
+    	var a3 = new kemia.model.Atom("C", 1, 1);
+    	var b1 = new kemia.model.SingleBond(a1, a2);
+    	var b2 = new kemia.model.SingleBond(a2, a3);
+    	m1.addAtom(a1);
+    	m1.addAtom(a2);
+    	m1.addAtom(a3);
+    	m1.addBond(b1);
+    	m1.addBond(b2);
+    	
+    	var m2 = new kemia.model.Molecule();
+    	var aa1 = new kemia.model.Atom("C", 10, -1);
+    	var aa2 = new kemia.model.Atom("C", 11, 0);
+    	var aa3 = new kemia.model.Atom("C", 10, 1);
+    	var bb1 = new kemia.model.SingleBond(aa1, aa2);
+    	var bb2 = new kemia.model.SingleBond(aa2, aa3);
+    	m2.addAtom(aa1);
+    	m2.addAtom(aa2);
+    	m2.addAtom(aa3);
+    	m2.addBond(bb1);
+    	m2.addBond(bb2);
+    	
+    	var nl = new kemia.model.NeighborList([m1,m2], 1, .5);
+    	var n = nl.getNearestList({x:11.4, y:0});
+    	assertEquals(aa2, n[0].obj);
+    };
+    
+    function testMoleculeWithBonds1() {
+    	var mol = new kemia.model.Molecule();
+    	var a1 = new kemia.model.Atom("C", -1, 1);
+    	var a2 = new kemia.model.Atom("C", 0, 0);
+    	var a3 = new kemia.model.Atom("C", 1, 1);
+    	var b1 = new kemia.model.Bond(a1, a2);
+    	var b2 = new kemia.model.Bond(a2, a3);
+    	mol.addAtom(a1);
+    	mol.addAtom(a2);
+    	mol.addAtom(a3);
+    	mol.addBond(b1);
+    	mol.addBond(b2);
+    	
+    	var nl = new kemia.model.NeighborList([mol], 2, .25);
+    	
+    	var n = nl.getNearestList({x:0.51, y:0.51});
+    	assertEquals('# nearest objects', 1, n.length);
+    	assertEquals('nearest object is bond b2', b2, n[0].obj);
+
+    	n = nl.getNearestList({x:0.89, y:0.85});
+    	assertEquals('# nearest objects', 2, n.length);
+    	assertEquals('nearest object is atom a3', a3, n[0].obj);
+    	assertEquals('2nd nearest object is bond b2', b2, n[1].obj);
+
+    	n = nl.getNearestList({x:0.04, y:0.11});
+    	assertEquals('# nearest objects', 3, n.length);
+    	assertEquals('nearest object is atom a2', a2, n[0].obj);
+    	assertEquals('2nd nearest object is bond b1', b1, n[1].obj);
+    	assertEquals('3th nearest object is bond b2', b2, n[2].obj);
+
+    	n = nl.getNearestList({x:1, y:0});
+    	assertEquals('# nearest objects', 0, n.length);
+    	n = nl.getNearestList({x:-1, y:0});
+    	assertEquals('# nearest objects', 0, n.length);
+
+
+
+    }
+	
+</script>
+</head>
+<body>
+</body>
+</html>

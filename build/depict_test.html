@@ -2,11 +2,11 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>jchemhub.view.MoleculeRenderer</title>
+<title>kemia.view.MoleculeRenderer</title>
 
 <script src="../third-party/closure/closure/goog/base.js"></script>
-<script src="jchemhub-depict.min.js"></script>
-<script src="../jchemhub/io/io_test_molsample2.js"></script>
+<script src="kemia-depict.min.js"></script>
+<script src="../kemia/io/io_test_molsample2.js"></script>
 
 <link rel="stylesheet"
 	href="../third-party/closure/closure/goog/demos/css/demo.css">
@@ -16,8 +16,8 @@
 	href="../third-party/closure/closure/goog/css/menubutton.css">
 
 <script>
-    goog.require('jchemhub.controller.ReactionEditor');
-    goog.require('jchemhub.io.mdl');
+    goog.require('kemia.controller.ReactionEditor');
+    goog.require('kemia.io.mdl');
     goog.require('goog.events.EventType');
     goog.require('goog.dom');
     goog.require('goog.debug.Console');
@@ -31,10 +31,10 @@
     function draw(){
         var sdfs = sdf.split("$$$$\n");
         var element = goog.dom.getElement('container');
-	var r = new jchemhub.controller.ReactionEditor(element);
+	var r = new kemia.controller.ReactionEditor(element);
         var timer = goog.now();
         var molfile = sdfs[1];
-        var mol=jchemhub.io.mdl.readMolfile(molfile);
+        var mol=kemia.io.mdl.readMolfile(molfile);
         r.setModels([mol]);
         goog.dom.setTextContent(goog.dom.getElement('perf'), (goog.now() - timer) + 'ms');
     }
